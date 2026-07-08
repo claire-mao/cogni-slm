@@ -24,6 +24,10 @@ This repository is currently scaffolded for production-grade development workflo
 2. Install the project in editable mode with dev tooling.
 3. Run checks with `make lint`, `make test`, and `make format`.
 
+## Development
+
+See the development workflow in `DEVELOPMENT.md`.
+
 ## Status
 
 - Project scaffold complete.

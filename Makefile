@@ -1,21 +1,38 @@
 PYTHON ?= python3
 PIP ?= $(PYTHON) -m pip
 
-.PHONY: install-dev test lint format clean
+.PHONY: setup install-dev lint format format-check test ci precommit-install precommit-run clean
 
-install-dev:
+setup:
+	$(PIP) install --upgrade pip
 	$(PIP) install -e .[dev]
+
+install-dev: setup
+
+lint:
+	$(PYTHON) -m ruff check .
+	$(PYTHON) -m black --check .
+
+format:
+	$(PYTHON) -m ruff check --fix .
+	$(PYTHON) -m black .
+
+format-check:
+	$(PYTHON) -m ruff check .
+	$(PYTHON) -m black --check .
 
 test:
 	$(PYTHON) -m pytest
 
-lint:
-	$(PYTHON) -m ruff check .
+ci: lint format-check test
 
-format:
-	$(PYTHON) -m ruff check --fix .
+precommit-install:
+	$(PYTHON) -m pre_commit install
+
+precommit-run:
+	$(PYTHON) -m pre_commit run --all-files
 
 clean:
 	find . -type d -name "__pycache__" -prune -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
-	rm -rf .pytest_cache .ruff_cache build dist *.egg-info
+	rm -rf .pytest_cache .ruff_cache .mypy_cache .venv build dist *.egg-info

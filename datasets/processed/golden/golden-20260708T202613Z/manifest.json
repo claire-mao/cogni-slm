@@ -1,0 +1,44 @@
+{
+  "adversarial_examples": 10,
+  "created_at": "2026-07-08T20:26:13.145317+00:00",
+  "dataset_name": "cogni_golden_dataset",
+  "dataset_version": "0.1.0-golden",
+  "domain_counts": {
+    "education": 10,
+    "environment": 8,
+    "finance": 8,
+    "health": 8,
+    "policy": 8,
+    "technology": 8
+  },
+  "fallacy_counts": {
+    "ad_hominem": 4,
+    "appeal_to_authority": 4,
+    "bandwagon": 4,
+    "circular_reasoning": 4,
+    "equivocation": 4,
+    "false_dilemma": 4,
+    "hasty_generalization": 4,
+    "post_hoc": 4,
+    "red_herring": 4,
+    "slippery_slope": 4,
+    "straw_man": 4
+  },
+  "generation_run_id": "golden-20260708T202613Z",
+  "metadata": {
+    "artifact": "golden_dataset",
+    "dataset_name": "cogni_golden_dataset"
+  },
+  "no_fallacy_examples": 6,
+  "prompt_bundle_version": "v1",
+  "reflection_style_counts": {
+    "concise_diagnostic": 14,
+    "counterexample_driven": 12,
+    "misconception_correction": 12,
+    "stepwise_pedagogical": 12
+  },
+  "snapshot_hash": "4203718b01c49dc03d3b7659901185713152591d2c2f4de97b9c0a8a6e5b9222",
+  "taxonomy_version": "v0",
+  "teacher_config_version": "teacher-v1",
+  "total_examples": 50
+}

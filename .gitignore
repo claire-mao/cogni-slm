@@ -15,11 +15,13 @@ env/
 .ruff_cache/
 .mypy_cache/
 .ipynb_checkpoints/
+.pre-commit-cache/
 
 # Packaging
 build/
 dist/
 *.egg-info/
+.coverage
 
 # OS / editor
 .DS_Store
@@ -35,6 +37,8 @@ datasets/raw/*
 !datasets/raw/.gitkeep
 datasets/processed/*
 !datasets/processed/.gitkeep
+!datasets/processed/golden/
+!datasets/processed/golden/**
 datasets/eval/*
 !datasets/eval/.gitkeep
 

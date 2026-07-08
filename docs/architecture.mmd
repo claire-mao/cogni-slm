@@ -1,0 +1,66 @@
+flowchart LR
+    subgraph DG[Data Generation Pipeline]
+        DG1[Coverage Plan]
+        DG2[Prompt Templates]
+        DG3[Teacher Generate]
+        DG4[Self Critique]
+        DG5[Revision Loop]
+        DG6[Quality Filter]
+        DG7[Deduplicate]
+        DG8[Validate]
+        DG9[JSONL Export and Manifest]
+
+        DG1 --> DG2 --> DG3 --> DG4 --> DG5 --> DG6 --> DG7 --> DG8 --> DG9
+    end
+
+    subgraph TR[Training Pipeline]
+        TR1[Dataset Loader]
+        TR2[Tokenizer and Packing]
+        TR3[Base Model Qwen3 1.7B]
+        TR4[PEFT Config LoRA or QLoRA]
+        TR5[SFT Loop]
+        TR6[Checkpoint and Adapter Save]
+        TR7[Training Report]
+
+        TR1 --> TR2 --> TR5
+        TR3 --> TR5
+        TR4 --> TR5
+        TR5 --> TR6 --> TR7
+    end
+
+    subgraph EV[Evaluation Pipeline]
+        EV1[Benchmark Loader]
+        EV2[Base Model Outputs]
+        EV3[Tuned Model Outputs]
+        EV4[Deterministic Checks]
+        EV5[LLM Judge Rubrics]
+        EV6[Metrics and CI]
+        EV7[Gated Composite Decision]
+        EV8[Summary Report and Traces]
+
+        EV1 --> EV2
+        EV1 --> EV3
+        EV2 --> EV4
+        EV3 --> EV4
+        EV2 --> EV5
+        EV3 --> EV5
+        EV4 --> EV6
+        EV5 --> EV6 --> EV7 --> EV8
+    end
+
+    subgraph IN[Inference Pipeline]
+        IN1[Learner Input]
+        IN2[Prompt Builder]
+        IN3[Tuned Model]
+        IN4[Behavior Contract Validator]
+        IN5[Safety and Scope Guard]
+        IN6[Structured Tutor Response]
+        IN7[Telemetry and Feedback Log]
+
+        IN1 --> IN2 --> IN3 --> IN4 --> IN5 --> IN6 --> IN7
+    end
+
+    DG9 --> TR1
+    TR6 --> EV3
+    TR3 --> EV2
+    EV8 --> IN2
