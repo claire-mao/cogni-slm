@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+*.so
+
+# Environments
+.venv/
+venv/
+env/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Local env files
+.env
+.env.*
+
+# Data artifacts (keep folder structure, ignore contents)
+datasets/raw/*
+!datasets/raw/.gitkeep
+datasets/processed/*
+!datasets/processed/.gitkeep
+datasets/eval/*
+!datasets/eval/.gitkeep
+
+# Model/output artifacts (keep folder structure, ignore contents)
+models/*
+!models/.gitkeep
+outputs/*
+!outputs/.gitkeep
