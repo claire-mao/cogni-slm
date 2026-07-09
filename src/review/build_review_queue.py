@@ -368,9 +368,7 @@ def build_review_queue(
             essay_excerpt = ""
         non_empty_reasoning = [value for value in reasoning_signatures if value]
         reasoning_unique_ratio = (
-            len(set(non_empty_reasoning)) / len(non_empty_reasoning)
-            if non_empty_reasoning
-            else 0.0
+            len(set(non_empty_reasoning)) / len(non_empty_reasoning) if non_empty_reasoning else 0.0
         )
 
         priority_score = (

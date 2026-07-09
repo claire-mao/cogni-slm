@@ -200,8 +200,7 @@ def brier_score(confidences: list[float], targets: list[float]) -> float | None:
     if not confidences or len(confidences) != len(targets):
         return None
     return mean(
-        (confidence - target) ** 2
-        for confidence, target in zip(confidences, targets, strict=True)
+        (confidence - target) ** 2 for confidence, target in zip(confidences, targets, strict=True)
     )
 
 
@@ -960,9 +959,7 @@ def evaluate_model_against_gold(
         total_tokens_total=input_tokens_total + output_tokens_total,
         cost_total_usd=cost_total,
         cost_per_example_usd=(
-            cost_total / examples_with_prediction
-            if examples_with_prediction
-            else 0.0
+            cost_total / examples_with_prediction if examples_with_prediction else 0.0
         ),
         agreement=0.0,
         consistency=_model_consistency(model_buckets=model_buckets),
@@ -1039,9 +1036,7 @@ def _leaderboard_score(row: ModelSummary) -> float:
     qwk_score = clamp01((row.score_prediction_qwk + 1.0) / 2.0)
     mae_score = clamp01(1.0 - min(1.0, row.score_prediction_mae / 4.0))
     calibration_score = (
-        clamp01(1.0 - row.calibration_ece_after)
-        if row.calibration_ece_after is not None
-        else 0.0
+        clamp01(1.0 - row.calibration_ece_after) if row.calibration_ece_after is not None else 0.0
     )
     return (
         0.20 * qwk_score

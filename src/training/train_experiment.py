@@ -278,8 +278,7 @@ def _infer_tracking_context(
                 break
 
     teacher_version = _normalize_text(
-        config.parameters.get("teacher_version")
-        or config.parameters.get("teacher_model_id")
+        config.parameters.get("teacher_version") or config.parameters.get("teacher_model_id")
     )
     if not teacher_version:
         for payload in manifests:
@@ -301,8 +300,7 @@ def _infer_tracking_context(
         teacher_version = "unknown"
 
     prompt_version = _normalize_text(
-        config.parameters.get("prompt_version")
-        or config.parameters.get("prompt_version_id")
+        config.parameters.get("prompt_version") or config.parameters.get("prompt_version_id")
     )
     if not prompt_version:
         for payload in manifests:
@@ -471,9 +469,7 @@ def _discover_batch_profiles(
             for profile_id, profile_data in phase3_map.items():
                 if isinstance(profile_id, str) and isinstance(profile_data, dict):
                     profiles[profile_id] = {
-                        key: _safe_int(value)
-                        for key, value in profile_data.items()
-                        if key
+                        key: _safe_int(value) for key, value in profile_data.items() if key
                     }
 
         comparison_axes = payload.get("comparison_axes")
@@ -487,9 +483,7 @@ def _discover_batch_profiles(
                     if not profile_id:
                         continue
                     profiles[profile_id] = {
-                        key: _safe_int(value)
-                        for key, value in row.items()
-                        if isinstance(key, str)
+                        key: _safe_int(value) for key, value in row.items() if isinstance(key, str)
                     }
     return profiles
 
@@ -774,11 +768,7 @@ def _seed_values_from_payload(payload: dict[str, Any]) -> tuple[int, ...]:
     if isinstance(policies, dict):
         seeds = policies.get("seed_candidates")
         if isinstance(seeds, list):
-            parsed = [
-                _safe_int(seed)
-                for seed in seeds
-                if _safe_float(seed) is not None
-            ]
+            parsed = [_safe_int(seed) for seed in seeds if _safe_float(seed) is not None]
             if parsed:
                 return tuple(parsed)
 
@@ -786,11 +776,7 @@ def _seed_values_from_payload(payload: dict[str, Any]) -> tuple[int, ...]:
     if isinstance(counts, dict):
         seeds = counts.get("seed_repeats")
         if isinstance(seeds, list):
-            parsed = [
-                _safe_int(seed)
-                for seed in seeds
-                if _safe_float(seed) is not None
-            ]
+            parsed = [_safe_int(seed) for seed in seeds if _safe_float(seed) is not None]
             if parsed:
                 return tuple(parsed)
     return ()
@@ -989,9 +975,7 @@ def _format_example_to_text(example: dict[str, Any]) -> str:
     output_text = _normalize_text(example.get("output"))
     if instruction or input_text or output_text:
         return (
-            f"Instruction:\n{instruction}\n\n"
-            f"Input:\n{input_text}\n\n"
-            f"Output:\n{output_text}"
+            f"Instruction:\n{instruction}\n\n" f"Input:\n{input_text}\n\n" f"Output:\n{output_text}"
         ).strip()
 
     prompt = _normalize_text(example.get("prompt"))
@@ -1471,9 +1455,7 @@ def _execute_training_run(
         history = trainer.state.log_history if trainer.state and trainer.state.log_history else []
         _save_log_history(config.logs_dir / "trainer_log_history.jsonl", history)
 
-        runtime_seconds = (
-            datetime.now(timezone.utc) - start_time
-        ).total_seconds()
+        runtime_seconds = (datetime.now(timezone.utc) - start_time).total_seconds()
 
         train_metrics.setdefault("runtime_seconds_wall", runtime_seconds)
         train_metrics.setdefault("train_loss_mean", _mean_from_log_history(history, "loss"))
@@ -1564,9 +1546,7 @@ def _execute_training_run(
             error=None,
         )
     except Exception as exc:  # pragma: no cover - runtime variability
-        runtime_seconds = (
-            datetime.now(timezone.utc) - start_time
-        ).total_seconds()
+        runtime_seconds = (datetime.now(timezone.utc) - start_time).total_seconds()
         error_text = f"{type(exc).__name__}: {exc}"
         _write_json(
             config.manifest_path,

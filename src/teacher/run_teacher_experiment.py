@@ -158,10 +158,7 @@ def _parse_dataset_examples(path: Path) -> tuple[DatasetExample, ...]:
 
         prompt = _normalize_text(row.get("prompt") or row.get("prompt_text"))
         essay = _normalize_text(
-            row.get("essay")
-            or row.get("essay_text")
-            or row.get("text")
-            or row.get("input")
+            row.get("essay") or row.get("essay_text") or row.get("text") or row.get("input")
         )
         if not prompt or not essay:
             continue
@@ -538,9 +535,7 @@ def run_teacher_experiment(
                 call_latency_ms = (time.perf_counter() - started) * 1000.0
 
                 metadata = (
-                    output.get("metadata")
-                    if isinstance(output.get("metadata"), dict)
-                    else {}
+                    output.get("metadata") if isinstance(output.get("metadata"), dict) else {}
                 )
                 if _safe_float(metadata.get("latency_ms")) is None:
                     metadata["latency_ms"] = call_latency_ms
@@ -648,9 +643,7 @@ def run_teacher_experiment(
                 else None
             ),
             "avg_confidence": mean(confidence_values) if confidence_values else None,
-            "json_validity_rate": (
-                mean(validation_json_valid) if validation_json_valid else None
-            ),
+            "json_validity_rate": (mean(validation_json_valid) if validation_json_valid else None),
         },
         "artifacts": {
             "responses_path": str(responses_path),

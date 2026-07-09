@@ -419,10 +419,7 @@ def _majority_vote_output(
     if not isinstance(base_output, dict):
         base_output = {}
 
-    confidences = [
-        _extract_task_specific_confidence(item, item.output_json)
-        for item in valid
-    ]
+    confidences = [_extract_task_specific_confidence(item, item.output_json) for item in valid]
     confidence = mean(confidences) if confidences else None
 
     if score is not None:
@@ -488,11 +485,7 @@ def _teacher_verifier_output(
 
     teacher_fallacy = _extract_fallacy(teacher.output_json)
     verifier_fallacy = _extract_fallacy(verifier.output_json)
-    fallacy_conflict = (
-        teacher_fallacy
-        and verifier_fallacy
-        and teacher_fallacy != verifier_fallacy
-    )
+    fallacy_conflict = teacher_fallacy and verifier_fallacy and teacher_fallacy != verifier_fallacy
 
     teacher_rubric = _extract_rubric_judgments(teacher.output_json)
     verifier_rubric = _extract_rubric_judgments(verifier.output_json)

@@ -417,9 +417,7 @@ def _load_models(models_path: Path) -> tuple[ModelSpec, ...]:
 
     missing = sorted(set(REQUIRED_TEACHER_MODELS) - set(dedup.keys()))
     if missing:
-        raise ValueError(
-            "Missing required teacher model(s) in config: " + ", ".join(missing)
-        )
+        raise ValueError("Missing required teacher model(s) in config: " + ", ".join(missing))
 
     ordered: list[ModelSpec] = []
     for model_id in REQUIRED_TEACHER_MODELS:
@@ -526,9 +524,7 @@ def _aggregate_metrics(
                 "min_confidence": min(values) if values else None,
                 "max_confidence": max(values) if values else None,
                 "low_confidence_rate_below_0_5": (
-                    sum(1 for value in values if value < 0.5) / len(values)
-                    if values
-                    else None
+                    sum(1 for value in values if value < 0.5) / len(values) if values else None
                 ),
             }
             for model, values in sorted(by_model_confidence.items())

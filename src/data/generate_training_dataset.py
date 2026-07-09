@@ -24,7 +24,11 @@ SRC_ROOT = Path(__file__).resolve().parents[1]
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from teacher.providers import TeacherExample, canonical_provider_name, create_teacher_provider
+from teacher.providers import (  # noqa: E402
+    TeacherExample,
+    canonical_provider_name,
+    create_teacher_provider,
+)
 
 DEFAULT_REQUIRED_FIELDS = (
     "id",
@@ -64,7 +68,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--provider",
         default="openai",
-        help="Provider identifier (openai|anthropic|gemini|deepseek|openrouter|local_transformers).",
+        help=(
+            "Provider identifier "
+            "(openai|anthropic|gemini|deepseek|openrouter|local_transformers)."
+        ),
     )
     parser.add_argument(
         "--model",

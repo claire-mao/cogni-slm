@@ -384,7 +384,7 @@ def _build_prompt(
 
 
 def _openai_like_text_and_usage(
-    response_json: dict[str, Any]
+    response_json: dict[str, Any],
 ) -> tuple[str, int | None, int | None]:
     usage = response_json.get("usage")
     input_tokens = None
@@ -883,9 +883,7 @@ def _load_plan(
     if not isinstance(configured_model_ids, list):
         raise ValueError(f"Round {round_id} missing model list.")
     unresolved_templates = [
-        value
-        for value in configured_model_ids
-        if isinstance(value, str) and "_from_" in value
+        value for value in configured_model_ids if isinstance(value, str) and "_from_" in value
     ]
     if unresolved_templates:
         raise ValueError(

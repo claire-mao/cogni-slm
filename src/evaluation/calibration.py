@@ -234,8 +234,7 @@ def brier_score(confidences: list[float], targets: list[float]) -> float | None:
     if not confidences or len(confidences) != len(targets):
         return None
     return mean(
-        (confidence - target) ** 2
-        for confidence, target in zip(confidences, targets, strict=True)
+        (confidence - target) ** 2 for confidence, target in zip(confidences, targets, strict=True)
     )
 
 
@@ -623,9 +622,7 @@ def render_reliability_svg(
             )
         if item.avg_confidence is not None:
             y_conf = bottom - (item.avg_confidence * plot_h)
-            rows.append(
-                f"<circle cx='{x_mid:.2f}' cy='{y_conf:.2f}' r='4' fill='#b11226'/>"
-            )
+            rows.append(f"<circle cx='{x_mid:.2f}' cy='{y_conf:.2f}' r='4' fill='#b11226'/>")
 
     # Axes labels and ticks.
     rows.extend(
@@ -652,9 +649,7 @@ def render_reliability_svg(
             f"<text x='{x:.2f}' y='{bottom + 20}' font-size='11' "
             f"text-anchor='middle'>{frac:.1f}</text>"
         )
-        rows.append(
-            f"<line x1='{left - 5}' y1='{y:.2f}' x2='{left}' y2='{y:.2f}' stroke='#222'/>"
-        )
+        rows.append(f"<line x1='{left - 5}' y1='{y:.2f}' x2='{left}' y2='{y:.2f}' stroke='#222'/>")
         rows.append(
             f"<text x='{left - 10}' y='{y + 4:.2f}' font-size='11' "
             f"text-anchor='end'>{frac:.1f}</text>"

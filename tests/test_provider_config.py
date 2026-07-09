@@ -17,7 +17,7 @@ def test_load_env_file_parses_values(tmp_path: Path, monkeypatch: pytest.MonkeyP
         "\n".join(
             [
                 "OPENAI_API_KEY=abc123",
-                "GOOGLE_API_KEY=\"g-key\"",
+                'GOOGLE_API_KEY="g-key"',
                 "export OPENROUTER_HTTP_REFERER=https://example.org",
             ]
         )

@@ -96,7 +96,7 @@ def test_benchmark_end_to_end(tmp_path: Path) -> None:
                 "argument_quality_score": 3,
                 "predicted_fallacies": ["none"],
                 "feedback": "Improve evidence support and organization.",
-                "raw_output": "{\"score\":3}",
+                "raw_output": '{"score":3}',
                 "latency_ms": 900,
                 "input_tokens": 490,
                 "output_tokens": 140,

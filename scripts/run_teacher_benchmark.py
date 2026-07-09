@@ -52,4 +52,3 @@ def __dir__() -> list[str]:
 
 if __name__ == "__main__":
     main()
-

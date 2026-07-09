@@ -447,11 +447,7 @@ def _render_teacher_section(payload: DashboardPayload) -> list[str]:
             f"- total_estimated_cost_usd: `{total_cost:.6f}`",
             (
                 "- total_runtime_seconds: "
-                + (
-                    f"`{sum(duration_values):.2f}`"
-                    if duration_values
-                    else "`n/a`"
-                )
+                + (f"`{sum(duration_values):.2f}`" if duration_values else "`n/a`")
             ),
             "",
             (

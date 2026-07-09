@@ -96,9 +96,11 @@ def load_sft_examples(sft_root: Path) -> list[SFTExample]:
                         instruction=str(payload.get("instruction", "")),
                         input_raw=str(payload.get("input", "")),
                         output_raw=str(payload.get("output", "")),
-                        metadata=payload.get("metadata")
-                        if isinstance(payload.get("metadata"), dict)
-                        else {},
+                        metadata=(
+                            payload.get("metadata")
+                            if isinstance(payload.get("metadata"), dict)
+                            else {}
+                        ),
                     )
                 )
     return examples
@@ -157,9 +159,7 @@ def _build_validation_pair(
         model_id=str(item.metadata.get("teacher_model_id", "unknown")),
         example_id=example_id,
         predicted_score=(
-            float(output_obj["score"])
-            if isinstance(output_obj.get("score"), int | float)
-            else None
+            float(output_obj["score"]) if isinstance(output_obj.get("score"), int | float) else None
         ),
         rubric_items=tuple(),
         rubric_score=None,

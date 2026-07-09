@@ -263,10 +263,7 @@ def _build_gold_record(
     label = _detect_label(row)
     if label is None:
         case_id = _normalize_text(row.get("case_id"))
-        raise ValueError(
-            "Approved row is missing label payload "
-            f"for case_id={case_id}"
-        )
+        raise ValueError("Approved row is missing label payload " f"for case_id={case_id}")
 
     gold_answer = row.get("gold_answer") if isinstance(row.get("gold_answer"), dict) else {}
     fallacies = gold_answer.get("expected_fallacies")
@@ -385,9 +382,9 @@ def build_gold_dataset(
 
     checksums = {
         "approved_input_sha256": _path_sha256(approved_path),
-        "adjudication_log_sha256": _path_sha256(adjudication_log)
-        if adjudication_log is not None
-        else "",
+        "adjudication_log_sha256": (
+            _path_sha256(adjudication_log) if adjudication_log is not None else ""
+        ),
         "gold_dataset_sha256": _path_sha256(dataset_path),
         "adjudication_history_sha256": _path_sha256(adjudication_path),
         "record_checksums_sha256": hashlib.sha256(

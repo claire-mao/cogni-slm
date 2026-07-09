@@ -17,6 +17,9 @@ dependencies = []
 [project.optional-dependencies]
 dev = [
   "black>=24.0",
+  "datasets>=2.14",
+  "pandas>=1.5",
+  "pyarrow>=12.0",
   "pre-commit>=3.7",
   "pytest>=8.0",
   "ruff>=0.5",
@@ -37,11 +40,14 @@ python_files = ["test_*.py"]
 [tool.black]
 line-length = 100
 target-version = ["py310"]
+extend-exclude = '''
+/(unsloth_compiled_cache)/
+'''
 
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-extend-exclude = [".venv", "build", "dist"]
+extend-exclude = [".venv", "build", "dist", "unsloth_compiled_cache"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

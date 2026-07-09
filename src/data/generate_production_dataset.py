@@ -239,8 +239,7 @@ def run_workflow(config: WorkflowConfig) -> dict[str, Any]:
     """Run end-to-end production dataset generation workflow."""
     if config.inference_mode != "precomputed":
         raise ValueError(
-            "Unsupported inference_mode. Workflow requires "
-            "'precomputed' teacher outputs."
+            "Unsupported inference_mode. Workflow requires " "'precomputed' teacher outputs."
         )
     if config.teacher_outputs_path is None:
         raise ValueError("--teacher-outputs-path is required when inference_mode=precomputed")
@@ -302,8 +301,7 @@ def run_workflow(config: WorkflowConfig) -> dict[str, Any]:
 
     if not approved_reviews_path.exists():
         raise FileNotFoundError(
-            "Approved review dataset not found for gold merge: "
-            f"{approved_reviews_path}"
+            "Approved review dataset not found for gold merge: " f"{approved_reviews_path}"
         )
 
     gold_manifest = build_gold_dataset(

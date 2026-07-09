@@ -351,9 +351,7 @@ class PromptRegistry:
             try:
                 weight = float(weight_raw)
             except (TypeError, ValueError) as exc:
-                raise ValueError(
-                    f"Invalid variant weight for label={label}: {weight_raw}"
-                ) from exc
+                raise ValueError(f"Invalid variant weight for label={label}: {weight_raw}") from exc
             if weight <= 0:
                 raise ValueError(f"Variant weight must be > 0 for label={label}")
 

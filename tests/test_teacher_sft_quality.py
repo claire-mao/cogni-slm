@@ -120,4 +120,3 @@ def test_sft_quality_checks(tmp_path: Path) -> None:
     assert summary.identical_feedback_count >= 2
     assert summary.low_confidence_count >= 1
     assert summary.schema_invalid_count >= 1
-

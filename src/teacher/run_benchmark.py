@@ -64,9 +64,7 @@ def main() -> None:
     output_dir = Path(args.output_root) / run_id
 
     selected_models = tuple(
-        canonical_model_id(item.strip())
-        for item in args.models.split(",")
-        if item.strip()
+        canonical_model_id(item.strip()) for item in args.models.split(",") if item.strip()
     )
     if not selected_models:
         raise ValueError("No models selected.")
@@ -102,4 +100,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

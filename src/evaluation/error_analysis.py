@@ -264,9 +264,7 @@ def _summarize_model(
         ),
         score_severe_error_rate=(
             mean(
-                1.0
-                if row.score_error is not None and row.score_error >= severe_threshold
-                else 0.0
+                1.0 if row.score_error is not None and row.score_error >= severe_threshold else 0.0
                 for row in scored
             )
             if scored
@@ -278,9 +276,7 @@ def _summarize_model(
         hallucination_rate=(
             mean(1.0 if row.hallucination else 0.0 for row in rows) if rows else 0.0
         ),
-        fallacy_miss_rate=(
-            mean(1.0 if row.fallacy_miss else 0.0 for row in rows) if rows else 0.0
-        ),
+        fallacy_miss_rate=(mean(1.0 if row.fallacy_miss else 0.0 for row in rows) if rows else 0.0),
         reasoning_failure_rate=(
             mean(1.0 if row.reasoning_failure else 0.0 for row in rows) if rows else 0.0
         ),
@@ -378,21 +374,25 @@ def render_markdown_report(result: ErrorAnalysisResult) -> str:
     for item in result.model_summaries:
         mae = f"{item.score_mae:.4f}" if item.score_mae is not None else "n/a"
         rmse = f"{item.score_rmse:.4f}" if item.score_rmse is not None else "n/a"
-        lines.append("| " + " | ".join(
-            [
-                item.model_id,
-                str(item.examples_total),
-                str(item.scored_examples),
-                mae,
-                rmse,
-                f"{item.score_exact_match_rate:.4f}",
-                f"{item.score_severe_error_rate:.4f}",
-                f"{item.rubric_failure_rate:.4f}",
-                f"{item.hallucination_rate:.4f}",
-                f"{item.fallacy_miss_rate:.4f}",
-                f"{item.reasoning_failure_rate:.4f}",
-            ]
-        ) + " |")
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    item.model_id,
+                    str(item.examples_total),
+                    str(item.scored_examples),
+                    mae,
+                    rmse,
+                    f"{item.score_exact_match_rate:.4f}",
+                    f"{item.score_severe_error_rate:.4f}",
+                    f"{item.rubric_failure_rate:.4f}",
+                    f"{item.hallucination_rate:.4f}",
+                    f"{item.fallacy_miss_rate:.4f}",
+                    f"{item.reasoning_failure_rate:.4f}",
+                ]
+            )
+            + " |"
+        )
 
     lines.extend(["", "## Score Error Buckets", ""])
     for item in result.model_summaries:
@@ -406,16 +406,13 @@ def render_markdown_report(result: ErrorAnalysisResult) -> str:
             )
         )
         lines.append(
-            "- top_score_error_example_ids: "
-            + ", ".join(item.top_score_error_example_ids)
+            "- top_score_error_example_ids: " + ", ".join(item.top_score_error_example_ids)
         )
         lines.append(
-            "- top_hallucination_example_ids: "
-            + ", ".join(item.top_hallucination_example_ids)
+            "- top_hallucination_example_ids: " + ", ".join(item.top_hallucination_example_ids)
         )
         lines.append(
-            "- top_fallacy_miss_example_ids: "
-            + ", ".join(item.top_fallacy_miss_example_ids)
+            "- top_fallacy_miss_example_ids: " + ", ".join(item.top_fallacy_miss_example_ids)
         )
         lines.append(
             "- top_reasoning_failure_example_ids: "

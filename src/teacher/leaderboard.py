@@ -304,9 +304,7 @@ def _compute_agreement(rows: list[dict[str, Any]]) -> dict[str, float | None]:
                     label_agreement = 1.0 if left_fallacy == right_fallacy else 0.0
 
                 components = [
-                    value
-                    for value in (numeric_agreement, label_agreement)
-                    if value is not None
+                    value for value in (numeric_agreement, label_agreement) if value is not None
                 ]
                 if not components:
                     continue
@@ -314,10 +312,7 @@ def _compute_agreement(rows: list[dict[str, Any]]) -> dict[str, float | None]:
                 per_model_scores.setdefault(left_model, []).append(pair_agreement)
                 per_model_scores.setdefault(right_model, []).append(pair_agreement)
 
-    return {
-        model: (mean(values) if values else None)
-        for model, values in per_model_scores.items()
-    }
+    return {model: (mean(values) if values else None) for model, values in per_model_scores.items()}
 
 
 def _compute_consistency(rows: list[dict[str, Any]]) -> dict[str, float]:
@@ -560,9 +555,7 @@ def compute_leaderboard(
             "cost_efficiency": 0.05,
         }
         weighted_values = [
-            weights[key] * value
-            for key, value in components.items()
-            if value is not None
+            weights[key] * value for key, value in components.items() if value is not None
         ]
         used_weight = sum(weights[key] for key, value in components.items() if value is not None)
         rank_score = sum(weighted_values) / used_weight if used_weight > 0 else 0.0

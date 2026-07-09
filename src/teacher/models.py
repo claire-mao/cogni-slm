@@ -81,7 +81,6 @@ def estimate_cost_usd(model_id: str, input_tokens: int, output_tokens: int) -> f
     if pricing.input_per_million is None or pricing.output_per_million is None:
         return None
 
-    return (
-        (input_tokens / 1_000_000.0) * pricing.input_per_million
-        + (output_tokens / 1_000_000.0) * pricing.output_per_million
-    )
+    return (input_tokens / 1_000_000.0) * pricing.input_per_million + (
+        output_tokens / 1_000_000.0
+    ) * pricing.output_per_million

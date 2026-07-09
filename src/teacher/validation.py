@@ -424,9 +424,7 @@ def validate_prediction(
             check_id="json_validity",
             passed=json_validity,
             message=(
-                "Output is parseable JSON object."
-                if json_validity
-                else "Output is not valid JSON."
+                "Output is parseable JSON object." if json_validity else "Output is not valid JSON."
             ),
         )
     )
@@ -447,9 +445,11 @@ def validate_prediction(
             ValidationFinding(
                 check_id="missing_fields",
                 passed=not missing_fields,
-                message="All required fields present."
-                if not missing_fields
-                else "Missing required fields.",
+                message=(
+                    "All required fields present."
+                    if not missing_fields
+                    else "Missing required fields."
+                ),
                 metadata={"missing_fields": list(missing_fields)},
             )
         )
@@ -459,9 +459,11 @@ def validate_prediction(
             ValidationFinding(
                 check_id="score_range",
                 passed=score_range_valid,
-                message="Score within [0,60] integer range."
-                if score_range_valid
-                else "Score missing or out of range.",
+                message=(
+                    "Score within [0,60] integer range."
+                    if score_range_valid
+                    else "Score missing or out of range."
+                ),
             )
         )
 
@@ -473,9 +475,11 @@ def validate_prediction(
             ValidationFinding(
                 check_id="unsupported_feedback",
                 passed=not unsupported_feedback,
-                message="Feedback appears grounded."
-                if not unsupported_feedback
-                else "Feedback appears weakly grounded or unsupported.",
+                message=(
+                    "Feedback appears grounded."
+                    if not unsupported_feedback
+                    else "Feedback appears weakly grounded or unsupported."
+                ),
             )
         )
 
@@ -484,9 +488,11 @@ def validate_prediction(
             ValidationFinding(
                 check_id="reasoning_completeness",
                 passed=reasoning_completeness >= 0.67,
-                message="Reasoning sections are complete enough."
-                if reasoning_completeness >= 0.67
-                else "Reasoning sections are incomplete.",
+                message=(
+                    "Reasoning sections are complete enough."
+                    if reasoning_completeness >= 0.67
+                    else "Reasoning sections are incomplete."
+                ),
                 metadata={"reasoning_completeness": reasoning_completeness},
             )
         )

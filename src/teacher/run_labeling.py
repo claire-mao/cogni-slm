@@ -199,15 +199,11 @@ def _extract_dataset(path: Path) -> list[DatasetExample]:
 
         prompt = _normalize_text(row.get("prompt") or row.get("prompt_text"))
         essay = _normalize_text(
-            row.get("essay")
-            or row.get("essay_text")
-            or row.get("text")
-            or row.get("input")
+            row.get("essay") or row.get("essay_text") or row.get("text") or row.get("input")
         )
         if not prompt or not essay:
             raise ValueError(
-                "Dataset row missing prompt/essay at "
-                f"{path}:{index} (example_id={example_id})"
+                "Dataset row missing prompt/essay at " f"{path}:{index} (example_id={example_id})"
             )
 
         metadata = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
