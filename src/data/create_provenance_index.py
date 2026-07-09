@@ -18,7 +18,7 @@ import hashlib
 import json
 from collections import Counter
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -132,7 +132,7 @@ def _file_date_or_unknown(path: Path) -> str:
     """Return file mtime date in ISO-8601 date form."""
     if not path.exists():
         return "unknown"
-    dt = datetime.fromtimestamp(path.stat().st_mtime, tz=UTC)
+    dt = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc)
     return dt.date().isoformat()
 
 
