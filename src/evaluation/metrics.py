@@ -8,7 +8,7 @@ from math import comb, sqrt
 from statistics import mean, pstdev
 from typing import Any
 
-from evaluation.benchmark import SplitName
+from .benchmark import SplitName
 
 
 @dataclass(frozen=True)

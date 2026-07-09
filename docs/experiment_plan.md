@@ -65,7 +65,7 @@ A run is considered failed if any are true:
 ## 6. Evaluation Methodology
 
 ### 6.1 Dataset and split policy
-Use the dataset policy already defined in `docs/dataset_spec.md`:
+Use the dataset policy already defined in `docs/datasets/dataset_spec.md`:
 - development splits: `train` 70%, `validation` 15%, `test` 15%
 - strictly isolated held-out benchmark for final comparisons
 - adversarial and non-adversarial strata in each evaluation context where applicable

@@ -19,7 +19,7 @@ Reference runner:
 
 Default command:
 ```bash
-python scripts/run_prompt_test.py
+python scripts/run_prompt_test.py --output-dir outputs/evaluation/prompt_test
 ```
 
 ## Base Model
@@ -100,7 +100,9 @@ Project-level outcome:
 - Otherwise, the run is recorded as baseline evidence that prompting alone is insufficient.
 
 ## Output Artifacts
-The script writes to `outputs/prompt_test/`:
+The script writes to `outputs/evaluation/prompt_test/` when run with `--output-dir outputs/evaluation/prompt_test`:
+- `prompt_test_results.json`: machine-readable baseline verdict and examples
+- `prompt_test_summary.md`: human-readable prompt-test summary
 - `report.md`: human-readable experiment report
 - `summary.json`: machine-readable aggregate metrics and thresholds
 - `raw_predictions.jsonl`: per-example per-run outputs, checks, and judge scores

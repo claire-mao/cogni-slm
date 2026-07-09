@@ -1,0 +1,25 @@
+Evaluate the student essay as an AP Language instructor.
+
+Input prompt:
+{{prompt}}
+
+Student essay:
+{{essay}}
+
+Reference score (for context only):
+{{score}}
+
+Return JSON only with exactly these keys:
+{
+  "reasoning": "string",
+  "feedback": "string",
+  "predicted_score": 0,
+  "confidence": 0.0
+}
+
+Rules:
+- Ground your analysis in the essay text.
+- Do not fabricate evidence.
+- `predicted_score` must be numeric.
+- `confidence` must be numeric in [0.0, 1.0].
+- Keep `feedback` concise and actionable.

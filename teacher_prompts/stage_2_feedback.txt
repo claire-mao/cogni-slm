@@ -1,0 +1,34 @@
+[ROLE]
+{{system_role}}
+
+[STAGE 2: FEEDBACK SYNTHESIS]
+Using the rubric analysis, generate student-facing feedback.
+
+[INPUT]
+Prompt:
+{{prompt}}
+
+Essay:
+{{essay}}
+
+Reference Score:
+{{score}}
+
+Rubric Analysis JSON:
+{{rubric_analysis_json}}
+
+[OUTPUT]
+Return JSON only:
+{
+  "feedback": {
+    "strengths": ["string"],
+    "weaknesses": ["string"],
+    "next_step": "string"
+  },
+  "teacher_reasoning": "string"
+}
+
+[CONSTRAINTS]
+- At least one strength and one weakness.
+- `next_step` must be a single actionable revision.
+- `teacher_reasoning` must justify likely score outcomes.

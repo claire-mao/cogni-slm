@@ -1,7 +1,7 @@
 """Public interfaces for the Cogni evaluation package."""
 
-from evaluation.benchmark import BenchmarkLoader, BenchmarkRecord, JSONLBenchmarkLoader, SplitName
-from evaluation.deterministic_checks import (
+from .benchmark import BenchmarkLoader, BenchmarkRecord, JSONLBenchmarkLoader, SplitName
+from .deterministic_checks import (
     BehaviorId,
     CheckInput,
     CheckResult,
@@ -9,9 +9,17 @@ from evaluation.deterministic_checks import (
     DeterministicCheckSuite,
     ProhibitionId,
 )
-from evaluation.evaluator import ComparisonPayload, EvaluationConfig, EvaluationRunner, ModelAdapter
-from evaluation.llm_judge import DefaultLLMJudge, JudgeInput, JudgeResult, JudgeRubric, LLMJudge
-from evaluation.metrics import (
+from .evaluator import ComparisonPayload, EvaluationConfig, EvaluationRunner, ModelAdapter
+from .judge import (
+    DefaultBehaviorJudge,
+    JudgeBackend,
+    JudgeDimensionScore,
+    JudgeInputRecord,
+    JudgeOutputRecord,
+    ResponseJudge,
+)
+from .llm_judge import DefaultLLMJudge, JudgeInput, JudgeResult, JudgeRubric, LLMJudge
+from .metrics import (
     AggregateMetric,
     ComparisonResult,
     GateOutcome,
@@ -20,7 +28,7 @@ from evaluation.metrics import (
     evaluate_gated_composite,
     paired_model_comparison,
 )
-from evaluation.report import (
+from .report import (
     DefaultReportRenderer,
     EvaluationSummary,
     ExampleTrace,
@@ -46,13 +54,19 @@ __all__ = [
     "ExampleTrace",
     "GateOutcome",
     "JSONLBenchmarkLoader",
+    "JudgeBackend",
+    "JudgeDimensionScore",
+    "JudgeInputRecord",
+    "JudgeOutputRecord",
     "JudgeInput",
     "JudgeResult",
     "JudgeRubric",
     "LLMJudge",
+    "DefaultBehaviorJudge",
     "ModelAdapter",
     "PerExampleMetric",
     "ProhibitionId",
+    "ResponseJudge",
     "ReportRenderer",
     "SplitName",
     "aggregate_metrics",

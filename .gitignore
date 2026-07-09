@@ -16,6 +16,14 @@ env/
 .mypy_cache/
 .ipynb_checkpoints/
 .pre-commit-cache/
+.cache/
+.hf_cache/
+**/.cache/
+datasets/.hf_cache/
+datasets/**/.hf_cache/
+datasets/.hf_validation_artifacts*/
+datasets/hf_validation_artifacts/
+.rebuild_workspace/
 
 # Packaging
 build/
@@ -31,19 +39,47 @@ dist/
 # Local env files
 .env
 .env.*
+!.env.example
+
+# Logs and temp artifacts
+logs/
+*.log
+tmp/
+temp/
 
 # Data artifacts (keep folder structure, ignore contents)
 datasets/raw/*
 !datasets/raw/.gitkeep
+!datasets/raw/README.md
+datasets/private/
 datasets/processed/*
 !datasets/processed/.gitkeep
 !datasets/processed/golden/
 !datasets/processed/golden/**
 datasets/eval/*
 !datasets/eval/.gitkeep
+!datasets/eval/heldout_benchmark.jsonl
+datasets/hf/
+datasets/hf_validation_artifacts/
+datasets/training/
+datasets/training_builder/
+datasets/training_candidates/
+datasets/training_provenance/
+datasets/final/*.jsonl
+datasets/final/dataset_dict/
+datasets/processed/unified/
 
 # Model/output artifacts (keep folder structure, ignore contents)
-models/*
+models/
 !models/.gitkeep
-outputs/*
+!models/**/.gitkeep
+checkpoints/
+adapters/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+outputs/
 !outputs/.gitkeep
+!outputs/**/.gitkeep

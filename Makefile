@@ -1,7 +1,7 @@
 PYTHON ?= python3
 PIP ?= $(PYTHON) -m pip
 
-.PHONY: setup install-dev lint format format-check test ci precommit-install precommit-run clean
+.PHONY: setup install-dev lint format format-check test ci precommit-install precommit-run clean dataset-build dataset-build-dry-run
 
 setup:
 	$(PIP) install --upgrade pip
@@ -36,3 +36,9 @@ clean:
 	find . -type d -name "__pycache__" -prune -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
 	rm -rf .pytest_cache .ruff_cache .mypy_cache .venv build dist *.egg-info
+
+dataset-build:
+	$(PYTHON) scripts/build_dataset.py
+
+dataset-build-dry-run:
+	$(PYTHON) scripts/build_dataset.py --dry-run

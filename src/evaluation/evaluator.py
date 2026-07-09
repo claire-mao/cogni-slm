@@ -10,10 +10,10 @@ from pathlib import Path
 from statistics import mean
 from typing import Any, Protocol
 
-from evaluation.benchmark import BenchmarkLoader, BenchmarkRecord, SplitName
-from evaluation.deterministic_checks import CheckInput, DeterministicCheckSuite
-from evaluation.llm_judge import JudgeInput, JudgeRubric, LLMJudge
-from evaluation.metrics import (
+from .benchmark import BenchmarkLoader, BenchmarkRecord, SplitName
+from .deterministic_checks import CheckInput, DeterministicCheckSuite
+from .llm_judge import JudgeInput, JudgeRubric, LLMJudge
+from .metrics import (
     ComparisonResult,
     GateOutcome,
     PerExampleMetric,
@@ -21,7 +21,7 @@ from evaluation.metrics import (
     evaluate_gated_composite,
     paired_model_comparison,
 )
-from evaluation.report import EvaluationSummary, ExampleTrace, ReportRenderer
+from .report import EvaluationSummary, ExampleTrace, ReportRenderer
 
 
 @dataclass(frozen=True)

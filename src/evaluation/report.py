@@ -7,10 +7,10 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Protocol
 
-from evaluation.benchmark import SplitName
-from evaluation.deterministic_checks import CheckResult
-from evaluation.llm_judge import JudgeResult
-from evaluation.metrics import AggregateMetric, GateOutcome
+from .benchmark import SplitName
+from .deterministic_checks import CheckResult
+from .llm_judge import JudgeResult
+from .metrics import AggregateMetric, GateOutcome
 
 
 @dataclass(frozen=True)

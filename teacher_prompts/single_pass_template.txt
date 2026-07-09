@@ -1,0 +1,44 @@
+[ROLE]
+Use this system role:
+{{system_role}}
+
+[TASK]
+Evaluate the student essay for argumentative quality using rubric-based analysis.
+You are given a reference score. Use it as context, not as an automatic answer.
+If your analysis differs, explain why and set `final_score` accordingly.
+
+[INPUT]
+Prompt:
+{{prompt}}
+
+Essay:
+{{essay}}
+
+Reference Score:
+{{score}}
+
+[OUTPUT RULES]
+- Return valid JSON only.
+- Do not include markdown or extra keys.
+- Follow this exact schema:
+{
+  "teacher_reasoning": "string",
+  "feedback": {
+    "strengths": ["string"],
+    "weaknesses": ["string"],
+    "next_step": "string"
+  },
+  "rubric_analysis": {
+    "claim": "string",
+    "evidence": "string",
+    "commentary": "string",
+    "organization_style": "string"
+  },
+  "final_score": 0
+}
+
+[QUALITY BAR]
+- `teacher_reasoning` must explain score logic with rubric grounding.
+- `feedback.strengths` and `feedback.weaknesses` must each contain at least one item.
+- `feedback.next_step` must be one concrete revision action.
+- `final_score` must be numeric and rubric-consistent.

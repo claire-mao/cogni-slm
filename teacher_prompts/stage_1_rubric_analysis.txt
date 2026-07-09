@@ -1,0 +1,36 @@
+[ROLE]
+{{system_role}}
+
+[STAGE 1: RUBRIC ANALYSIS]
+Analyze the essay against rubric-aligned dimensions.
+
+[INPUT]
+Prompt:
+{{prompt}}
+
+Essay:
+{{essay}}
+
+Reference Score:
+{{score}}
+
+[OUTPUT]
+Return JSON only:
+{
+  "rubric_analysis": {
+    "claim": "string",
+    "evidence": "string",
+    "commentary": "string",
+    "organization_style": "string"
+  },
+  "score_alignment": {
+    "reference_score": 0,
+    "provisional_score": 0,
+    "alignment_note": "string"
+  }
+}
+
+[CONSTRAINTS]
+- No fabricated evidence.
+- Keep analysis concise and text-grounded.
+- `provisional_score` must be numeric.

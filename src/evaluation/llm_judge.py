@@ -7,7 +7,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
-from evaluation.benchmark import BenchmarkRecord, SplitName
+from .benchmark import BenchmarkRecord, SplitName
 
 
 @dataclass(frozen=True)
