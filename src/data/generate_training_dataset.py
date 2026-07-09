@@ -14,11 +14,17 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import math
+import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+SRC_ROOT = Path(__file__).resolve().parents[1]
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from teacher.providers import TeacherExample, canonical_provider_name, create_teacher_provider
 
 DEFAULT_REQUIRED_FIELDS = (
     "id",
@@ -57,12 +63,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--provider",
-        default="mock",
-        help="Provider identifier (e.g. mock/custom).",
+        default="openai",
+        help="Provider identifier (openai|anthropic|gemini|deepseek|openrouter|local_transformers).",
     )
     parser.add_argument(
         "--model",
-        default="teacher-placeholder-v1",
+        default="gpt-5",
         help="Teacher model identifier.",
     )
     parser.add_argument("--batch-size", type=int, default=8, help="Batch size for generation loop.")
@@ -70,11 +76,6 @@ def parse_args() -> argparse.Namespace:
         "--resume",
         action="store_true",
         help="Skip essays with an existing output JSON.",
-    )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Generate deterministic mock outputs without external provider calls.",
     )
     parser.add_argument(
         "--failure-log",
@@ -152,50 +153,102 @@ def build_prompt(teacher_prompt_doc: str, essay: EssayInput) -> str:
     )
 
 
+def _normalize_text(value: Any) -> str:
+    return " ".join(str(value or "").split()).strip()
+
+
+def _first_sentence(text: str) -> str:
+    cleaned = _normalize_text(text)
+    if not cleaned:
+        return ""
+    pieces = [part.strip() for part in cleaned.replace("\n", " ").split(".") if part.strip()]
+    if not pieces:
+        return cleaned
+    return pieces[0] + ("." if not pieces[0].endswith(".") else "")
+
+
+def _derive_rubric_score(value: Any) -> int:
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError):
+        raise ValueError(f"Teacher output missing numeric score: {value!r}") from None
+    if numeric != numeric:  # NaN guard
+        raise ValueError("Teacher output score cannot be NaN.")
+    return int(round(numeric))
+
+
 def call_teacher_provider(
     *,
     prompt: str,
     essay: EssayInput,
-    provider: str,
-    model: str,
-    dry_run: bool,
+    provider_name: str,
+    model_name: str,
+    provider_adapter: Any,
 ) -> dict[str, Any]:
-    """Provider abstraction for teacher generation.
-
-    This function intentionally avoids API-specific hardcoding.
-    Replace the non-mock branch with your provider integration when ready.
-    """
-    if dry_run or provider == "mock":
-        word_count = len(essay.essay_text.split())
-        score = min(6, max(0, math.floor(word_count / 120)))
-        return {
-            "id": essay.essay_id,
-            "essay": essay.essay_text,
-            "rubric_score": int(score),
-            "score_explanation": (
-                "Placeholder teacher output generated in mock mode for pipeline testing."
-            ),
-            "strongest_evidence": "Placeholder strongest evidence.",
-            "weakest_reasoning": "Placeholder weakest reasoning.",
-            "revision": "Add one concrete counterargument and rebuttal with specific evidence.",
-            "teacher_reasoning": (
-                "Mock reasoning used for dry-run/provider-agnostic pipeline tests."
-            ),
-            "metadata": {
-                "teacher_model": model,
-                "rubric_version": "ap_lang_argument_v1",
-                "generated_at": datetime.now(timezone.utc).isoformat(),
-                "source_path": essay.source_path,
-                "placeholder": True,
-                "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
-                "provider": provider,
-            },
-        }
-
-    raise NotImplementedError(
-        "No concrete provider implementation configured. "
-        "Implement provider logic inside call_teacher_provider()."
+    """Call a production provider and map output to training-record schema."""
+    output = provider_adapter.generate(
+        TeacherExample(
+            example_id=essay.essay_id,
+            prompt=prompt,
+            essay=essay.essay_text,
+            score=None,
+            task_id="essay_scoring",
+            metadata={"source_path": essay.source_path},
+        )
     )
+    if not isinstance(output, dict):
+        raise ValueError("Teacher provider returned non-object output.")
+
+    metadata = output.get("metadata") if isinstance(output.get("metadata"), dict) else {}
+    parse_error = _normalize_text(metadata.get("parse_error"))
+    if parse_error:
+        raise ValueError(f"Teacher output is not valid JSON: {parse_error}")
+
+    reasoning = _normalize_text(output.get("reasoning"))
+    rubric_analysis = _normalize_text(output.get("rubric_analysis"))
+    feedback = _normalize_text(output.get("feedback"))
+    if not reasoning:
+        raise ValueError("Teacher output missing reasoning text.")
+    if not rubric_analysis:
+        raise ValueError("Teacher output missing rubric_analysis text.")
+    if not feedback:
+        raise ValueError("Teacher output missing feedback text.")
+
+    rubric_score = _derive_rubric_score(output.get("score"))
+    confidence_value = output.get("confidence")
+    confidence = None
+    if confidence_value is not None:
+        try:
+            confidence = float(confidence_value)
+        except (TypeError, ValueError):
+            confidence = None
+        else:
+            if confidence > 1.0:
+                confidence = confidence / 100.0
+            confidence = max(0.0, min(1.0, confidence))
+
+    return {
+        "id": essay.essay_id,
+        "essay": essay.essay_text,
+        "rubric_score": rubric_score,
+        "score_explanation": rubric_analysis,
+        "strongest_evidence": _first_sentence(rubric_analysis) or rubric_analysis,
+        "weakest_reasoning": _first_sentence(reasoning) or reasoning,
+        "revision": _first_sentence(feedback) or feedback,
+        "teacher_reasoning": reasoning,
+        "metadata": {
+            "teacher_model": model_name,
+            "rubric_version": "ap_lang_argument_v1",
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "source_path": essay.source_path,
+            "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
+            "provider": provider_name,
+            "confidence": confidence,
+            "input_tokens": metadata.get("input_tokens"),
+            "output_tokens": metadata.get("output_tokens"),
+            "latency_ms": metadata.get("latency_ms"),
+        },
+    }
 
 
 def validate_generated_record(record: dict[str, Any]) -> None:
@@ -232,6 +285,16 @@ def main() -> None:
     processed = 0
     skipped = 0
     failed = 0
+    provider_name = canonical_provider_name(str(args.provider))
+    provider_adapter = create_teacher_provider(
+        provider=provider_name,
+        model_name=str(args.model),
+        prompt_template="{{prompt}}",
+        temperature=0.0,
+        seed=42,
+        timeout_seconds=120.0,
+        max_output_tokens=1200,
+    )
 
     for batch_start in range(0, len(essays), args.batch_size):
         batch = essays[batch_start : batch_start + args.batch_size]
@@ -246,9 +309,9 @@ def main() -> None:
                 record = call_teacher_provider(
                     prompt=prompt,
                     essay=essay,
-                    provider=args.provider,
-                    model=args.model,
-                    dry_run=args.dry_run,
+                    provider_name=provider_name,
+                    model_name=str(args.model),
+                    provider_adapter=provider_adapter,
                 )
                 validate_generated_record(record)
                 out_path.write_text(
@@ -263,9 +326,8 @@ def main() -> None:
     summary = {
         "raw_dir": str(raw_dir),
         "output_dir": str(output_dir),
-        "provider": args.provider,
+        "provider": provider_name,
         "model": args.model,
-        "dry_run": args.dry_run,
         "batch_size": args.batch_size,
         "total_essays": len(essays),
         "processed": processed,

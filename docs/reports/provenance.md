@@ -21,9 +21,9 @@
 
 | split | rows |
 |---|---:|
-| test | 8396 |
-| train | 88749 |
-| validation | 46870 |
+| test | 12122 |
+| train | 81300 |
+| validation | 50593 |
 
 ## Counts by Original Dataset
 
@@ -44,9 +44,9 @@
 | final/quality_filtered.jsonl | 32493 | 32493 | yes |
 | final/quality_removed.jsonl | 20895 | 20895 | yes |
 | final/quality_scored.jsonl | 53388 | 53388 | yes |
-| final/test.jsonl | 0 | 0 | yes |
-| final/train.jsonl | 12413 | 12413 | yes |
-| final/validation.jsonl | 0 | 0 | yes |
+| final/test.jsonl | 1242 | 1242 | yes |
+| final/train.jsonl | 9930 | 9930 | yes |
+| final/validation.jsonl | 1241 | 1241 | yes |
 
 ## Preview Rows
 

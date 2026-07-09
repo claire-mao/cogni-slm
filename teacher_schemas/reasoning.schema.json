@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "teacher_schemas/reasoning.schema.json",
+  "title": "Teacher Reasoning Output",
+  "description": "Schema for reasoning and logical_analysis fields aligned with src/teacher/validation.py.",
+  "type": "object",
+  "required": [
+    "reasoning",
+    "logical_analysis"
+  ],
+  "properties": {
+    "reasoning": {
+      "type": "object",
+      "required": [
+        "summary",
+        "steps"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "logical_analysis": {
+      "type": "object",
+      "required": [
+        "claim_quality",
+        "evidence_quality",
+        "coherence",
+        "counterargument_handling",
+        "consistency_checks"
+      ],
+      "properties": {
+        "claim_quality": {
+          "type": "string",
+          "enum": [
+            "strong",
+            "mixed",
+            "weak"
+          ]
+        },
+        "evidence_quality": {
+          "type": "string",
+          "enum": [
+            "strong",
+            "mixed",
+            "weak"
+          ]
+        },
+        "coherence": {
+          "type": "string",
+          "enum": [
+            "strong",
+            "mixed",
+            "weak"
+          ]
+        },
+        "counterargument_handling": {
+          "type": "string",
+          "enum": [
+            "strong",
+            "mixed",
+            "weak",
+            "not_present"
+          ]
+        },
+        "consistency_checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "multipleOf": 0.01
+    },
+    "reasoning_quality_score": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "schema_name",
+        "prompt_version",
+        "model_id",
+        "generated_at_utc"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "teacher_reasoning_v1"
+        },
+        "schema_name": {
+          "type": "string",
+          "const": "reasoning.schema.json"
+        },
+        "prompt_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generated_at_utc": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validation_rules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "json_validity",
+              "missing_fields",
+              "reasoning_completeness",
+              "confidence_calibration"
+            ]
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "x-schema-version": "1.0.0",
+  "x-validator-target": "src/teacher/validation.py::_reasoning_completeness",
+  "x-validation-rules": [
+    "reasoning.summary must be non-empty",
+    "reasoning.steps must include at least 3 non-empty strings",
+    "logical_analysis must include all required fields",
+    "logical_analysis.consistency_checks must include at least one item"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "v1",
+  "phase_id": "phase2_qwen3_8b_scale",
+  "description": "Scale run on Qwen3-8B-Instruct after validated Qwen3-4B pipeline.",
+  "baseline": {
+    "model_id": "Qwen/Qwen3-8B-Instruct",
+    "lora_rank": 16,
+    "lora_alpha": 16,
+    "learning_rate": 0.00015,
+    "num_train_epochs": 2.0,
+    "batch_profile_id": "bsz16",
+    "max_seq_length": 2048,
+    "warmup_ratio": 0.03,
+    "packing": false,
+    "optimizer": "adamw_torch"
+  },
+  "runs": [
+    {
+      "run_id": "p2_qwen3_8b_baseline",
+      "overrides": {}
+    }
+  ],
+  "run_count": 1
+}

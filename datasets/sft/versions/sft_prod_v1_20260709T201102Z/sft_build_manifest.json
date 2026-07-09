@@ -1,0 +1,99 @@
+{
+  "canonical_manifest": {
+    "confidence_threshold": 0.0,
+    "counts": {
+      "after_confidence_filter": 24,
+      "after_quality_filter": 24,
+      "after_schema_validation": 24,
+      "after_validation": 24,
+      "export_test": 0,
+      "export_train": 24,
+      "export_validation": 0,
+      "input_examples": 24,
+      "predictions_available": 24
+    },
+    "inference_mode": "precomputed",
+    "input_jsonl": "outputs/teacher_runs/validated_inputs/validated_teacher_inputs_pilot24.jsonl",
+    "pipeline_order": [
+      "dataset",
+      "teacher_inference",
+      "validation",
+      "quality_filter",
+      "json_schema_validation",
+      "confidence_filter",
+      "dataset_export"
+    ],
+    "predictions_path": "outputs/teacher_runs/validated_inputs/validated_teacher_outputs_gpt5_pilot24.jsonl",
+    "quality_threshold": 0.0,
+    "schema_path": "teacher_prompts/output_schema.json",
+    "teacher_model_id": "gpt-5"
+  },
+  "confidence_threshold": 0.0,
+  "export_formats": [
+    "alpaca",
+    "sharegpt",
+    "chatml",
+    "huggingface"
+  ],
+  "export_summary": {
+    "formats": {
+      "alpaca": {
+        "paths": {
+          "test": "datasets/sft/formats/alpaca/test.jsonl",
+          "train": "datasets/sft/formats/alpaca/train.jsonl",
+          "validation": "datasets/sft/formats/alpaca/validation.jsonl"
+        },
+        "split_counts": {
+          "test": 0,
+          "train": 24,
+          "validation": 0
+        }
+      },
+      "chatml": {
+        "paths": {
+          "test": "datasets/sft/formats/chatml/test.jsonl",
+          "train": "datasets/sft/formats/chatml/train.jsonl",
+          "validation": "datasets/sft/formats/chatml/validation.jsonl"
+        },
+        "split_counts": {
+          "test": 0,
+          "train": 24,
+          "validation": 0
+        }
+      },
+      "huggingface": {
+        "paths": {
+          "test": "datasets/sft/formats/huggingface/test.jsonl",
+          "train": "datasets/sft/formats/huggingface/train.jsonl",
+          "validation": "datasets/sft/formats/huggingface/validation.jsonl"
+        },
+        "split_counts": {
+          "test": 0,
+          "train": 24,
+          "validation": 0
+        }
+      },
+      "sharegpt": {
+        "paths": {
+          "test": "datasets/sft/formats/sharegpt/test.jsonl",
+          "train": "datasets/sft/formats/sharegpt/train.jsonl",
+          "validation": "datasets/sft/formats/sharegpt/validation.jsonl"
+        },
+        "split_counts": {
+          "test": 0,
+          "train": 24,
+          "validation": 0
+        }
+      }
+    }
+  },
+  "inference_mode": "precomputed",
+  "input_jsonl": "outputs/teacher_runs/validated_inputs/validated_teacher_inputs_pilot24.jsonl",
+  "output_root": "datasets/sft",
+  "quality_threshold": 0.0,
+  "schema_path": "teacher_prompts/output_schema.json",
+  "stage": "build_sft_dataset",
+  "strict_source_split": true,
+  "teacher_model_id": "gpt-5",
+  "teacher_outputs_path": "outputs/teacher_runs/validated_inputs/validated_teacher_outputs_gpt5_pilot24.jsonl"
+}

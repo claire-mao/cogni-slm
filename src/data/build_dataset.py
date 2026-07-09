@@ -37,6 +37,9 @@ ENCODING_CANDIDATES = ("utf-8-sig", "cp1252", "latin-1")
 VALID_SPLITS = {"train", "validation", "test"}
 TEXT_FIELDS = ("input", "text", "essay", "argument_text", "student_response", "content")
 SCORE_FIELDS = ("score", "label", "rubric_score", "domain1_score", "holistic_essay_score")
+DEFAULT_TRAIN_RATIO = 0.8
+DEFAULT_VALIDATION_RATIO = 0.1
+DEFAULT_TEST_RATIO = 0.1
 
 LICENSE_FALLBACKS = {
     "asap_aes": "Public competition/research dataset terms (verify official terms)",
@@ -335,7 +338,48 @@ def deduplicate_quality_filtered(
         row["id"] = record_id
         row["_normalized_text"] = text_value
         row["_normalized_score"] = score_value
+        row["_original_split"] = str(row.get("split", "train")).strip().lower()
+        row["_split_hash"] = hashlib.sha256(
+            f"{record_id}\n{normalize_text(text_value).lower()}".encode()
+        ).hexdigest()
         deduped_records.append(row)
+
+    # Deterministically assign train/validation/test on the deduplicated set.
+    # This prevents split collapse caused by cross-split duplicate removal order.
+    ordered_indices = sorted(
+        range(len(deduped_records)),
+        key=lambda i: (
+            str(deduped_records[i].get("_split_hash", "")),
+            str(deduped_records[i].get("id", "")),
+        ),
+    )
+    n = len(ordered_indices)
+    train_count = int(n * DEFAULT_TRAIN_RATIO)
+    validation_count = int(n * DEFAULT_VALIDATION_RATIO)
+    test_count = n - train_count - validation_count
+
+    if n >= 3:
+        train_count = max(train_count, 1)
+        validation_count = max(validation_count, 1)
+        test_count = max(test_count, 1)
+        while train_count + validation_count + test_count > n:
+            if train_count >= validation_count and train_count >= test_count and train_count > 1:
+                train_count -= 1
+            elif validation_count >= test_count and validation_count > 1:
+                validation_count -= 1
+            elif test_count > 1:
+                test_count -= 1
+            else:
+                break
+
+    for rank, row_index in enumerate(ordered_indices):
+        if rank < train_count:
+            assigned_split = "train"
+        elif rank < train_count + validation_count:
+            assigned_split = "validation"
+        else:
+            assigned_split = "test"
+        deduped_records[row_index]["split"] = assigned_split
 
     deduped_output.parent.mkdir(parents=True, exist_ok=True)
     with deduped_output.open("w", encoding="utf-8") as handle:
@@ -343,6 +387,7 @@ def deduplicate_quality_filtered(
             row_copy = dict(row)
             row_copy.pop("_normalized_text", None)
             row_copy.pop("_normalized_score", None)
+            row_copy.pop("_split_hash", None)
             handle.write(json.dumps(row_copy, ensure_ascii=False) + "\n")
 
     final_dir.mkdir(parents=True, exist_ok=True)
@@ -365,8 +410,6 @@ def deduplicate_quality_filtered(
         with merged_all.open("w", encoding="utf-8") as merged:
             for row in deduped_records:
                 split = str(row.get("split", "train")).strip().lower()
-                if split in {"valid", "val", "dev"}:
-                    split = "validation"
                 if split not in VALID_SPLITS:
                     split = "train"
 
@@ -379,6 +422,9 @@ def deduplicate_quality_filtered(
 
                 metadata = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
                 metadata = dict(metadata)
+                original_split = str(row.get("_original_split", "")).strip().lower()
+                if original_split:
+                    metadata.setdefault("original_split", original_split)
 
                 if "license" in row and str(row.get("license", "")).strip():
                     metadata.setdefault("license", str(row.get("license")).strip())
@@ -416,6 +462,10 @@ def deduplicate_quality_filtered(
         f"- Removed duplicate text: `{removed_dup_text}`",
         f"- Skipped invalid rows: `{skipped_invalid}`",
         f"- Final records materialized: `{final_count}`",
+        (
+            "- Split assignment: deterministic hash partition "
+            f"({DEFAULT_TRAIN_RATIO:.1f}/{DEFAULT_VALIDATION_RATIO:.1f}/{DEFAULT_TEST_RATIO:.1f})"
+        ),
         "",
         "## Final Split Counts",
         "",

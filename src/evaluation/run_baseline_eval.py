@@ -11,14 +11,24 @@ from pathlib import Path
 from statistics import mean
 from typing import Any, cast
 
-from evaluation.benchmark import BenchmarkRecord, JSONLBenchmarkLoader
-from evaluation.deterministic_checks import (
-    BehaviorId,
-    CheckInput,
-    DefaultDeterministicCheckSuite,
-    ProhibitionId,
-)
-from evaluation.judge import DefaultBehaviorJudge, JudgeInputRecord
+try:
+    from src.evaluation.benchmark import BenchmarkRecord, JSONLBenchmarkLoader
+    from src.evaluation.deterministic_checks import (
+        BehaviorId,
+        CheckInput,
+        DefaultDeterministicCheckSuite,
+        ProhibitionId,
+    )
+    from src.evaluation.judge import DefaultBehaviorJudge, JudgeInputRecord
+except ImportError:
+    from evaluation.benchmark import BenchmarkRecord, JSONLBenchmarkLoader
+    from evaluation.deterministic_checks import (
+        BehaviorId,
+        CheckInput,
+        DefaultDeterministicCheckSuite,
+        ProhibitionId,
+    )
+    from evaluation.judge import DefaultBehaviorJudge, JudgeInputRecord
 
 SYSTEM_PROMPT = (
     "You are Cogni, an educational logical-fallacy tutor. "

@@ -1,0 +1,23 @@
+{
+  "version": "teacher_rounds_pilot20_v2",
+  "rounds": [
+    {
+      "round_id": "round_1_pilot_live",
+      "description": "Live 20-example pilot across the three production-candidate teachers.",
+      "examples": 20,
+      "models": [
+        "gpt-5",
+        "claude_opus_4x",
+        "deepseek_r1"
+      ],
+      "ensembles": [
+        "single_teacher"
+      ],
+      "exit_criteria": [
+        "json_validity >= 0.98",
+        "all_three_models_complete",
+        "cost_latency_summary_available"
+      ]
+    }
+  ]
+}

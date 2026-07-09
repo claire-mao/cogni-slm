@@ -23,9 +23,9 @@
 
 | split | examples | score_min | score_max | score_mean |
 |---|---:|---:|---:|---:|
-| train | 12413 | 0.0000 | 60.0000 | 7.0524 |
-| validation | 0 | N/A | N/A | N/A |
-| test | 0 | N/A | N/A | N/A |
+| train | 9930 | 0.0000 | 55.0000 | 7.1074 |
+| validation | 1241 | 0.0000 | 60.0000 | 7.1249 |
+| test | 1242 | 0.0000 | 55.0000 | 6.5411 |
 
 ## Output Schema
 
@@ -39,4 +39,4 @@ Provenance is stored separately per split in JSONL files and contains source lin
 ## HF Load Verification
 
 - `datasets.load_from_disk()` status: PASS
-- Message: load_from_disk succeeded with splits: ['train']
+- Message: load_from_disk succeeded with splits: ['test', 'train', 'validation']

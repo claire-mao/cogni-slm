@@ -1,0 +1,90 @@
+{
+  "leaderboard": [
+    {
+      "agreement": 1.0,
+      "consistency": 1.0,
+      "cost_usd": 0.0,
+      "fallacy_f1": null,
+      "hallucination_rate": 0.0,
+      "json_validity": 1.0,
+      "latency_ms": 0.001976158403392349,
+      "mae": 27.0,
+      "model": "qwen3",
+      "qwk": 0.0,
+      "rank": 1,
+      "rank_score": 0.6766233766233766,
+      "responses": 7,
+      "rubric_adherence": 0.1285714285714286
+    },
+    {
+      "agreement": 1.0,
+      "consistency": 1.0,
+      "cost_usd": 0.0,
+      "fallacy_f1": null,
+      "hallucination_rate": 0.0,
+      "json_validity": 1.0,
+      "latency_ms": 0.0020235643855163027,
+      "mae": 27.0,
+      "model": "gemini_2_5_pro",
+      "qwk": 0.0,
+      "rank": 2,
+      "rank_score": 0.6754262340081402,
+      "responses": 7,
+      "rubric_adherence": 0.1285714285714286
+    },
+    {
+      "agreement": 1.0,
+      "consistency": 1.0,
+      "cost_usd": 0.0,
+      "fallacy_f1": null,
+      "hallucination_rate": 0.0,
+      "json_validity": 1.0,
+      "latency_ms": 0.002077423102621521,
+      "mae": 27.0,
+      "model": "deepseek_r1",
+      "qwk": 0.0,
+      "rank": 3,
+      "rank_score": 0.67406614056508,
+      "responses": 7,
+      "rubric_adherence": 0.1285714285714286
+    },
+    {
+      "agreement": 1.0,
+      "consistency": 1.0,
+      "cost_usd": 0.0,
+      "fallacy_f1": null,
+      "hallucination_rate": 0.0,
+      "json_validity": 1.0,
+      "latency_ms": 0.0022201482871813433,
+      "mae": 27.0,
+      "model": "claude_sonnet_4x",
+      "qwk": 0.0,
+      "rank": 4,
+      "rank_score": 0.6704619034403791,
+      "responses": 7,
+      "rubric_adherence": 0.1285714285714286
+    },
+    {
+      "agreement": 1.0,
+      "consistency": 1.0,
+      "cost_usd": 0.0,
+      "fallacy_f1": null,
+      "hallucination_rate": 0.0,
+      "json_validity": 1.0,
+      "latency_ms": 0.004226117328341518,
+      "mae": 27.0,
+      "model": "gpt-5",
+      "qwk": 0.0,
+      "rank": 5,
+      "rank_score": 0.6198051948051949,
+      "responses": 7,
+      "rubric_adherence": 0.1285714285714286
+    }
+  ],
+  "models_ranked": 5,
+  "notes": [
+    "Run `teacher-runs-smoke` is marked dry_run=true."
+  ],
+  "responses_loaded": 35,
+  "runs_scanned": 1
+}

@@ -1,0 +1,24 @@
+{
+  "counts": {
+    "gold_rows_written": 100,
+    "input_rows_seen": 100
+  },
+  "created_at_utc": "2026-07-09T18:54:41.212609Z",
+  "inputs": {
+    "review_forms_path": "datasets/gold/review_package/review_forms.jsonl"
+  },
+  "notes": [
+    "Populated from review package forms for pilot experimentation.",
+    "License field remains unknown and should be finalized before external release."
+  ],
+  "outputs": {
+    "gold_dataset_jsonl": "datasets/gold/v1/gold_dataset.jsonl",
+    "gold_v1_jsonl": "datasets/gold/gold_v1.jsonl"
+  },
+  "schema_version": "gold_dataset_v1_populated",
+  "score_stats": {
+    "max": 50.0,
+    "mean": 8.65,
+    "min": 0.0
+  }
+}

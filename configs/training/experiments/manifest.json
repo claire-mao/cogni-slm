@@ -1,0 +1,41 @@
+{
+  "schema_version": "v1",
+  "created_date": "2026-07-09",
+  "directory": "configs/training/experiments",
+  "files": [
+    {
+      "path": "configs/training/experiments/qlora_matrix_v1.json",
+      "purpose": "Full search space and totals.",
+      "run_count": 13824
+    },
+    {
+      "path": "configs/training/experiments/qlora_phase1_ofat_v1.json",
+      "purpose": "One-factor-at-a-time screening.",
+      "run_count": 20
+    },
+    {
+      "path": "configs/training/experiments/qlora_phase2_interactions_v1.json",
+      "purpose": "Interaction-focused matrix blocks.",
+      "run_count": 264
+    },
+    {
+      "path": "configs/training/experiments/qlora_phase3_full_factorial_v1.json",
+      "purpose": "Exhaustive full-factorial plan and sharding.",
+      "run_count": 13824
+    },
+    {
+      "path": "configs/training/experiments/qlora_phase1_qwen3_4b_v1.json",
+      "purpose": "First production validation run on Qwen3-4B-Instruct.",
+      "run_count": 1
+    },
+    {
+      "path": "configs/training/experiments/qlora_phase2_qwen3_8b_v1.json",
+      "purpose": "Scale run on Qwen3-8B-Instruct after 4B validation.",
+      "run_count": 1
+    }
+  ],
+  "notes": [
+    "Design-only artifacts. No training executed.",
+    "Packing and optimizer are explicit matrix variables."
+  ]
+}

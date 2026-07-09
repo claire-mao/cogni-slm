@@ -1,0 +1,140 @@
+{
+  "schema_version": "v1",
+  "phase_id": "phase3_full_factorial",
+  "description": "Exhaustive full-factorial matrix across all requested QLoRA knobs.",
+  "axes": {
+    "lora_rank": [
+      8,
+      16,
+      32,
+      64
+    ],
+    "learning_rate": [
+      5e-05,
+      0.0001,
+      0.0002,
+      0.0003
+    ],
+    "num_train_epochs": [
+      1.0,
+      2.0,
+      3.0
+    ],
+    "batch_profile_id": [
+      "bsz16",
+      "bsz32",
+      "bsz64"
+    ],
+    "max_seq_length": [
+      1024,
+      1536,
+      2048,
+      3072
+    ],
+    "warmup_ratio": [
+      0.0,
+      0.03,
+      0.06,
+      0.1
+    ],
+    "packing": [
+      false,
+      true
+    ],
+    "optimizer": [
+      "adamw_torch",
+      "adamw_torch_fused",
+      "paged_adamw_8bit"
+    ]
+  },
+  "batch_profile_map": {
+    "bsz16": {
+      "per_device_train_batch_size": 2,
+      "gradient_accumulation_steps": 8,
+      "per_device_eval_batch_size": 2,
+      "effective_batch_size": 16
+    },
+    "bsz32": {
+      "per_device_train_batch_size": 4,
+      "gradient_accumulation_steps": 8,
+      "per_device_eval_batch_size": 4,
+      "effective_batch_size": 32
+    },
+    "bsz64": {
+      "per_device_train_batch_size": 4,
+      "gradient_accumulation_steps": 16,
+      "per_device_eval_batch_size": 4,
+      "effective_batch_size": 64
+    }
+  },
+  "lora_alpha_policy": "match_rank",
+  "counts": {
+    "unique_combinations": 13824,
+    "seed_repeats": [
+      42,
+      314,
+      2718
+    ],
+    "runs_with_repeats": 41472
+  },
+  "sharding_plan": [
+    {
+      "shard_id": "seq1024_packfalse",
+      "max_seq_length": 1024,
+      "packing": false,
+      "combinations": 1728
+    },
+    {
+      "shard_id": "seq1024_packtrue",
+      "max_seq_length": 1024,
+      "packing": true,
+      "combinations": 1728
+    },
+    {
+      "shard_id": "seq1536_packfalse",
+      "max_seq_length": 1536,
+      "packing": false,
+      "combinations": 1728
+    },
+    {
+      "shard_id": "seq1536_packtrue",
+      "max_seq_length": 1536,
+      "packing": true,
+      "combinations": 1728
+    },
+    {
+      "shard_id": "seq2048_packfalse",
+      "max_seq_length": 2048,
+      "packing": false,
+      "combinations": 1728
+    },
+    {
+      "shard_id": "seq2048_packtrue",
+      "max_seq_length": 2048,
+      "packing": true,
+      "combinations": 1728
+    },
+    {
+      "shard_id": "seq3072_packfalse",
+      "max_seq_length": 3072,
+      "packing": false,
+      "combinations": 1728
+    },
+    {
+      "shard_id": "seq3072_packtrue",
+      "max_seq_length": 3072,
+      "packing": true,
+      "combinations": 1728
+    }
+  ],
+  "execution_priority": [
+    "seq1024_packfalse",
+    "seq1536_packfalse",
+    "seq2048_packfalse",
+    "seq1024_packtrue",
+    "seq1536_packtrue",
+    "seq2048_packtrue",
+    "seq3072_packfalse",
+    "seq3072_packtrue"
+  ]
+}

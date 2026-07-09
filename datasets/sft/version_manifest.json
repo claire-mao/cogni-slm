@@ -1,0 +1,31 @@
+{
+  "build_parameters": {
+    "confidence_threshold": 0.0,
+    "formats": [
+      "alpaca",
+      "sharegpt",
+      "chatml",
+      "huggingface"
+    ],
+    "quality_threshold": 0.0,
+    "strict_source_split": true
+  },
+  "counts": {
+    "alpaca_test": 0,
+    "alpaca_train": 24,
+    "alpaca_validation": 0,
+    "canonical_test": 0,
+    "canonical_train": 24,
+    "canonical_validation": 0,
+    "chatml_train": 24,
+    "huggingface_train": 24,
+    "sharegpt_train": 24
+  },
+  "created_at_utc": "2026-07-09T20:13:22.813543+00:00",
+  "source_inputs": {
+    "teacher_inputs": "outputs/teacher_runs/validated_inputs/validated_teacher_inputs_pilot24.jsonl",
+    "teacher_outputs": "outputs/teacher_runs/validated_inputs/validated_teacher_outputs_gpt5_pilot24.jsonl"
+  },
+  "version_id": "sft_prod_v1_20260709T201322Z",
+  "version_path": "datasets/sft/versions/sft_prod_v1_20260709T201322Z"
+}

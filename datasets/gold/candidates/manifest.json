@@ -1,0 +1,90 @@
+{
+  "version": "candidate_gold_v1",
+  "created_at_utc": "2026-07-09T17:28:03.941417+00:00",
+  "seed": 20260709,
+  "input_dataset": "datasets/training",
+  "input_total_examples": 12413,
+  "sample_size": 100,
+  "stratification": {
+    "by_prompt_hard_quota": {
+      "2": 13,
+      "1": 13,
+      "6": 13,
+      "5": 13,
+      "3": 12,
+      "7": 12,
+      "4": 12,
+      "8": 12
+    },
+    "by_score_decile_target": {
+      "0": 10,
+      "1": 10,
+      "2": 10,
+      "3": 10,
+      "4": 10,
+      "5": 10,
+      "6": 10,
+      "7": 10,
+      "8": 10,
+      "9": 10
+    },
+    "by_length_band_target": {
+      "short": 34,
+      "medium": 33,
+      "long": 33
+    },
+    "by_quality_band_target": {
+      "low": 34,
+      "medium": 33,
+      "high": 33
+    }
+  },
+  "selected_distributions": {
+    "prompt_id": {
+      "1": 13,
+      "2": 13,
+      "3": 12,
+      "4": 12,
+      "5": 13,
+      "6": 13,
+      "7": 12,
+      "8": 12
+    },
+    "score_decile": {
+      "0": 10,
+      "1": 10,
+      "2": 10,
+      "3": 9,
+      "4": 10,
+      "5": 9,
+      "6": 10,
+      "7": 10,
+      "8": 11,
+      "9": 11
+    },
+    "length_band": {
+      "short": 34,
+      "medium": 33,
+      "long": 33
+    },
+    "quality_band": {
+      "low": 34,
+      "medium": 33,
+      "high": 33
+    },
+    "score": {
+      "min": 0.0,
+      "max": 50.0,
+      "mean": 8.65
+    },
+    "essay_length": {
+      "min": 40,
+      "max": 921,
+      "mean": 303.9
+    }
+  },
+  "outputs": {
+    "candidate_gold_jsonl": "datasets/gold/candidates/candidate_gold.jsonl",
+    "candidate_gold_sha256": "b741d49588fa63ba811cd9bc059057250cce4c6082da5efd0b1dc3f415677ca0"
+  }
+}

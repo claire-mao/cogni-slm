@@ -1,0 +1,108 @@
+{
+  "manifest_version": "teacher_prompt_manifest_v1",
+  "created_at": "2026-07-09",
+  "prompt_directory": "teacher_prompts",
+  "default_prompt_version": "production_teacher_v1",
+  "deterministic_policy": {
+    "temperature": 0.0,
+    "chain_of_thought_requested": false,
+    "output_mode": "strict_json_only"
+  },
+  "global_constraints": [
+    "No markdown in runtime outputs",
+    "No external facts",
+    "No demographic assumptions",
+    "No invented evidence",
+    "No extra output keys"
+  ],
+  "tasks": [
+    {
+      "task_id": "essay_scoring",
+      "file": "teacher_prompts/essay_scoring.md",
+      "sha256": "f86b2f029b820437e58cdf0f4b2105150f20048232c877b242d90f48788ae940",
+      "required_output_fields": [
+        "score",
+        "score_range_min",
+        "score_range_max",
+        "confidence",
+        "rationale"
+      ]
+    },
+    {
+      "task_id": "rubric_adherence",
+      "file": "teacher_prompts/rubric_scoring.md",
+      "sha256": "60dc6b39b3d7ce8b9be5efab4fe663fec0280fcf0ec56b57598fdaadcce220b9",
+      "required_output_fields": [
+        "criterion_scores",
+        "criterion_evidence",
+        "missing_criteria",
+        "rubric_adherence_confidence"
+      ]
+    },
+    {
+      "task_id": "logical_reasoning",
+      "file": "teacher_prompts/logical_reasoning.md",
+      "sha256": "37c7623d6f09b473b114c0ad07f470df0d07eb89ce2630ca8e40d9a24213fd24",
+      "required_output_fields": [
+        "reasoning_quality_score",
+        "claim_evidence_links",
+        "logic_gaps",
+        "confidence"
+      ]
+    },
+    {
+      "task_id": "argument_quality",
+      "file": "teacher_prompts/argument_quality.md",
+      "sha256": "abeaf8e5c5386215e155b09e76dd3a920bd4db085a2779e2046887467f4413b5",
+      "required_output_fields": [
+        "argument_quality_score",
+        "thesis_assessment",
+        "evidence_assessment",
+        "counterargument_assessment"
+      ]
+    },
+    {
+      "task_id": "logical_fallacy_identification",
+      "file": "teacher_prompts/logical_fallacies.md",
+      "sha256": "12705c0ed072053ecae3ba74561f9908a3c3fac9cdd3865f274ad6fc64f981c8",
+      "required_output_fields": [
+        "fallacy_label",
+        "alternative_labels",
+        "evidence_span",
+        "confidence"
+      ]
+    },
+    {
+      "task_id": "educational_feedback",
+      "file": "teacher_prompts/educational_feedback.md",
+      "sha256": "fb78e136b4a21c9558cd94cfe0cbbf8fb04828d851d8d5cfe16dc4e7a8611643",
+      "required_output_fields": [
+        "strengths",
+        "improvement_priorities",
+        "next_revision_step",
+        "tone_safety_check"
+      ]
+    },
+    {
+      "task_id": "revision_suggestions",
+      "file": "teacher_prompts/revision_suggestions.md",
+      "sha256": "e634c32be3714795dbac355dabe30a94d0ae684a50ce0d4fbf59945187e062e3",
+      "required_output_fields": [
+        "revision_goals",
+        "sentence_level_edits",
+        "structural_edits",
+        "predicted_score_gain"
+      ]
+    }
+  ],
+  "runtime_output_contract": {
+    "top_level_fields": [
+      "example_id",
+      "task_id",
+      "model_id",
+      "output"
+    ],
+    "strict_schema": true
+  },
+  "schema_reference": "teacher_prompts/output_schema.json"
+}

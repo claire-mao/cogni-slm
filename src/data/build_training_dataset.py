@@ -422,16 +422,20 @@ def main() -> None:
     load_message = "unknown"
     try:
         loaded = load_from_disk(str(output_dataset_dir))
-        loaded_splits = sorted(set(loaded.keys()))
-        if "train" not in loaded:
-            load_message = f"missing required train split: {loaded_splits}"
+        required_splits = {"train", "validation", "test"}
+        loaded_splits = set(loaded.keys())
+        if loaded_splits != required_splits:
+            load_message = (
+                f"unexpected splits: expected {sorted(required_splits)}, "
+                f"got {sorted(loaded_splits)}"
+            )
         else:
-            for split in loaded_splits:
+            for split in sorted(loaded_splits):
                 columns = list(loaded[split].column_names)
                 if columns != ["prompt", "essay", "score"]:
                     raise ValueError(f"split {split} columns mismatch: {columns}")
             load_ok = True
-            load_message = f"load_from_disk succeeded with splits: {loaded_splits}"
+            load_message = f"load_from_disk succeeded with splits: {sorted(loaded_splits)}"
     except Exception as exc:  # pragma: no cover
         load_ok = False
         load_message = f"{type(exc).__name__}: {exc}"

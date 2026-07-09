@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "teacher_schemas/rubric.schema.json",
+  "title": "Teacher Rubric Output",
+  "description": "Schema for rubric object aligned with src/teacher/validation.py rubric checks.",
+  "type": "object",
+  "required": [
+    "rubric"
+  ],
+  "properties": {
+    "rubric": {
+      "type": "object",
+      "required": [
+        "criteria",
+        "summary"
+      ],
+      "properties": {
+        "criteria": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": [
+              "criterion",
+              "judgment",
+              "evidence",
+              "impact"
+            ],
+            "properties": {
+              "criterion": {
+                "type": "string",
+                "enum": [
+                  "claim",
+                  "evidence",
+                  "reasoning",
+                  "organization",
+                  "style"
+                ]
+              },
+              "judgment": {
+                "type": "string",
+                "enum": [
+                  "meets",
+                  "partially_meets",
+                  "does_not_meet"
+                ]
+              },
+              "evidence": {
+                "type": "string",
+                "minLength": 1
+              },
+              "impact": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "allOf": [
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "criterion": {
+                    "const": "claim"
+                  }
+                },
+                "required": [
+                  "criterion"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "criterion": {
+                    "const": "evidence"
+                  }
+                },
+                "required": [
+                  "criterion"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "criterion": {
+                    "const": "reasoning"
+                  }
+                },
+                "required": [
+                  "criterion"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "criterion": {
+                    "const": "organization"
+                  }
+                },
+                "required": [
+                  "criterion"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "criterion": {
+                    "const": "style"
+                  }
+                },
+                "required": [
+                  "criterion"
+                ]
+              }
+            }
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "rubric_adherence_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "multipleOf": 0.01,
+      "description": "Optional confidence for rubric-specific judgments."
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "schema_name",
+        "prompt_version",
+        "model_id",
+        "generated_at_utc"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "teacher_rubric_v1"
+        },
+        "schema_name": {
+          "type": "string",
+          "const": "rubric.schema.json"
+        },
+        "prompt_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generated_at_utc": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validation_rules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "json_validity",
+              "missing_fields",
+              "hallucinated_rubric_items"
+            ]
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "x-schema-version": "1.0.0",
+  "x-validator-target": "src/teacher/validation.py::_validate_rubric_items",
+  "x-validation-rules": [
+    "criteria must be exactly the allowed set",
+    "no unknown or duplicate criterion labels",
+    "rubric.summary must be non-empty"
+  ]
+}

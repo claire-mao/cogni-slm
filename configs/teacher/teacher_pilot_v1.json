@@ -1,0 +1,161 @@
+{
+  "version": "teacher_pilot_v1",
+  "created_at": "2026-07-09",
+  "objective": "Pilot teacher validation on 20 examples to compare GPT-5, Claude Opus 4, and DeepSeek R1 before larger rounds.",
+  "status": "design_only",
+  "do_not_execute": true,
+  "inputs": {
+    "dataset_path": "datasets/gold/gold_v1.jsonl",
+    "task_suite_path": "configs/teacher/teacher_task_suite_v1.json",
+    "metrics_reference_path": "configs/teacher/teacher_metrics_v1.json",
+    "models_costs_path": "configs/teacher/teacher_models_costs_v1.json",
+    "prompt_template": "teacher_prompts/production_teacher.txt",
+    "prompt_version": "production_teacher_v1",
+    "schema_path": "teacher_prompts/output_schema.json"
+  },
+  "sampling": {
+    "total_examples": 20,
+    "strategy": "stratified_fixed_quota",
+    "seed": 42,
+    "source_quotas": {
+      "asap": 6,
+      "persuade": 4,
+      "ap_style_writing": 4,
+      "argumentative_essays": 4,
+      "logical_fallacy_examples": 2
+    },
+    "difficulty_target": {
+      "low": 6,
+      "medium": 8,
+      "high": 6
+    },
+    "length_bins": {
+      "short": 5,
+      "medium": 9,
+      "long": 6
+    },
+    "topic_max_share": 0.25
+  },
+  "models": [
+    {
+      "model_id": "gpt-5",
+      "display_name": "GPT-5",
+      "provider": "openai",
+      "role": "teacher"
+    },
+    {
+      "model_id": "claude_opus_4x",
+      "display_name": "Claude Opus 4",
+      "provider": "anthropic",
+      "role": "teacher"
+    },
+    {
+      "model_id": "deepseek_r1",
+      "display_name": "DeepSeek R1",
+      "provider": "deepseek",
+      "role": "teacher"
+    }
+  ],
+  "tasks": [
+    "essay_scoring",
+    "rubric_adherence",
+    "educational_feedback",
+    "logical_reasoning",
+    "argument_quality",
+    "logical_fallacy_identification"
+  ],
+  "run_parameters": {
+    "temperatures": [
+      0.0
+    ],
+    "seeds": [
+      42
+    ],
+    "max_output_tokens": 1200,
+    "timeout_seconds": 120,
+    "strict_json_required": true,
+    "dry_run": false
+  },
+  "metrics": {
+    "primary": [
+      "quadratic_weighted_kappa",
+      "mae",
+      "rubric_adherence",
+      "feedback_quality",
+      "json_validity",
+      "hallucination_rate",
+      "logical_reasoning",
+      "fallacy_detection",
+      "agreement",
+      "cost",
+      "latency"
+    ],
+    "definitions": {
+      "quadratic_weighted_kappa": "QWK between predicted and gold essay scores.",
+      "mae": "Mean absolute error between predicted and gold essay scores.",
+      "rubric_adherence": "Fraction of required rubric criteria correctly addressed with grounded evidence.",
+      "feedback_quality": "Human-rated utility (1-5 normalized) plus grounding checks.",
+      "json_validity": "Valid strict-JSON outputs divided by total outputs.",
+      "hallucination_rate": "Unsupported claims divided by outputs.",
+      "logical_reasoning": "Reasoning completeness and coherence score from required fields.",
+      "fallacy_detection": "Macro F1 across fallacy labels including no-fallacy.",
+      "agreement": "Pairwise inter-model agreement (QWK for score, macro label agreement for fallacy/rubric).",
+      "cost": "Estimated USD from token usage and pricing table.",
+      "latency": "End-to-end response latency in ms; report p50 and p95."
+    }
+  },
+  "evaluation": {
+    "agreement_pairs": [
+      [
+        "gpt-5",
+        "claude_opus_4x"
+      ],
+      [
+        "gpt-5",
+        "deepseek_r1"
+      ],
+      [
+        "claude_opus_4x",
+        "deepseek_r1"
+      ]
+    ],
+    "report_slices": [
+      "overall",
+      "by_source",
+      "by_difficulty",
+      "by_task"
+    ]
+  },
+  "quality_gates": {
+    "json_validity_min": 0.98,
+    "hallucination_rate_max": 0.1,
+    "score_metrics_required": [
+      "quadratic_weighted_kappa",
+      "mae"
+    ],
+    "fallacy_metric_required": "fallacy_detection",
+    "agreement_required": true,
+    "cost_latency_required": true
+  },
+  "outputs": {
+    "run_root": "outputs/teacher_runs/teacher_pilot_v1",
+    "responses_path": "outputs/teacher_runs/teacher_pilot_v1/responses.jsonl",
+    "summary_path": "outputs/teacher_runs/teacher_pilot_v1/summary.json",
+    "validation_path": "outputs/teacher_runs/teacher_pilot_v1/validation/teacher_validation_summary.json",
+    "report_path": "docs/reports/teacher_pilot_plan.md"
+  },
+  "request_volume_estimate": {
+    "model_count": 3,
+    "task_count": 6,
+    "example_count": 20,
+    "seed_count": 1,
+    "temperature_count": 1,
+    "estimated_requests_total": 360
+  },
+  "guardrails": {
+    "allow_dataset_modification": false,
+    "allow_label_generation": false,
+    "allow_training": false,
+    "allow_inference_execution_in_this_step": false
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "teacher_schemas/feedback.schema.json",
+  "title": "Teacher Feedback Output",
+  "description": "Schema for feedback object aligned with src/teacher/validation.py feedback checks.",
+  "type": "object",
+  "required": [
+    "feedback"
+  ],
+  "properties": {
+    "feedback": {
+      "type": "object",
+      "required": [
+        "strengths",
+        "priorities",
+        "student_facing_summary"
+      ],
+      "properties": {
+        "strengths": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "priorities": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "student_facing_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tone_safety_check": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "fail"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "multipleOf": 0.01
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "schema_name",
+        "prompt_version",
+        "model_id",
+        "generated_at_utc"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "teacher_feedback_v1"
+        },
+        "schema_name": {
+          "type": "string",
+          "const": "feedback.schema.json"
+        },
+        "prompt_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generated_at_utc": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validation_rules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "json_validity",
+              "missing_fields",
+              "unsupported_feedback"
+            ]
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "x-schema-version": "1.0.0",
+  "x-validator-target": "src/teacher/validation.py::_feedback_text + _is_unsupported_feedback",
+  "x-validation-rules": [
+    "feedback fields must be non-empty",
+    "content must avoid unsupported-pattern triggers",
+    "confidence must be numeric in [0,1] when provided"
+  ]
+}

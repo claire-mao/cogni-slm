@@ -1,0 +1,87 @@
+{
+  "dataset_root": "datasets/sft",
+  "files": {
+    "build_report.md": {
+      "bytes": 1638,
+      "non_empty_lines": 40,
+      "sha256": "3c8f84b06b81c49e83d912702187362f5ed8939f0307fcea14c4e60291e1bf77"
+    },
+    "formats/alpaca/test.jsonl": {
+      "bytes": 0,
+      "non_empty_lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "formats/alpaca/train.jsonl": {
+      "bytes": 111365,
+      "non_empty_lines": 24,
+      "sha256": "aa001dafcd0ccc11715d673519c3431543361f9249a57d6632e2f4ab9e277790"
+    },
+    "formats/alpaca/validation.jsonl": {
+      "bytes": 0,
+      "non_empty_lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "formats/chatml/test.jsonl": {
+      "bytes": 0,
+      "non_empty_lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "formats/chatml/train.jsonl": {
+      "bytes": 113141,
+      "non_empty_lines": 24,
+      "sha256": "027109157991dd2de8ee4312b48cd49bed5a675e56040f1b223eccd20ab429b1"
+    },
+    "formats/chatml/validation.jsonl": {
+      "bytes": 0,
+      "non_empty_lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "formats/huggingface/test.jsonl": {
+      "bytes": 0,
+      "non_empty_lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "formats/huggingface/train.jsonl": {
+      "bytes": 317035,
+      "non_empty_lines": 24,
+      "sha256": "78f9fd4325eaf40ee6dde5e73e6bf183d727acc724fa42303762c705397b7083"
+    },
+    "formats/huggingface/validation.jsonl": {
+      "bytes": 0,
+      "non_empty_lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "formats/sharegpt/test.jsonl": {
+      "bytes": 0,
+      "non_empty_lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "formats/sharegpt/train.jsonl": {
+      "bytes": 112829,
+      "non_empty_lines": 24,
+      "sha256": "a62e33fdb99ee40dffb283f855aa64c781323b220db136baac5c84d979ef6ee0"
+    },
+    "formats/sharegpt/validation.jsonl": {
+      "bytes": 0,
+      "non_empty_lines": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "manifest.json": {
+      "bytes": 851,
+      "non_empty_lines": 29,
+      "sha256": "a6817a309a5369de9c153f280a9fbb5366d7f2a42e70bfc0eba8694b47a50f40"
+    },
+    "sft_build_manifest.json": {
+      "bytes": 3010,
+      "non_empty_lines": 99,
+      "sha256": "d20d75c6e0222af7abfd9f1c9ac0837c3c59d14c6e1383a565cba1d9fd2830ca"
+    },
+    "train/data.jsonl": {
+      "bytes": 110693,
+      "non_empty_lines": 24,
+      "sha256": "e029766998f9dbd6074fcb053eccd7799d66ea7f3331ee5de46a85e7780838e2"
+    }
+  },
+  "generated_at_utc": "2026-07-09T20:13:22.810698+00:00",
+  "version_id": "sft_prod_v1_20260709T201322Z"
+}

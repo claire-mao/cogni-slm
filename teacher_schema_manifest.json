@@ -1,0 +1,179 @@
+{
+  "manifest_version": "teacher_schema_manifest_v1",
+  "created_at": "2026-07-09",
+  "schema_root": "teacher_schemas",
+  "validator_reference": "src/teacher/validation.py",
+  "validator_required_structure_keys": [
+    "score",
+    "confidence",
+    "rubric",
+    "reasoning",
+    "logical_analysis",
+    "fallacies",
+    "feedback",
+    "revision_plan"
+  ],
+  "global_validation_rules": [
+    "json_validity",
+    "missing_fields",
+    "score_range",
+    "hallucinated_rubric_items",
+    "unsupported_feedback",
+    "reasoning_completeness",
+    "confidence_calibration"
+  ],
+  "confidence_format": {
+    "type": "number",
+    "minimum": 0,
+    "maximum": 1,
+    "multiple_of": 0.01
+  },
+  "score_ranges": {
+    "essay_score": {
+      "minimum": 0,
+      "maximum": 60
+    },
+    "reasoning_quality_score": {
+      "minimum": 1,
+      "maximum": 5
+    },
+    "predicted_score_gain": {
+      "minimum": -10,
+      "maximum": 20
+    }
+  },
+  "schemas": [
+    {
+      "name": "essay_score",
+      "path": "teacher_schemas/essay_score.schema.json",
+      "sha256": "356658e4d46d54028c9cb300417c94087befa0c3db700a6f9ee0b583c9cc0910",
+      "schema_version": "teacher_essay_score_v1",
+      "required_fields": [
+        "score",
+        "confidence"
+      ],
+      "enum_fields": [],
+      "validator_checks": [
+        "missing_fields",
+        "score_range",
+        "confidence_calibration"
+      ]
+    },
+    {
+      "name": "rubric",
+      "path": "teacher_schemas/rubric.schema.json",
+      "sha256": "a2d7650c21de7614661f931903753977bda3f6dfbf2856a347a754a5936a7f67",
+      "schema_version": "teacher_rubric_v1",
+      "required_fields": [
+        "rubric",
+        "rubric.criteria",
+        "rubric.summary"
+      ],
+      "enum_fields": [
+        "rubric.criteria[].criterion",
+        "rubric.criteria[].judgment"
+      ],
+      "validator_checks": [
+        "missing_fields",
+        "hallucinated_rubric_items"
+      ]
+    },
+    {
+      "name": "feedback",
+      "path": "teacher_schemas/feedback.schema.json",
+      "sha256": "dda2bd71079aaf5318bf69f297fcf4047efac7fb716859ac027093c4f258e0cc",
+      "schema_version": "teacher_feedback_v1",
+      "required_fields": [
+        "feedback",
+        "feedback.strengths",
+        "feedback.priorities",
+        "feedback.student_facing_summary"
+      ],
+      "enum_fields": [
+        "feedback.tone_safety_check"
+      ],
+      "validator_checks": [
+        "missing_fields",
+        "unsupported_feedback"
+      ]
+    },
+    {
+      "name": "reasoning",
+      "path": "teacher_schemas/reasoning.schema.json",
+      "sha256": "f08654bb614437ed160cd5157a7bcf6a5652446a5c671067900fdce358ce40e3",
+      "schema_version": "teacher_reasoning_v1",
+      "required_fields": [
+        "reasoning",
+        "reasoning.summary",
+        "reasoning.steps",
+        "logical_analysis",
+        "logical_analysis.claim_quality",
+        "logical_analysis.evidence_quality",
+        "logical_analysis.coherence",
+        "logical_analysis.counterargument_handling",
+        "logical_analysis.consistency_checks"
+      ],
+      "enum_fields": [
+        "logical_analysis.claim_quality",
+        "logical_analysis.evidence_quality",
+        "logical_analysis.coherence",
+        "logical_analysis.counterargument_handling"
+      ],
+      "validator_checks": [
+        "missing_fields",
+        "reasoning_completeness",
+        "confidence_calibration"
+      ]
+    },
+    {
+      "name": "fallacies",
+      "path": "teacher_schemas/fallacies.schema.json",
+      "sha256": "4768f7f33d5d8a68175ccbffe728b3b4621c17fea7c9c70878bbb8210ba241fd",
+      "schema_version": "teacher_fallacies_v1",
+      "required_fields": [
+        "fallacies",
+        "fallacies.detected",
+        "fallacies.primary",
+        "fallacies.secondary",
+        "fallacies.evidence",
+        "fallacies.severity"
+      ],
+      "enum_fields": [
+        "fallacies.primary",
+        "fallacies.secondary[]",
+        "fallacies.severity"
+      ],
+      "validator_checks": [
+        "missing_fields",
+        "confidence_calibration"
+      ]
+    },
+    {
+      "name": "revision",
+      "path": "teacher_schemas/revision.schema.json",
+      "sha256": "c4153b5aad599beb26cccbca73a95228ab76fae3b165e3457644eea282154eca",
+      "schema_version": "teacher_revision_v1",
+      "required_fields": [
+        "revision_plan",
+        "revision_plan.goal",
+        "revision_plan.actions",
+        "revision_plan.expected_impact"
+      ],
+      "enum_fields": [],
+      "validator_checks": [
+        "missing_fields"
+      ]
+    }
+  ],
+  "metadata_contract": {
+    "field": "metadata",
+    "required_metadata_keys": [
+      "schema_version",
+      "schema_name",
+      "prompt_version",
+      "model_id",
+      "generated_at_utc"
+    ],
+    "note": "Defined in every schema; optional at payload root for backward compatibility with current validator inputs."
+  }
+}

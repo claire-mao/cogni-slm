@@ -1,0 +1,86 @@
+{
+  "version": "teacher_rounds_v1",
+  "rounds": [
+    {
+      "round_id": "round_1_pilot",
+      "description": "Small pilot to validate protocol, schema, and judge reliability.",
+      "examples": 24,
+      "models": [
+        "gpt-5",
+        "claude_sonnet_4x",
+        "gemini_2_5_pro",
+        "deepseek_r1",
+        "qwen3"
+      ],
+      "ensembles": [
+        "single_teacher",
+        "teacher_plus_local_checker"
+      ],
+      "exit_criteria": [
+        "json_validity >= 0.98",
+        "annotation_process_complete",
+        "all_metrics_computable"
+      ]
+    },
+    {
+      "round_id": "round_2_gold100",
+      "description": "Full gold-set evaluation across all candidate teachers and ensemble strategies.",
+      "examples": 100,
+      "models": [
+        "gpt-5",
+        "o3",
+        "claude_opus_4x",
+        "claude_sonnet_4x",
+        "gemini_2_5_pro",
+        "deepseek_r1",
+        "qwen3",
+        "llama4_maverick"
+      ],
+      "ensembles": [
+        "single_teacher",
+        "majority_vote",
+        "score_averaging",
+        "teacher_judge_pipeline",
+        "teacher_plus_verifier",
+        "teacher_plus_local_checker"
+      ],
+      "exit_criteria": [
+        "repeatability_tests_complete",
+        "top_3_set_identified",
+        "cost_runtime_summary_complete"
+      ]
+    },
+    {
+      "round_id": "round_3_scale1000",
+      "description": "Scale test on 1,000 examples using top 3 single models and top 2 ensembles only.",
+      "examples": 1000,
+      "models": [
+        "top3_from_round2"
+      ],
+      "ensembles": [
+        "top2_from_round2"
+      ],
+      "exit_criteria": [
+        "quality_within_2_percent_of_round2",
+        "throughput_targets_met",
+        "hallucination_rate_not_worse_than_round2_by_more_than_1_percent"
+      ]
+    },
+    {
+      "round_id": "round_4_full_dataset_shadow",
+      "description": "Shadow evaluation on full dataset with selected winner, no label write-back.",
+      "examples": "full_dataset",
+      "models": [
+        "winner_from_round3"
+      ],
+      "ensembles": [
+        "winner_from_round3_if_ensemble"
+      ],
+      "exit_criteria": [
+        "production_readiness_checklist_passed",
+        "budget_and_latency_within_operational_limits",
+        "explicit_signoff_before_any_labeling"
+      ]
+    }
+  ]
+}

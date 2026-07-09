@@ -1,0 +1,115 @@
+{
+  "version": "teacher_ensembles_v1",
+  "strategies": [
+    {
+      "strategy_id": "single_teacher",
+      "description": "One model handles all tasks.",
+      "aggregation": "none"
+    },
+    {
+      "strategy_id": "majority_vote",
+      "description": "Discrete outputs use majority vote across 3 teachers.",
+      "aggregation": "mode",
+      "tie_breaker": "highest_calibrated_confidence"
+    },
+    {
+      "strategy_id": "score_averaging",
+      "description": "Numeric outputs aggregated via weighted mean across 3 teachers.",
+      "aggregation": "weighted_mean",
+      "weights_source": "round2_validation_scorecard"
+    },
+    {
+      "strategy_id": "teacher_judge_pipeline",
+      "description": "Primary teacher proposes output, independent judge scores adherence and requests repair if below threshold.",
+      "aggregation": "judge_gate_then_repair",
+      "gate_thresholds": {
+        "rubric_adherence_min": 0.85,
+        "json_validity_required": true,
+        "hallucination_rate_max": 0.05
+      }
+    },
+    {
+      "strategy_id": "teacher_plus_verifier",
+      "description": "Primary teacher output validated by verifier model focused on factual/rubric consistency.",
+      "aggregation": "verify_then_accept_or_rewrite",
+      "verifier_actions": [
+        "accept",
+        "minor_fix",
+        "reject_and_regenerate"
+      ]
+    },
+    {
+      "strategy_id": "teacher_plus_local_checker",
+      "description": "API teacher paired with deterministic local checker for schema, score-range, and citation-evidence checks.",
+      "aggregation": "rule_guardrails",
+      "local_checks": [
+        "json_schema_validation",
+        "score_range_validation",
+        "required_field_presence",
+        "evidence_span_presence"
+      ]
+    }
+  ],
+  "planned_comparisons": {
+    "single_teacher_candidates": [
+      "gpt-5",
+      "o3",
+      "claude_opus_4x",
+      "claude_sonnet_4x",
+      "gemini_2_5_pro",
+      "deepseek_r1",
+      "qwen3",
+      "llama4_maverick"
+    ],
+    "three_teacher_majority_vote_triplets": [
+      [
+        "gpt-5",
+        "claude_sonnet_4x",
+        "gemini_2_5_pro"
+      ],
+      [
+        "gpt-5",
+        "deepseek_r1",
+        "qwen3"
+      ],
+      [
+        "claude_opus_4x",
+        "gemini_2_5_pro",
+        "deepseek_r1"
+      ]
+    ],
+    "teacher_judge_pairs": [
+      {
+        "teacher": "claude_sonnet_4x",
+        "judge": "gpt-5"
+      },
+      {
+        "teacher": "gpt-5",
+        "judge": "claude_opus_4x"
+      },
+      {
+        "teacher": "deepseek_r1",
+        "judge": "gpt-5"
+      }
+    ],
+    "teacher_verifier_pairs": [
+      {
+        "teacher": "gemini_2_5_pro",
+        "verifier": "claude_sonnet_4x"
+      },
+      {
+        "teacher": "gpt-5",
+        "verifier": "qwen3"
+      },
+      {
+        "teacher": "claude_opus_4x",
+        "verifier": "deepseek_r1"
+      }
+    ]
+  },
+  "selection_rule": {
+    "primary": "maximize_weighted_scorecard",
+    "secondary": "minimize_cost_given_quality_within_1_percent_of_best",
+    "stability_requirement": "must_pass_repeatability_hard_gates"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "teacher_schemas/revision.schema.json",
+  "title": "Teacher Revision Plan Output",
+  "description": "Schema for revision_plan output aligned with src/teacher/validation.py.",
+  "type": "object",
+  "required": [
+    "revision_plan"
+  ],
+  "properties": {
+    "revision_plan": {
+      "type": "object",
+      "required": [
+        "goal",
+        "actions",
+        "expected_impact"
+      ],
+      "properties": {
+        "goal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actions": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "expected_impact": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "predicted_score_gain": {
+      "type": "integer",
+      "minimum": -10,
+      "maximum": 20,
+      "description": "Optional score delta estimate for revision planning."
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "multipleOf": 0.01
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "schema_name",
+        "prompt_version",
+        "model_id",
+        "generated_at_utc"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "teacher_revision_v1"
+        },
+        "schema_name": {
+          "type": "string",
+          "const": "revision.schema.json"
+        },
+        "prompt_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generated_at_utc": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validation_rules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "json_validity",
+              "missing_fields"
+            ]
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "x-schema-version": "1.0.0",
+  "x-validator-target": "src/teacher/validation.py::REQUIRED_STRUCTURE(revision_plan)",
+  "x-validation-rules": [
+    "revision_plan.goal must be non-empty",
+    "revision_plan.actions must contain at least 3 items",
+    "revision_plan.expected_impact must be non-empty",
+    "confidence must be numeric in [0,1] when provided"
+  ]
+}

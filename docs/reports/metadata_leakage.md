@@ -9,9 +9,9 @@
 
 | split | rows | columns | only_prompt_essay_score |
 |---|---:|---|---|
-| train | 12413 | `['prompt', 'essay', 'score']` | PASS |
-| validation | 0 | missing | SKIP |
-| test | 0 | missing | SKIP |
+| train | 9930 | `['prompt', 'essay', 'score']` | PASS |
+| validation | 1241 | `['prompt', 'essay', 'score']` | PASS |
+| test | 1242 | `['prompt', 'essay', 'score']` | PASS |
 
 ## Provenance Key Audit
 
@@ -21,6 +21,3 @@
 ## Verdict
 
 - Status: **PASS**
-- Warnings:
-  - Missing split: validation
-  - Missing split: test

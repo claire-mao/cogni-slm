@@ -6,14 +6,15 @@
 - Removed duplicate text: `8`
 - Skipped invalid rows: `7837`
 - Final records materialized: `12413`
+- Split assignment: deterministic hash partition (0.8/0.1/0.1)
 
 ## Final Split Counts
 
 | split | records |
 |---|---:|
-| train | 12413 |
-| validation | 0 |
-| test | 0 |
+| train | 9930 |
+| validation | 1241 |
+| test | 1242 |
 
 ## Label Summary
 

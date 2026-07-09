@@ -1,0 +1,94 @@
+{
+  "version": "teacher_task_suite_v1",
+  "task_count": 7,
+  "tasks": [
+    {
+      "task_id": "essay_scoring",
+      "description": "Predict holistic score from prompt + essay using rubric-constrained reasoning.",
+      "required_output_fields": [
+        "score",
+        "score_range_min",
+        "score_range_max",
+        "confidence",
+        "rationale"
+      ],
+      "scoring_mode": "ordinal"
+    },
+    {
+      "task_id": "rubric_adherence",
+      "description": "Assess rubric criterion coverage and cite evidence spans from essay.",
+      "required_output_fields": [
+        "criterion_scores",
+        "criterion_evidence",
+        "missing_criteria",
+        "rubric_adherence_confidence"
+      ],
+      "scoring_mode": "analytic_rubric"
+    },
+    {
+      "task_id": "educational_feedback",
+      "description": "Produce actionable student-facing feedback with strengths and next steps.",
+      "required_output_fields": [
+        "strengths",
+        "improvement_priorities",
+        "next_revision_step",
+        "tone_safety_check"
+      ],
+      "scoring_mode": "quality_judged"
+    },
+    {
+      "task_id": "logical_reasoning",
+      "description": "Evaluate internal logic quality of the essay's claims and support.",
+      "required_output_fields": [
+        "reasoning_quality_score",
+        "claim_evidence_links",
+        "logic_gaps",
+        "confidence"
+      ],
+      "scoring_mode": "ordinal"
+    },
+    {
+      "task_id": "argument_quality",
+      "description": "Score thesis clarity, evidence sufficiency, and counterargument handling.",
+      "required_output_fields": [
+        "argument_quality_score",
+        "thesis_assessment",
+        "evidence_assessment",
+        "counterargument_assessment"
+      ],
+      "scoring_mode": "analytic_rubric"
+    },
+    {
+      "task_id": "logical_fallacy_identification",
+      "description": "Detect primary fallacy (or no-fallacy) and justify with brief evidence.",
+      "required_output_fields": [
+        "fallacy_label",
+        "alternative_labels",
+        "evidence_span",
+        "confidence"
+      ],
+      "scoring_mode": "classification"
+    },
+    {
+      "task_id": "revision_suggestions",
+      "description": "Generate high-utility revision suggestions aligned to rubric deficits.",
+      "required_output_fields": [
+        "revision_goals",
+        "sentence_level_edits",
+        "structural_edits",
+        "predicted_score_gain"
+      ],
+      "scoring_mode": "quality_judged"
+    }
+  ],
+  "serialization_contract": {
+    "format": "json",
+    "strict_schema": true,
+    "json_top_level_fields": [
+      "example_id",
+      "task_id",
+      "model_id",
+      "output"
+    ]
+  }
+}

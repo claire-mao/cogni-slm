@@ -1,0 +1,90 @@
+{
+  "schema_version": "v1",
+  "matrix_id": "qlora_complete_v1",
+  "created_date": "2026-07-09",
+  "base_config_path": "configs/training/qlora_default.json",
+  "objective": "Design a complete QLoRA experiment matrix before any training runs.",
+  "comparison_axes": {
+    "lora_rank": [
+      8,
+      16,
+      32,
+      64
+    ],
+    "learning_rate": [
+      5e-05,
+      0.0001,
+      0.0002,
+      0.0003
+    ],
+    "num_train_epochs": [
+      1.0,
+      2.0,
+      3.0
+    ],
+    "batch_profiles": [
+      {
+        "batch_profile_id": "bsz16",
+        "per_device_train_batch_size": 2,
+        "gradient_accumulation_steps": 8,
+        "per_device_eval_batch_size": 2,
+        "effective_batch_size": 16
+      },
+      {
+        "batch_profile_id": "bsz32",
+        "per_device_train_batch_size": 4,
+        "gradient_accumulation_steps": 8,
+        "per_device_eval_batch_size": 4,
+        "effective_batch_size": 32
+      },
+      {
+        "batch_profile_id": "bsz64",
+        "per_device_train_batch_size": 4,
+        "gradient_accumulation_steps": 16,
+        "per_device_eval_batch_size": 4,
+        "effective_batch_size": 64
+      }
+    ],
+    "max_seq_length": [
+      1024,
+      1536,
+      2048,
+      3072
+    ],
+    "warmup_ratio": [
+      0.0,
+      0.03,
+      0.06,
+      0.1
+    ],
+    "packing": [
+      false,
+      true
+    ],
+    "optimizer": [
+      "adamw_torch",
+      "adamw_torch_fused",
+      "paged_adamw_8bit"
+    ]
+  },
+  "policies": {
+    "lora_alpha_policy": "match_rank",
+    "lora_dropout": 0.0,
+    "weight_decay": 0.0,
+    "lr_scheduler_type": "cosine",
+    "seed_candidates": [
+      42,
+      314,
+      2718
+    ]
+  },
+  "full_factorial": {
+    "expression": "4 * 4 * 3 * 3 * 4 * 4 * 2 * 3",
+    "total_unique_combinations": 13824,
+    "with_three_seeds": 41472
+  },
+  "notes": [
+    "This file defines the complete matrix only; it does not execute training.",
+    "Packing and optimizer are included as experiment knobs for comparison planning."
+  ]
+}

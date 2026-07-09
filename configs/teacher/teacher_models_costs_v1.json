@@ -1,0 +1,288 @@
+{
+  "version": "teacher_models_costs_v1",
+  "cost_assumptions": {
+    "evaluation_examples": 100,
+    "tasks_per_example": 7,
+    "base_input_tokens_per_example": 5700,
+    "base_output_tokens_per_example": 1320,
+    "requests_per_run": 700,
+    "repeatability_runs": 5,
+    "planning_concurrency": 10,
+    "notes": "Costs are planning estimates from published pricing in existing reports; runtime/throughput are expected ranges, not measured benchmarks."
+  },
+  "models": [
+    {
+      "model_id": "gpt-5",
+      "display_name": "GPT-5",
+      "api_availability": "openai_api",
+      "local_availability": false,
+      "open_weights": false,
+      "rate_limits": {
+        "tier1_rpm": 500,
+        "tier1_tpm": 500000
+      },
+      "pricing_usd_per_million_tokens": {
+        "input": 1.25,
+        "output": 10.0
+      },
+      "token_multiplier": 1.0,
+      "estimated_tokens": {
+        "input_100_examples_one_run": 570000,
+        "output_100_examples_one_run": 132000,
+        "input_100_examples_five_runs": 2850000,
+        "output_100_examples_five_runs": 660000
+      },
+      "estimated_cost_usd": {
+        "one_run_100_examples": 2.03,
+        "five_runs_100_examples": 10.16
+      },
+      "estimated_latency_seconds_p50": 12.0,
+      "estimated_throughput_requests_per_minute": 50.0,
+      "estimated_runtime_minutes": {
+        "one_run_100_examples": 14.0,
+        "five_runs_100_examples": 70.0
+      }
+    },
+    {
+      "model_id": "o3",
+      "display_name": "o3",
+      "api_availability": "openai_api",
+      "local_availability": false,
+      "open_weights": false,
+      "rate_limits": {
+        "tier1_rpm": 500,
+        "tier1_tpm": 30000
+      },
+      "pricing_usd_per_million_tokens": {
+        "input": 2.0,
+        "output": 8.0
+      },
+      "token_multiplier": 1.1,
+      "estimated_tokens": {
+        "input_100_examples_one_run": 570000,
+        "output_100_examples_one_run": 145200,
+        "input_100_examples_five_runs": 2850000,
+        "output_100_examples_five_runs": 726000
+      },
+      "estimated_cost_usd": {
+        "one_run_100_examples": 2.3,
+        "five_runs_100_examples": 11.51
+      },
+      "estimated_latency_seconds_p50": 16.0,
+      "estimated_throughput_requests_per_minute": 37.5,
+      "estimated_runtime_minutes": {
+        "one_run_100_examples": 18.67,
+        "five_runs_100_examples": 93.33
+      }
+    },
+    {
+      "model_id": "claude_opus_4x",
+      "display_name": "Claude Opus 4",
+      "api_availability": "anthropic_api_and_partner_clouds",
+      "local_availability": false,
+      "open_weights": false,
+      "rate_limits": {
+        "start_tier_rpm": 1000,
+        "start_tier_itpm": 2000000,
+        "start_tier_otpm": 400000
+      },
+      "pricing_usd_per_million_tokens": {
+        "input": 15.0,
+        "output": 75.0
+      },
+      "token_multiplier": 1.05,
+      "estimated_tokens": {
+        "input_100_examples_one_run": 570000,
+        "output_100_examples_one_run": 138600,
+        "input_100_examples_five_runs": 2850000,
+        "output_100_examples_five_runs": 693000
+      },
+      "estimated_cost_usd": {
+        "one_run_100_examples": 18.95,
+        "five_runs_100_examples": 94.73
+      },
+      "estimated_latency_seconds_p50": 14.0,
+      "estimated_throughput_requests_per_minute": 42.86,
+      "estimated_runtime_minutes": {
+        "one_run_100_examples": 16.33,
+        "five_runs_100_examples": 81.67
+      }
+    },
+    {
+      "model_id": "claude_sonnet_4x",
+      "display_name": "Claude Sonnet 4",
+      "api_availability": "anthropic_api_and_partner_clouds",
+      "local_availability": false,
+      "open_weights": false,
+      "rate_limits": {
+        "start_tier_rpm": 1000,
+        "start_tier_itpm": 2000000,
+        "start_tier_otpm": 400000
+      },
+      "pricing_usd_per_million_tokens": {
+        "input": 3.0,
+        "output": 15.0
+      },
+      "token_multiplier": 1.0,
+      "estimated_tokens": {
+        "input_100_examples_one_run": 570000,
+        "output_100_examples_one_run": 132000,
+        "input_100_examples_five_runs": 2850000,
+        "output_100_examples_five_runs": 660000
+      },
+      "estimated_cost_usd": {
+        "one_run_100_examples": 3.69,
+        "five_runs_100_examples": 18.45
+      },
+      "estimated_latency_seconds_p50": 8.0,
+      "estimated_throughput_requests_per_minute": 75.0,
+      "estimated_runtime_minutes": {
+        "one_run_100_examples": 9.33,
+        "five_runs_100_examples": 46.67
+      }
+    },
+    {
+      "model_id": "gemini_2_5_pro",
+      "display_name": "Gemini 2.5 Pro",
+      "api_availability": "gemini_api_and_vertex_ai",
+      "local_availability": false,
+      "open_weights": false,
+      "rate_limits": {
+        "model_specific_limits": "dynamic_project_and_tier_based"
+      },
+      "pricing_usd_per_million_tokens": {
+        "input": 1.25,
+        "output": 10.0
+      },
+      "token_multiplier": 1.15,
+      "estimated_tokens": {
+        "input_100_examples_one_run": 570000,
+        "output_100_examples_one_run": 151800,
+        "input_100_examples_five_runs": 2850000,
+        "output_100_examples_five_runs": 759000
+      },
+      "estimated_cost_usd": {
+        "one_run_100_examples": 2.23,
+        "five_runs_100_examples": 11.15
+      },
+      "estimated_latency_seconds_p50": 12.0,
+      "estimated_throughput_requests_per_minute": 50.0,
+      "estimated_runtime_minutes": {
+        "one_run_100_examples": 14.0,
+        "five_runs_100_examples": 70.0
+      }
+    },
+    {
+      "model_id": "deepseek_r1",
+      "display_name": "DeepSeek R1",
+      "api_availability": "deepseek_api_openai_compatible",
+      "local_availability": true,
+      "open_weights": true,
+      "rate_limits": {
+        "v4_flash_concurrency": 2500,
+        "v4_pro_concurrency": 500
+      },
+      "pricing_usd_per_million_tokens": {
+        "input": 0.14,
+        "output": 0.28
+      },
+      "token_multiplier": 1.2,
+      "estimated_tokens": {
+        "input_100_examples_one_run": 570000,
+        "output_100_examples_one_run": 158400,
+        "input_100_examples_five_runs": 2850000,
+        "output_100_examples_five_runs": 792000
+      },
+      "estimated_cost_usd": {
+        "one_run_100_examples": 0.12,
+        "five_runs_100_examples": 0.62
+      },
+      "estimated_latency_seconds_p50": 7.0,
+      "estimated_throughput_requests_per_minute": 85.71,
+      "estimated_runtime_minutes": {
+        "one_run_100_examples": 8.17,
+        "five_runs_100_examples": 40.83
+      }
+    },
+    {
+      "model_id": "qwen3",
+      "display_name": "Qwen3",
+      "api_availability": "alibaba_model_studio_and_openai_compatible_mode",
+      "local_availability": true,
+      "open_weights": true,
+      "rate_limits": {
+        "typical_rpm": 600,
+        "typical_tpm": 1000000,
+        "note": "model_and_region_specific"
+      },
+      "pricing_usd_per_million_tokens": {
+        "input": 0.287,
+        "output_non_thinking": 1.147,
+        "output_thinking": 2.868
+      },
+      "token_multiplier": 1.1,
+      "estimated_tokens": {
+        "input_100_examples_one_run": 570000,
+        "output_100_examples_one_run": 145200,
+        "input_100_examples_five_runs": 2850000,
+        "output_100_examples_five_runs": 726000
+      },
+      "estimated_cost_usd": {
+        "one_run_100_examples_non_thinking": 0.33,
+        "five_runs_100_examples_non_thinking": 1.65,
+        "one_run_100_examples_thinking": 0.58,
+        "five_runs_100_examples_thinking": 2.9
+      },
+      "estimated_latency_seconds_p50": 8.0,
+      "estimated_throughput_requests_per_minute": 75.0,
+      "estimated_runtime_minutes": {
+        "one_run_100_examples": 9.33,
+        "five_runs_100_examples": 46.67
+      }
+    },
+    {
+      "model_id": "llama4_maverick",
+      "display_name": "Llama 4 Maverick",
+      "api_availability": "provider_dependent_bedrock_and_other_hosts",
+      "local_availability": true,
+      "open_weights": true,
+      "rate_limits": {
+        "example_bedrock_cross_region_rpm": 800
+      },
+      "pricing_usd_per_million_tokens": {
+        "input_estimated_range": [
+          0.5,
+          3.0
+        ],
+        "output_estimated_range": [
+          2.0,
+          12.0
+        ],
+        "note": "provider_dependent"
+      },
+      "token_multiplier": 1.05,
+      "estimated_tokens": {
+        "input_100_examples_one_run": 570000,
+        "output_100_examples_one_run": 138600,
+        "input_100_examples_five_runs": 2850000,
+        "output_100_examples_five_runs": 693000
+      },
+      "estimated_cost_usd": {
+        "one_run_100_examples_low_to_high": [
+          0.56,
+          3.37
+        ],
+        "five_runs_100_examples_low_to_high": [
+          2.81,
+          16.87
+        ]
+      },
+      "estimated_latency_seconds_p50": 10.0,
+      "estimated_throughput_requests_per_minute": 60.0,
+      "estimated_runtime_minutes": {
+        "one_run_100_examples": 11.67,
+        "five_runs_100_examples": 58.33
+      }
+    }
+  ]
+}

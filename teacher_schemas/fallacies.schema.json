@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "teacher_schemas/fallacies.schema.json",
+  "title": "Teacher Fallacies Output",
+  "description": "Schema for fallacies field aligned with src/teacher/validation.py.",
+  "type": "object",
+  "required": [
+    "fallacies"
+  ],
+  "properties": {
+    "fallacies": {
+      "type": "object",
+      "required": [
+        "detected",
+        "primary",
+        "secondary",
+        "evidence",
+        "severity"
+      ],
+      "properties": {
+        "detected": {
+          "type": "boolean"
+        },
+        "primary": {
+          "type": "string",
+          "enum": [
+            "none",
+            "ad_hominem",
+            "straw_man",
+            "false_dilemma",
+            "slippery_slope",
+            "hasty_generalization",
+            "appeal_to_authority",
+            "circular_reasoning",
+            "equivocation",
+            "red_herring",
+            "other"
+          ]
+        },
+        "secondary": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "ad_hominem",
+              "straw_man",
+              "false_dilemma",
+              "slippery_slope",
+              "hasty_generalization",
+              "appeal_to_authority",
+              "circular_reasoning",
+              "equivocation",
+              "red_herring",
+              "other"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "none",
+            "low",
+            "moderate",
+            "high"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "detected": {
+                "const": false
+              }
+            },
+            "required": [
+              "detected"
+            ]
+          },
+          "then": {
+            "properties": {
+              "primary": {
+                "const": "none"
+              },
+              "severity": {
+                "const": "none"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "detected": {
+                "const": true
+              }
+            },
+            "required": [
+              "detected"
+            ]
+          },
+          "then": {
+            "properties": {
+              "primary": {
+                "not": {
+                  "const": "none"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "multipleOf": 0.01
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "schema_name",
+        "prompt_version",
+        "model_id",
+        "generated_at_utc"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "teacher_fallacies_v1"
+        },
+        "schema_name": {
+          "type": "string",
+          "const": "fallacies.schema.json"
+        },
+        "prompt_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generated_at_utc": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validation_rules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "json_validity",
+              "missing_fields",
+              "confidence_calibration"
+            ]
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "x-schema-version": "1.0.0",
+  "x-validator-target": "src/teacher/validation.py::REQUIRED_STRUCTURE(fallacies)",
+  "x-validation-rules": [
+    "fallacies object must include detected/primary/secondary/evidence/severity",
+    "severity must be one of none|low|moderate|high",
+    "detected=false implies primary=none and severity=none",
+    "confidence must be numeric in [0,1] when provided"
+  ]
+}

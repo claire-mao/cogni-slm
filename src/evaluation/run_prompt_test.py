@@ -22,14 +22,24 @@ from pathlib import Path
 from statistics import mean
 from typing import Any, cast
 
-from evaluation.benchmark import BenchmarkRecord, JSONLBenchmarkLoader
-from evaluation.deterministic_checks import (
-    BehaviorId,
-    CheckInput,
-    DefaultDeterministicCheckSuite,
-    ProhibitionId,
-)
-from evaluation.llm_judge import DefaultLLMJudge, JudgeInput, JudgeRubric
+try:
+    from src.evaluation.benchmark import BenchmarkRecord, JSONLBenchmarkLoader
+    from src.evaluation.deterministic_checks import (
+        BehaviorId,
+        CheckInput,
+        DefaultDeterministicCheckSuite,
+        ProhibitionId,
+    )
+    from src.evaluation.llm_judge import DefaultLLMJudge, JudgeInput, JudgeRubric
+except ImportError:
+    from evaluation.benchmark import BenchmarkRecord, JSONLBenchmarkLoader
+    from evaluation.deterministic_checks import (
+        BehaviorId,
+        CheckInput,
+        DefaultDeterministicCheckSuite,
+        ProhibitionId,
+    )
+    from evaluation.llm_judge import DefaultLLMJudge, JudgeInput, JudgeRubric
 
 BEHAVIOR_STEPS: tuple[str, ...] = ("B1", "B2", "B3", "B4", "B5", "B6", "B7")
 PROHIBITION_STEPS: tuple[str, ...] = ("P1", "P2", "P3", "P4", "P5")

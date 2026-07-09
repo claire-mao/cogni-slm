@@ -9,27 +9,27 @@
 - Duplicate text: **PASS**
 - Score validity: **PASS**
 - Split leakage (ID overlap): **PASS**
-- Prompt leakage (prompt overlap): **PASS**
+- Prompt leakage (prompt overlap): **FAIL**
 - Train/test contamination (text overlap): **PASS**
 - Corrupted files: **PASS**
 - UTF-8 validity: **PASS**
-- Hugging Face compatibility (`load_from_disk`): **FAIL**
+- Hugging Face compatibility (`load_from_disk`): **PASS**
 
 ## Split Sizes
 
 | split | rows |
 |---|---:|
-| train | 12413 |
-| validation | 0 |
-| test | 0 |
+| train | 9930 |
+| validation | 1241 |
+| test | 1242 |
 
 ## Score Stats
 
 | split | min | max | mean |
 |---|---:|---:|---:|
-| train | 0.0000 | 60.0000 | 7.0524 |
-| validation | 0.0000 | 0.0000 | 0.0000 |
-| test | 0.0000 | 0.0000 | 0.0000 |
+| train | 0.0000 | 55.0000 | 7.1074 |
+| validation | 0.0000 | 60.0000 | 7.1249 |
+| test | 0.0000 | 55.0000 | 6.5411 |
 
 ## Duplicate Summary
 
@@ -52,17 +52,17 @@
 
 | check | value |
 |---|---:|
-| prompt overlap train∩validation | 0 |
-| prompt overlap train∩test | 0 |
-| prompt overlap validation∩test | 0 |
-| test prompts also in train (%) | 0.00 |
-| validation prompts also in train (%) | 0.00 |
+| prompt overlap train∩validation | 8 |
+| prompt overlap train∩test | 8 |
+| prompt overlap validation∩test | 8 |
+| test prompts also in train (%) | 100.00 |
+| validation prompts also in train (%) | 100.00 |
 
 ## File Integrity Details
 
 ### train
 - Path: `datasets/final/train.jsonl`
-- Parsed rows: `12413`
+- Parsed rows: `9930`
 - UTF-8 errors: `0`
 - JSON errors: `0`
 - Schema/type errors: `0`
@@ -71,7 +71,7 @@
 - Empty text rows: `0`
 ### validation
 - Path: `datasets/final/validation.jsonl`
-- Parsed rows: `0`
+- Parsed rows: `1241`
 - UTF-8 errors: `0`
 - JSON errors: `0`
 - Schema/type errors: `0`
@@ -80,7 +80,7 @@
 - Empty text rows: `0`
 ### test
 - Path: `datasets/final/test.jsonl`
-- Parsed rows: `0`
+- Parsed rows: `1242`
 - UTF-8 errors: `0`
 - JSON errors: `0`
 - Schema/type errors: `0`
@@ -91,7 +91,7 @@
 ## Hugging Face Compatibility
 
 - Saved/loaded dataset path: `datasets/final/dataset_dict`
-- Result: **FAIL**
-- Message: Instruction "validation" corresponds to no data!
+- Result: **PASS**
+- Message: OK
 
 The dataset is directly loadable via `datasets.load_from_disk()` at the path above.

@@ -1,0 +1,17 @@
+{
+  "dataset_found": false,
+  "examples_total": 0,
+  "duplicates_count": 0,
+  "duplicate_example_ids": [],
+  "identical_reasoning_count": 0,
+  "identical_feedback_count": 0,
+  "low_confidence_count": 0,
+  "low_confidence_rate": 0.0,
+  "hallucination_count": 0,
+  "hallucination_rate": 0.0,
+  "schema_invalid_count": 0,
+  "schema_valid_rate": 0.0,
+  "avg_confidence": null,
+  "confidence_threshold": 0.6,
+  "notes": "datasets/sft not found; checks were not executed."
+}

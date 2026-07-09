@@ -1,6 +1,22 @@
 """Public interfaces for the Cogni evaluation package."""
 
 from .benchmark import BenchmarkLoader, BenchmarkRecord, JSONLBenchmarkLoader, SplitName
+from .calibration import (
+    CalibrationConfig,
+    CalibrationExampleRecord,
+    CalibrationResult,
+    ModelCalibrationSummary,
+    ModelReliability,
+    ReliabilityBin,
+    analyze_calibration,
+    brier_score,
+    expected_calibration_error,
+    fit_temperature_scaling,
+    reliability_diagram_bins,
+    render_reliability_svg,
+    temperature_scale_confidence,
+    write_calibration_outputs,
+)
 from .deterministic_checks import (
     BehaviorId,
     CheckInput,
@@ -8,6 +24,14 @@ from .deterministic_checks import (
     DefaultDeterministicCheckSuite,
     DeterministicCheckSuite,
     ProhibitionId,
+)
+from .error_analysis import (
+    ErrorAnalysisConfig,
+    ErrorAnalysisResult,
+    ErrorExampleRecord,
+    ModelErrorSummary,
+    analyze_errors,
+    write_analysis_outputs,
 )
 from .evaluator import ComparisonPayload, EvaluationConfig, EvaluationRunner, ModelAdapter
 from .judge import (
@@ -40,6 +64,9 @@ __all__ = [
     "BehaviorId",
     "BenchmarkLoader",
     "BenchmarkRecord",
+    "CalibrationConfig",
+    "CalibrationExampleRecord",
+    "CalibrationResult",
     "CheckInput",
     "CheckResult",
     "ComparisonPayload",
@@ -52,6 +79,9 @@ __all__ = [
     "EvaluationRunner",
     "EvaluationSummary",
     "ExampleTrace",
+    "ErrorAnalysisConfig",
+    "ErrorAnalysisResult",
+    "ErrorExampleRecord",
     "GateOutcome",
     "JSONLBenchmarkLoader",
     "JudgeBackend",
@@ -64,12 +94,26 @@ __all__ = [
     "LLMJudge",
     "DefaultBehaviorJudge",
     "ModelAdapter",
+    "ModelCalibrationSummary",
+    "ModelErrorSummary",
+    "ModelReliability",
     "PerExampleMetric",
     "ProhibitionId",
+    "ReliabilityBin",
     "ResponseJudge",
     "ReportRenderer",
     "SplitName",
+    "analyze_calibration",
+    "analyze_errors",
     "aggregate_metrics",
+    "brier_score",
     "evaluate_gated_composite",
+    "expected_calibration_error",
+    "fit_temperature_scaling",
     "paired_model_comparison",
+    "reliability_diagram_bins",
+    "render_reliability_svg",
+    "temperature_scale_confidence",
+    "write_calibration_outputs",
+    "write_analysis_outputs",
 ]

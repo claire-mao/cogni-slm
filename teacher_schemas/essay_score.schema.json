@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "teacher_schemas/essay_score.schema.json",
+  "title": "Teacher Essay Score Output",
+  "description": "Schema for score/confidence fields aligned with src/teacher/validation.py.",
+  "type": "object",
+  "required": [
+    "score",
+    "confidence"
+  ],
+  "properties": {
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 60,
+      "description": "Holistic score. Must satisfy validation._score_range_valid in [0,60]."
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "multipleOf": 0.01,
+      "description": "Confidence value for calibration checks."
+    },
+    "score_range_min": {
+      "type": "integer",
+      "const": 0
+    },
+    "score_range_max": {
+      "type": "integer",
+      "const": 60
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "schema_name",
+        "prompt_version",
+        "model_id",
+        "generated_at_utc"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "teacher_essay_score_v1"
+        },
+        "schema_name": {
+          "type": "string",
+          "const": "essay_score.schema.json"
+        },
+        "prompt_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generated_at_utc": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validation_rules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "json_validity",
+              "missing_fields",
+              "score_range",
+              "confidence_calibration"
+            ]
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "x-schema-version": "1.0.0",
+  "x-validator-target": "src/teacher/validation.py::REQUIRED_STRUCTURE(score, confidence)",
+  "x-validation-rules": [
+    "score must be integer in [0,60]",
+    "confidence must be numeric in [0,1]",
+    "json object must include required fields"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "version": "providers_v1",
+  "description": "Provider credential requirements for teacher execution.",
+  "env_file_default": ".env",
+  "aliases": {
+    "gemini": "google",
+    "openrouter_compatible": "openrouter"
+  },
+  "providers": {
+    "openai": {
+      "required_env_all": [
+        "OPENAI_API_KEY"
+      ],
+      "required_env_any": [],
+      "optional_env": [
+        "OPENAI_BASE_URL"
+      ]
+    },
+    "anthropic": {
+      "required_env_all": [
+        "ANTHROPIC_API_KEY"
+      ],
+      "required_env_any": [],
+      "optional_env": [
+        "ANTHROPIC_BASE_URL",
+        "ANTHROPIC_VERSION"
+      ]
+    },
+    "google": {
+      "required_env_all": [],
+      "required_env_any": [
+        [
+          "GEMINI_API_KEY",
+          "GOOGLE_API_KEY"
+        ]
+      ],
+      "optional_env": [
+        "GEMINI_BASE_URL"
+      ]
+    },
+    "deepseek": {
+      "required_env_all": [
+        "DEEPSEEK_API_KEY"
+      ],
+      "required_env_any": [],
+      "optional_env": [
+        "DEEPSEEK_BASE_URL"
+      ]
+    },
+    "openrouter": {
+      "required_env_all": [],
+      "required_env_any": [
+        [
+          "OPENROUTER_API_KEY",
+          "OPENROUTER_COMPAT_API_KEY"
+        ]
+      ],
+      "optional_env": [
+        "OPENROUTER_BASE_URL",
+        "OPENROUTER_COMPAT_BASE_URL",
+        "OPENROUTER_HTTP_REFERER",
+        "OPENROUTER_X_TITLE"
+      ]
+    }
+  }
+}

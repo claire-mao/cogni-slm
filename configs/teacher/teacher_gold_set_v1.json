@@ -1,0 +1,114 @@
+{
+  "version": "teacher_gold_set_v1",
+  "target_size": 100,
+  "construction": {
+    "dataset_output_path": "datasets/eval/teacher_gold_v1",
+    "do_not_generate_labels_now": true,
+    "sampling_policy": "stratified_then_manual_review",
+    "sources": [
+      {
+        "source_id": "asap",
+        "count": 30,
+        "requirements": {
+          "prompt_coverage": "all available essay_set prompts proportionally",
+          "score_band_coverage": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "length_bins": [
+            "short",
+            "medium",
+            "long"
+          ]
+        }
+      },
+      {
+        "source_id": "persuade",
+        "count": 20,
+        "requirements": {
+          "argument_modes": [
+            "claim_only",
+            "claim_plus_counterclaim",
+            "evidence_rich"
+          ],
+          "note": "Use licensed local copy when available; otherwise keep slot unfilled until acquisition is complete."
+        }
+      },
+      {
+        "source_id": "argumentative_essays",
+        "count": 20,
+        "requirements": {
+          "topic_diversity": [
+            "civics",
+            "science_policy",
+            "education",
+            "technology_ethics"
+          ],
+          "stance_balance": "50/50 pro-con where applicable"
+        }
+      },
+      {
+        "source_id": "ap_style_writing",
+        "count": 20,
+        "requirements": {
+          "style_mix": [
+            "rhetorical_analysis",
+            "argument",
+            "synthesis"
+          ],
+          "official_scoring_guideline": true
+        }
+      },
+      {
+        "source_id": "logical_fallacy_examples",
+        "count": 10,
+        "requirements": {
+          "label_balance": [
+            "strawman",
+            "hasty_generalization",
+            "false_cause",
+            "false_dilemma",
+            "appeal_to_authority",
+            "ad_hominem",
+            "slippery_slope",
+            "equivocation",
+            "red_herring",
+            "no_fallacy"
+          ]
+        }
+      }
+    ],
+    "manual_review_process": {
+      "raters_per_example": 2,
+      "adjudicator_count": 1,
+      "calibration_examples_before_main_review": 15,
+      "agreement_thresholds": {
+        "score_qwk_min": 0.75,
+        "fallacy_f1_min": 0.75,
+        "rubric_item_agreement_min": 0.8
+      },
+      "adjudication_rule": "If raters disagree on core fields, adjudicator sets final gold and records rationale."
+    },
+    "required_gold_fields": [
+      "example_id",
+      "source_id",
+      "prompt",
+      "essay_text",
+      "gold_score",
+      "gold_rubric_items",
+      "gold_feedback_reference",
+      "gold_reasoning_completeness",
+      "gold_argument_quality",
+      "gold_fallacy_label",
+      "gold_revision_targets",
+      "reviewer_confidence",
+      "adjudication_note"
+    ],
+    "freeze_policy": {
+      "version_tag": "teacher_gold_v1.0",
+      "immutability_after_freeze": true,
+      "require_checksum_manifest": true
+    }
+  }
+}

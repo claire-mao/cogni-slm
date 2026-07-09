@@ -1,0 +1,42 @@
+{
+  "output_dataset": "datasets/gold/pilot20_v1.jsonl",
+  "sample_size": 20,
+  "seed": 42,
+  "selected_distribution": {
+    "length_bin": {
+      "long": 7,
+      "medium": 5,
+      "short": 8
+    },
+    "prompt": {
+      "1": 3,
+      "2": 3,
+      "3": 1,
+      "4": 3,
+      "5": 1,
+      "6": 3,
+      "7": 3,
+      "8": 3
+    },
+    "score_bin": {
+      "high": 3,
+      "low": 10,
+      "mid": 7
+    }
+  },
+  "source_dataset": "datasets/gold/gold_v1.jsonl",
+  "targets": {
+    "length_quota": {
+      "long": 6,
+      "medium": 8,
+      "short": 6
+    },
+    "prompt_max_per_id": 3,
+    "score_quota": {
+      "high": 6,
+      "low": 7,
+      "mid": 7
+    }
+  },
+  "version": "pilot20_v1"
+}

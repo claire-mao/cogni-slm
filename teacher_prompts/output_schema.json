@@ -1,80 +1,263 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "TeacherPromptOutput",
+  "title": "ProductionTeacherOutput",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "teacher_reasoning",
+    "score",
+    "confidence",
+    "rubric",
+    "reasoning",
+    "logical_analysis",
+    "fallacies",
     "feedback",
-    "rubric_analysis",
-    "final_score"
+    "revision_plan"
   ],
   "properties": {
-    "teacher_reasoning": {
-      "type": "string",
-      "minLength": 1
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 60
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "rubric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "criteria",
+        "summary"
+      ],
+      "properties": {
+        "criteria": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "criterion",
+              "judgment",
+              "evidence",
+              "impact"
+            ],
+            "properties": {
+              "criterion": {
+                "type": "string",
+                "enum": [
+                  "claim",
+                  "evidence",
+                  "reasoning",
+                  "organization",
+                  "style"
+                ]
+              },
+              "judgment": {
+                "type": "string",
+                "enum": [
+                  "meets",
+                  "partially_meets",
+                  "does_not_meet"
+                ]
+              },
+              "evidence": {
+                "type": "string",
+                "minLength": 1
+              },
+              "impact": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "reasoning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "steps"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "logical_analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_quality",
+        "evidence_quality",
+        "coherence",
+        "counterargument_handling",
+        "consistency_checks"
+      ],
+      "properties": {
+        "claim_quality": {
+          "type": "string",
+          "enum": [
+            "strong",
+            "mixed",
+            "weak"
+          ]
+        },
+        "evidence_quality": {
+          "type": "string",
+          "enum": [
+            "strong",
+            "mixed",
+            "weak"
+          ]
+        },
+        "coherence": {
+          "type": "string",
+          "enum": [
+            "strong",
+            "mixed",
+            "weak"
+          ]
+        },
+        "counterargument_handling": {
+          "type": "string",
+          "enum": [
+            "strong",
+            "mixed",
+            "weak",
+            "not_present"
+          ]
+        },
+        "consistency_checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "fallacies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "detected",
+        "primary",
+        "secondary",
+        "evidence",
+        "severity"
+      ],
+      "properties": {
+        "detected": {
+          "type": "boolean"
+        },
+        "primary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "secondary": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "none",
+            "low",
+            "moderate",
+            "high"
+          ]
+        }
+      }
     },
     "feedback": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "strengths",
-        "weaknesses",
-        "next_step"
+        "priorities",
+        "student_facing_summary"
       ],
       "properties": {
         "strengths": {
           "type": "array",
           "minItems": 1,
+          "maxItems": 3,
           "items": {
             "type": "string",
             "minLength": 1
           }
         },
-        "weaknesses": {
+        "priorities": {
           "type": "array",
           "minItems": 1,
+          "maxItems": 3,
           "items": {
             "type": "string",
             "minLength": 1
           }
         },
-        "next_step": {
+        "student_facing_summary": {
           "type": "string",
           "minLength": 1
         }
       }
     },
-    "rubric_analysis": {
+    "revision_plan": {
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "claim",
-        "evidence",
-        "commentary",
-        "organization_style"
+        "goal",
+        "actions",
+        "expected_impact"
       ],
       "properties": {
-        "claim": {
+        "goal": {
           "type": "string",
           "minLength": 1
         },
-        "evidence": {
-          "type": "string",
-          "minLength": 1
+        "actions": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
-        "commentary": {
-          "type": "string",
-          "minLength": 1
-        },
-        "organization_style": {
+        "expected_impact": {
           "type": "string",
           "minLength": 1
         }
       }
-    },
-    "final_score": {
-      "type": "number"
     }
   }
 }

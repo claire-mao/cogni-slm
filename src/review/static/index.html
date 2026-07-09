@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Teacher Review Interface</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Teacher Review Interface</h1>
+      <p>Compare gold answer, selected teacher answer, and multiple teacher outputs.</p>
+    </header>
+
+    <section class="filters">
+      <label>
+        Run
+        <select id="filter-run">
+          <option value="">All</option>
+        </select>
+      </label>
+      <label>
+        Task
+        <select id="filter-task">
+          <option value="">All</option>
+        </select>
+      </label>
+      <label>
+        Model
+        <select id="filter-model">
+          <option value="">All</option>
+        </select>
+      </label>
+      <label class="query-label">
+        Search
+        <input id="filter-query" type="text" placeholder="example id or prompt text" />
+      </label>
+      <button id="refresh-cases" type="button">Refresh</button>
+    </section>
+
+    <main>
+      <aside class="case-list">
+        <h2>Cases</h2>
+        <div id="case-count"></div>
+        <ul id="cases"></ul>
+      </aside>
+
+      <section class="case-detail">
+        <h2>Case Detail</h2>
+        <div id="case-meta"></div>
+
+        <div class="panel">
+          <h3>Gold Answer</h3>
+          <pre id="gold-answer">{}</pre>
+        </div>
+
+        <div class="panel">
+          <h3>Teacher Answer</h3>
+          <label>
+            Selected teacher
+            <select id="teacher-select"></select>
+          </label>
+          <pre id="teacher-answer">{}</pre>
+        </div>
+
+        <div class="panel">
+          <h3>Multiple Teacher Outputs</h3>
+          <div id="multi-outputs"></div>
+        </div>
+
+        <div class="panel review-panel">
+          <h3>Reviewer Action</h3>
+          <form id="review-form">
+            <label>
+              Reviewer ID
+              <input id="reviewer-id" type="text" value="anonymous" />
+            </label>
+
+            <label>
+              Decision
+              <select id="decision">
+                <option value="accept">accept</option>
+                <option value="reject">reject</option>
+                <option value="edit">edit</option>
+              </select>
+            </label>
+
+            <label class="checkbox">
+              <input id="flag-hallucination" type="checkbox" />
+              flag hallucination
+            </label>
+            <label class="checkbox">
+              <input id="flag-rubric-error" type="checkbox" />
+              flag rubric error
+            </label>
+
+            <label>
+              Edited output (JSON object; required for decision=edit)
+              <textarea id="edited-output" rows="8" placeholder="{}"></textarea>
+            </label>
+
+            <label>
+              Notes
+              <textarea id="review-notes" rows="4"></textarea>
+            </label>
+
+            <button id="save-review" type="submit">Save Review</button>
+          </form>
+          <div id="review-status"></div>
+          <pre id="latest-review">{}</pre>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

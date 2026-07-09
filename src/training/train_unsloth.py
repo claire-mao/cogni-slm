@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import os
 from pathlib import Path
 from typing import Any
@@ -20,8 +19,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--dataset-path",
-        default="datasets/processed/placeholder_train.jsonl",
-        help="Placeholder dataset path for initialization checks.",
+        default="datasets/sft/train/data.jsonl",
+        help="Path to a real JSONL training dataset.",
     )
     parser.add_argument("--max-seq-length", type=int, default=2048)
     parser.add_argument("--load-in-4bit", action="store_true")
@@ -31,25 +30,22 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def ensure_dataset_placeholder(dataset_path: Path) -> dict[str, Any]:
-    dataset_path.parent.mkdir(parents=True, exist_ok=True)
+def ensure_dataset_ready(dataset_path: Path) -> dict[str, Any]:
     if not dataset_path.exists():
-        sample = {
-            "text": (
-                "fallacy_hypothesis: hasty_generalization\n"
-                "reasoning_diagnosis: The argument generalizes from too few examples.\n"
-                "analogy: source_scenario: ... mapping: ... limits: ...\n"
-                "repair: Use broader evidence before concluding.\n"
-                "confidence_note: Moderate confidence."
-            )
-        }
-        dataset_path.write_text(json.dumps(sample, ensure_ascii=False) + "\n", encoding="utf-8")
-    return {"dataset_path": str(dataset_path), "exists": dataset_path.exists()}
+        raise FileNotFoundError(
+            f"Dataset path not found: {dataset_path}. "
+            "Build the SFT dataset before initializing training."
+        )
+    if not dataset_path.is_file():
+        raise ValueError(f"Dataset path must be a JSONL file: {dataset_path}")
+    if dataset_path.stat().st_size == 0:
+        raise ValueError(f"Dataset JSONL is empty: {dataset_path}")
+    return {"dataset_path": str(dataset_path), "exists": True}
 
 
 def main() -> None:
     args = parse_args()
-    dataset_info = ensure_dataset_placeholder(Path(args.dataset_path))
+    dataset_info = ensure_dataset_ready(Path(args.dataset_path))
 
     try:
         from unsloth import FastLanguageModel
@@ -93,6 +89,8 @@ def main() -> None:
 
     dataset = load_dataset("json", data_files={"train": str(dataset_info["dataset_path"])})
     train_rows = len(dataset["train"])
+    if train_rows == 0:
+        raise ValueError(f"Training dataset has zero rows: {dataset_info['dataset_path']}")
 
     print("Unsloth training scaffold initialized successfully.")
     print(f"model_id={args.model_id}")

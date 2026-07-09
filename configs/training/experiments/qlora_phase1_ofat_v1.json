@@ -1,0 +1,140 @@
+{
+  "schema_version": "v1",
+  "phase_id": "phase1_ofat_screening",
+  "description": "One-factor-at-a-time screening around baseline to estimate sensitivity per knob.",
+  "baseline": {
+    "lora_rank": 16,
+    "lora_alpha": 16,
+    "learning_rate": 0.0002,
+    "num_train_epochs": 2.0,
+    "batch_profile_id": "bsz32",
+    "max_seq_length": 2048,
+    "warmup_ratio": 0.03,
+    "packing": false,
+    "optimizer": "adamw_torch"
+  },
+  "runs": [
+    {
+      "run_id": "p1_baseline",
+      "overrides": {}
+    },
+    {
+      "run_id": "p1_rank_8",
+      "overrides": {
+        "lora_rank": 8,
+        "lora_alpha": 8
+      }
+    },
+    {
+      "run_id": "p1_rank_32",
+      "overrides": {
+        "lora_rank": 32,
+        "lora_alpha": 32
+      }
+    },
+    {
+      "run_id": "p1_rank_64",
+      "overrides": {
+        "lora_rank": 64,
+        "lora_alpha": 64
+      }
+    },
+    {
+      "run_id": "p1_lr_5e-5",
+      "overrides": {
+        "learning_rate": 5e-05
+      }
+    },
+    {
+      "run_id": "p1_lr_1e-4",
+      "overrides": {
+        "learning_rate": 0.0001
+      }
+    },
+    {
+      "run_id": "p1_lr_3e-4",
+      "overrides": {
+        "learning_rate": 0.0003
+      }
+    },
+    {
+      "run_id": "p1_epochs_1",
+      "overrides": {
+        "num_train_epochs": 1.0
+      }
+    },
+    {
+      "run_id": "p1_epochs_3",
+      "overrides": {
+        "num_train_epochs": 3.0
+      }
+    },
+    {
+      "run_id": "p1_batch_bsz16",
+      "overrides": {
+        "batch_profile_id": "bsz16"
+      }
+    },
+    {
+      "run_id": "p1_batch_bsz64",
+      "overrides": {
+        "batch_profile_id": "bsz64"
+      }
+    },
+    {
+      "run_id": "p1_seq_1024",
+      "overrides": {
+        "max_seq_length": 1024
+      }
+    },
+    {
+      "run_id": "p1_seq_1536",
+      "overrides": {
+        "max_seq_length": 1536
+      }
+    },
+    {
+      "run_id": "p1_seq_3072",
+      "overrides": {
+        "max_seq_length": 3072
+      }
+    },
+    {
+      "run_id": "p1_warmup_0.00",
+      "overrides": {
+        "warmup_ratio": 0.0
+      }
+    },
+    {
+      "run_id": "p1_warmup_0.06",
+      "overrides": {
+        "warmup_ratio": 0.06
+      }
+    },
+    {
+      "run_id": "p1_warmup_0.10",
+      "overrides": {
+        "warmup_ratio": 0.1
+      }
+    },
+    {
+      "run_id": "p1_packing_true",
+      "overrides": {
+        "packing": true
+      }
+    },
+    {
+      "run_id": "p1_optim_fused",
+      "overrides": {
+        "optimizer": "adamw_torch_fused"
+      }
+    },
+    {
+      "run_id": "p1_optim_paged8bit",
+      "overrides": {
+        "optimizer": "paged_adamw_8bit"
+      }
+    }
+  ],
+  "run_count": 20
+}

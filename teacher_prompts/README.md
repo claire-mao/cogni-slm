@@ -23,6 +23,14 @@ See [output_schema.json](output_schema.json) for the strict JSON shape.
 
 ## Pipeline Modes
 
+### Production single-pass
+
+- `production_teacher.txt`
+- `output_schema.json`
+- `examples.md`
+
+This is the recommended prompt bundle for deterministic supervision generation.
+
 1. `single_pass_template.txt`
 - One call that returns the final JSON directly.
 

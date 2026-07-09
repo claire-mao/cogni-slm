@@ -1,0 +1,29 @@
+{
+  "config": {
+    "max_queue_size": 300,
+    "min_priority_score": 0.35,
+    "per_example_cap": 12,
+    "per_task_cap": 80
+  },
+  "counts": {
+    "cases_candidate": 840,
+    "cases_scored": 840,
+    "cases_selected": 288,
+    "examples_selected": 24,
+    "tasks_selected": 7
+  },
+  "generated_at_utc": "2026-07-09T17:47:11.629183+00:00",
+  "inputs": {
+    "gold_path": "datasets/gold/review_package/review_forms.jsonl",
+    "teacher_outputs_path": "outputs/teacher_round1/round1_teacher_validation/collected_outputs.jsonl"
+  },
+  "outputs": {
+    "queue_all_scored": "datasets/review/queue/queue_all_scored.jsonl",
+    "review_queue": "datasets/review/queue/review_queue.jsonl",
+    "summary": "datasets/review/queue/summary.md"
+  },
+  "priority_reason_counts": {
+    "hallucination_flags": 204,
+    "low_confidence": 288
+  }
+}

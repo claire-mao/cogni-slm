@@ -35,14 +35,14 @@ DATASET_URLS: dict[str, str] = {
     "asap_aes": "https://www.kaggle.com/c/asap-aes",
     "persuade2": "https://www.kaggle.com/competitions/feedback-prize-effectiveness",
     "asap2": "https://huggingface.co/datasets/jatinmehra/Automated-Essay-Scoring-2.0",
-    "heldout_placeholder": "datasets/eval/heldout_benchmark.jsonl",
+    "heldout_benchmark_internal": "datasets/eval/heldout_benchmark.jsonl",
 }
 
 DATASET_LICENSES: dict[str, str] = {
     "asap_aes": "ASAP-AES competition/research dataset terms (verify redistribution rights)",
     "persuade2": "Kaggle/official source terms (manual acceptance may be required)",
     "asap2": "Unknown on mirror; verify before redistribution",
-    "heldout_placeholder": "Internal placeholder held-out benchmark artifact",
+    "heldout_benchmark_internal": "Internal held-out benchmark artifact",
 }
 
 DEFAULT_INTERNAL_LICENSE = "Derived internal artifact; inherits upstream source license constraints"
@@ -185,7 +185,7 @@ def infer_license(source: str, metadata: dict[str, Any], row_license: str = "") 
         if isinstance(raw, str) and raw.strip() and raw.strip().lower() != "unknown":
             return raw.strip()
     if source.startswith("eval/heldout_benchmark") or "golden" in source:
-        return DATASET_LICENSES["heldout_placeholder"]
+        return DATASET_LICENSES["heldout_benchmark_internal"]
     if source == "asap_aes" or source.startswith("raw/asap_aes/") or "asap_aes" in source:
         return DATASET_LICENSES["asap_aes"]
     if source in DATASET_LICENSES:
@@ -212,7 +212,7 @@ def infer_original_dataset(source: str, metadata: dict[str, Any]) -> str:
     if source == "asap_aes" or source.startswith("raw/asap_aes/") or "asap_aes" in source:
         return "asap_aes"
     if source.startswith("eval/heldout_benchmark") or "golden" in source:
-        return "heldout_placeholder"
+        return "heldout_benchmark_internal"
     if source:
         return source
     return "unknown"

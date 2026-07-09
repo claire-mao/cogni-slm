@@ -1,0 +1,109 @@
+{
+  "version": "teacher_metrics_v1",
+  "metrics": {
+    "essay_scoring": [
+      {
+        "metric_id": "quadratic_weighted_kappa",
+        "goal": "maximize"
+      },
+      {
+        "metric_id": "mae",
+        "goal": "minimize"
+      },
+      {
+        "metric_id": "score_consistency",
+        "definition": "1 - normalized stddev over repeated runs",
+        "goal": "maximize"
+      }
+    ],
+    "rubric_and_format": [
+      {
+        "metric_id": "rubric_adherence",
+        "definition": "fraction of rubric criteria correctly addressed",
+        "goal": "maximize"
+      },
+      {
+        "metric_id": "json_validity",
+        "definition": "valid_json_outputs / total_outputs",
+        "goal": "maximize"
+      },
+      {
+        "metric_id": "reasoning_completeness",
+        "definition": "coverage of required reasoning sections and evidence links",
+        "goal": "maximize"
+      }
+    ],
+    "feedback_and_safety": [
+      {
+        "metric_id": "feedback_usefulness",
+        "definition": "human-rated utility for student revision (1-5 normalized)",
+        "goal": "maximize"
+      },
+      {
+        "metric_id": "hallucination_rate",
+        "definition": "unsupported factual or rubric claims / total outputs",
+        "goal": "minimize"
+      }
+    ],
+    "logic_tasks": [
+      {
+        "metric_id": "fallacy_precision",
+        "goal": "maximize"
+      },
+      {
+        "metric_id": "fallacy_recall",
+        "goal": "maximize"
+      },
+      {
+        "metric_id": "inter_model_agreement",
+        "definition": "pairwise agreement among model predictions (QWK for scores, macro-F1 overlap for labels)",
+        "goal": "contextual"
+      }
+    ]
+  },
+  "repeatability_tests": {
+    "run_repetitions": 5,
+    "seed_schedule": [
+      11,
+      22,
+      33,
+      44,
+      55
+    ],
+    "tests": [
+      {
+        "test_id": "variance_across_5_runs",
+        "definition": "per-metric variance across repeated generations",
+        "target": "low"
+      },
+      {
+        "test_id": "deterministic_output_success",
+        "definition": "percentage of examples with byte-identical canonical JSON across all 5 runs at temperature=0",
+        "target_min": 0.95
+      },
+      {
+        "test_id": "confidence_calibration",
+        "definition": "ECE and Brier score using model confidence fields against correctness",
+        "target": "low_ece_low_brier"
+      },
+      {
+        "test_id": "score_stability",
+        "definition": "max score delta and stddev across 5 runs",
+        "target_max_delta": 1
+      }
+    ]
+  },
+  "selection_scorecard": {
+    "weights": {
+      "educational_quality": 0.4,
+      "logical_reliability": 0.2,
+      "stability_repeatability": 0.2,
+      "cost_efficiency": 0.2
+    },
+    "hard_gates": {
+      "json_validity_min": 0.98,
+      "hallucination_rate_max": 0.05,
+      "deterministic_output_success_min": 0.95
+    }
+  }
+}

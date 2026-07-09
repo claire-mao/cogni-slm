@@ -92,7 +92,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--max-examples", type=int, default=0)
     parser.add_argument("--resume", action="store_true")
-    parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args()
 
 
@@ -321,15 +320,6 @@ def append_jsonl(path: Path, payload: dict[str, Any]) -> None:
         handle.write(json.dumps(payload, ensure_ascii=False) + "\n")
 
 
-def run_dry_inference(record: InputRecord) -> tuple[str, str, float, float]:
-    """Deterministic dry-run output for pipeline verification."""
-    reasoning = "Dry-run reasoning placeholder for local pipeline verification."
-    feedback = "Dry-run feedback: clarify claim and strengthen evidence-commentary linkage."
-    predicted_score = record.score
-    confidence = 0.5
-    return reasoning, feedback, predicted_score, confidence
-
-
 def main() -> None:
     """Run local teacher inference pipeline."""
     args = parse_args()
@@ -366,20 +356,15 @@ def main() -> None:
 
     existing_ids = load_existing_ids(predictions_path) if args.resume else set()
 
-    if args.dry_run:
-        tokenizer = None
-        model = None
-        device = "dry-run"
-        load_seconds = 0.0
-    else:
-        # Enforce offline/local-only generation.
-        os.environ.setdefault("HF_HUB_OFFLINE", "1")
-        os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+    # Enforce offline/local-only generation.
+    os.environ.setdefault("HF_HUB_OFFLINE", "1")
+    os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 
-        device = resolve_device()
-        dtype = torch.float16 if device == "mps" else torch.float32
+    device = resolve_device()
+    dtype = torch.float16 if device == "mps" else torch.float32
 
-        load_start = time.perf_counter()
+    load_start = time.perf_counter()
+    try:
         tokenizer = AutoTokenizer.from_pretrained(
             args.model_id,
             trust_remote_code=True,
@@ -394,9 +379,16 @@ def main() -> None:
             local_files_only=True,
             torch_dtype=dtype,
         )
-        model.to(device)
-        model.eval()
-        load_seconds = time.perf_counter() - load_start
+    except Exception as exc:  # pragma: no cover - runtime model availability varies
+        raise RuntimeError(
+            "Failed to load local model artifacts for run_teacher_inference. "
+            "Ensure model files are available locally (offline mode is enabled) "
+            f"for model_id='{args.model_id}'. Original error: {type(exc).__name__}: {exc}"
+        ) from exc
+
+    model.to(device)
+    model.eval()
+    load_seconds = time.perf_counter() - load_start
 
     for record in inputs:
         if args.resume and record.example_id in existing_ids:
@@ -406,41 +398,34 @@ def main() -> None:
         prompt_text = render_template(template, record)
 
         try:
-            if args.dry_run:
-                reasoning, feedback, predicted_score, confidence = run_dry_inference(record)
-                inference_seconds = 0.0
-            else:
-                assert tokenizer is not None
-                assert model is not None
+            messages = [
+                {"role": "system", "content": system_role},
+                {"role": "user", "content": prompt_text},
+            ]
 
-                messages = [
-                    {"role": "system", "content": system_role},
-                    {"role": "user", "content": prompt_text},
-                ]
+            rendered_chat = tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+            encoded = tokenizer(rendered_chat, return_tensors="pt")
+            encoded = {name: value.to(device) for name, value in encoded.items()}
 
-                rendered_chat = tokenizer.apply_chat_template(
-                    messages,
-                    tokenize=False,
-                    add_generation_prompt=True,
+            infer_start = time.perf_counter()
+            with torch.inference_mode():
+                output_ids = model.generate(
+                    **encoded,
+                    max_new_tokens=args.max_new_tokens,
+                    do_sample=args.temperature > 0.0,
+                    temperature=max(args.temperature, 1e-6),
+                    pad_token_id=tokenizer.pad_token_id,
+                    eos_token_id=tokenizer.eos_token_id,
                 )
-                encoded = tokenizer(rendered_chat, return_tensors="pt")
-                encoded = {name: value.to(device) for name, value in encoded.items()}
+            inference_seconds = time.perf_counter() - infer_start
 
-                infer_start = time.perf_counter()
-                with torch.inference_mode():
-                    output_ids = model.generate(
-                        **encoded,
-                        max_new_tokens=args.max_new_tokens,
-                        do_sample=args.temperature > 0.0,
-                        temperature=max(args.temperature, 1e-6),
-                        pad_token_id=tokenizer.pad_token_id,
-                        eos_token_id=tokenizer.eos_token_id,
-                    )
-                inference_seconds = time.perf_counter() - infer_start
-
-                generated_ids = output_ids[0][encoded["input_ids"].shape[-1] :]
-                raw_response = tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
-                reasoning, feedback, predicted_score, confidence = parse_model_payload(raw_response)
+            generated_ids = output_ids[0][encoded["input_ids"].shape[-1] :]
+            raw_response = tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
+            reasoning, feedback, predicted_score, confidence = parse_model_payload(raw_response)
 
             output_record = OutputRecord(
                 id=record.example_id,
@@ -473,7 +458,6 @@ def main() -> None:
         "output_dir": str(output_dir),
         "model_id": args.model_id,
         "device": device,
-        "dry_run": args.dry_run,
         "template_path": args.template_path,
         "system_role_path": args.system_role_path,
         "total_inputs": len(inputs),

@@ -1,9 +1,9 @@
 # Provenance Repair Report
 
 - Output parquet: `datasets/final/provenance.parquet`
-- Final JSONL rows scanned: `144015`
-- Provenance rows written: `144015`
-- Fully traceable rows: `144015`
+- Final JSONL rows scanned: `156428`
+- Provenance rows written: `156428`
+- Fully traceable rows: `156428`
 - All examples traceable: `YES`
 
 ## Required Field Completeness
@@ -21,15 +21,15 @@
 
 | split | rows |
 |---|---:|
-| test | 8396 |
-| train | 88749 |
-| validation | 46870 |
+| test | 13364 |
+| train | 91230 |
+| validation | 51834 |
 
 ## Counts by Original Dataset
 
 | original_dataset | rows |
 |---|---:|
-| asap_aes | 144007 |
+| asap_aes | 156420 |
 | hf/build_summary.json | 2 |
 | hf/dataset_dict/dataset_dict.json | 2 |
 | hf/dataset_dict/train/dataset_info.json | 2 |
@@ -39,14 +39,17 @@
 
 | artifact | input_rows | provenance_rows | match |
 |---|---:|---:|---|
+| final/dataset_dict/test | 1242 | 1242 | yes |
+| final/dataset_dict/train | 9930 | 9930 | yes |
+| final/dataset_dict/validation | 1241 | 1241 | yes |
 | final/merged_all.jsonl | 12413 | 12413 | yes |
 | final/quality_deduped.jsonl | 12413 | 12413 | yes |
 | final/quality_filtered.jsonl | 32493 | 32493 | yes |
 | final/quality_removed.jsonl | 20895 | 20895 | yes |
 | final/quality_scored.jsonl | 53388 | 53388 | yes |
-| final/test.jsonl | 0 | 0 | yes |
-| final/train.jsonl | 12413 | 12413 | yes |
-| final/validation.jsonl | 0 | 0 | yes |
+| final/test.jsonl | 1242 | 1242 | yes |
+| final/train.jsonl | 9930 | 9930 | yes |
+| final/validation.jsonl | 1241 | 1241 | yes |
 
 ## Preview Rows
 
