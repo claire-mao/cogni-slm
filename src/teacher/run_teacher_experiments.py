@@ -19,9 +19,18 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from urllib import error, parse, request
+from urllib import error, request
+from urllib.parse import urlparse
+
+from utils.environment import (
+    get_teacher_api_key,
+    get_teacher_base_url,
+    get_teacher_base_url_variable_name,
+    get_teacher_provider_mode,
+)
 
 from .provider_config import validate_provider_configuration
+from .providers.http import create_ssl_context
 
 
 @dataclass(frozen=True)
@@ -266,6 +275,20 @@ def _env_key_for_model_name(model_id: str) -> str:
     return f"TEACHER_MODEL_NAME_{normalized}"
 
 
+def _canonicalish_model_id(model_id: str) -> str:
+    raw = _normalize_text(model_id).lower().replace("-", "_")
+    return raw
+
+
+def _model_role_env_key(model: ModelSpec) -> str:
+    model_id = _canonicalish_model_id(model.model_id)
+    if model_id in {"gpt_5", "o3"}:
+        return "PRIMARY_TEACHER_MODEL"
+    if "claude" in model_id:
+        return "VERIFIER_MODEL"
+    return "SECONDARY_MODEL"
+
+
 def _infer_provider(model: ModelSpec) -> str:
     key = model.api_availability.lower()
     if "openai_api" in key:
@@ -334,8 +357,9 @@ def _http_json_post(
 ) -> tuple[int, dict[str, Any], str]:
     encoded = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     req = request.Request(url=url, data=encoded, headers=headers, method="POST")
+    ssl_context = create_ssl_context()
     try:
-        with request.urlopen(req, timeout=timeout_seconds) as resp:
+        with request.urlopen(req, timeout=timeout_seconds, context=ssl_context) as resp:
             status = int(resp.status)
             body = resp.read().decode("utf-8", errors="replace")
     except error.HTTPError as exc:  # pragma: no cover - runtime API failure path
@@ -466,17 +490,36 @@ def _gemini_text_and_usage(response_json: dict[str, Any]) -> tuple[str, int | No
 def _call_openai(
     *,
     model_name: str,
+    provider: str,
     prompt: str,
     temperature: float,
     seed: int,
     timeout_seconds: float,
     max_output_tokens: int,
 ) -> tuple[dict[str, Any], str, int | None, int | None]:
-    api_key = os.getenv("OPENAI_API_KEY")
+    provider_mode = get_teacher_provider_mode()
+    api_key = get_teacher_api_key()
     if not api_key:
-        raise RuntimeError("Missing OPENAI_API_KEY")
-    base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
-    url = f"{base_url}/chat/completions"
+        if provider_mode == "direct":
+            raise RuntimeError("Missing TEACHER_API_KEY")
+        raise RuntimeError("Missing TFY_API_KEY or TRUEFOUNDRY_API_KEY")
+    base_url = get_teacher_base_url()
+    base_url_var = get_teacher_base_url_variable_name()
+    if not base_url:
+        if provider_mode == "direct":
+            raise RuntimeError("Missing TEACHER_BASE_URL")
+        raise RuntimeError("Missing TFY_BASE_URL or TRUEFOUNDRY_BASE_URL")
+    parsed_url = urlparse(base_url)
+    if parsed_url.scheme not in {"http", "https"} or not parsed_url.netloc:
+        expected_name = (
+            base_url_var
+            or ("TEACHER_BASE_URL" if provider_mode == "direct" else "TFY_BASE_URL")
+        )
+        raise RuntimeError(
+            f"Invalid {expected_name}. "
+            f"Expected absolute http(s) URL, got: {base_url!r}"
+        )
+    url = f"{base_url.rstrip('/')}/chat/completions"
     payload = {
         "model": model_name,
         "messages": [{"role": "user", "content": prompt}],
@@ -495,7 +538,9 @@ def _call_openai(
         timeout_seconds=timeout_seconds,
     )
     if status >= 400:
-        raise RuntimeError(f"OpenAI API error status={status}: {response_json}")
+        raise RuntimeError(
+            f"TrueFoundry gateway API error provider={provider} status={status}: {response_json}"
+        )
     text, in_tokens, out_tokens = _openai_like_text_and_usage(response_json)
     return response_json, text, in_tokens, out_tokens
 
@@ -509,32 +554,15 @@ def _call_deepseek(
     timeout_seconds: float,
     max_output_tokens: int,
 ) -> tuple[dict[str, Any], str, int | None, int | None]:
-    api_key = os.getenv("DEEPSEEK_API_KEY")
-    if not api_key:
-        raise RuntimeError("Missing DEEPSEEK_API_KEY")
-    base_url = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1").rstrip("/")
-    url = f"{base_url}/chat/completions"
-    payload = {
-        "model": model_name,
-        "messages": [{"role": "user", "content": prompt}],
-        "temperature": temperature,
-        "seed": seed,
-        "max_tokens": max_output_tokens,
-        "response_format": {"type": "json_object"},
-    }
-    status, response_json, _ = _http_json_post(
-        url=url,
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
-        payload=payload,
+    return _call_openai(
+        model_name=model_name,
+        provider="deepseek",
+        prompt=prompt,
+        temperature=temperature,
+        seed=seed,
         timeout_seconds=timeout_seconds,
+        max_output_tokens=max_output_tokens,
     )
-    if status >= 400:
-        raise RuntimeError(f"DeepSeek API error status={status}: {response_json}")
-    text, in_tokens, out_tokens = _openai_like_text_and_usage(response_json)
-    return response_json, text, in_tokens, out_tokens
 
 
 def _call_openrouter_compatible(
@@ -546,46 +574,15 @@ def _call_openrouter_compatible(
     timeout_seconds: float,
     max_output_tokens: int,
 ) -> tuple[dict[str, Any], str, int | None, int | None]:
-    api_key = os.getenv("OPENROUTER_API_KEY")
-    if not api_key:
-        api_key = os.getenv("OPENROUTER_COMPAT_API_KEY")
-    if not api_key:
-        raise RuntimeError("Missing OPENROUTER_API_KEY or OPENROUTER_COMPAT_API_KEY")
-
-    base_url = os.getenv("OPENROUTER_COMPAT_BASE_URL")
-    if not base_url:
-        base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-    base_url = base_url.rstrip("/")
-    url = f"{base_url}/chat/completions"
-    payload = {
-        "model": model_name,
-        "messages": [{"role": "user", "content": prompt}],
-        "temperature": temperature,
-        "seed": seed,
-        "max_tokens": max_output_tokens,
-        "response_format": {"type": "json_object"},
-    }
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json",
-    }
-    referer = os.getenv("OPENROUTER_HTTP_REFERER")
-    if referer:
-        headers["HTTP-Referer"] = referer
-    title = os.getenv("OPENROUTER_X_TITLE")
-    if title:
-        headers["X-Title"] = title
-
-    status, response_json, _ = _http_json_post(
-        url=url,
-        headers=headers,
-        payload=payload,
+    return _call_openai(
+        model_name=model_name,
+        provider="openrouter_compatible",
+        prompt=prompt,
+        temperature=temperature,
+        seed=seed,
         timeout_seconds=timeout_seconds,
+        max_output_tokens=max_output_tokens,
     )
-    if status >= 400:
-        raise RuntimeError(f"OpenRouter-compatible API error status={status}: {response_json}")
-    text, in_tokens, out_tokens = _openai_like_text_and_usage(response_json)
-    return response_json, text, in_tokens, out_tokens
 
 
 def _call_anthropic(
@@ -597,33 +594,15 @@ def _call_anthropic(
     timeout_seconds: float,
     max_output_tokens: int,
 ) -> tuple[dict[str, Any], str, int | None, int | None]:
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    if not api_key:
-        raise RuntimeError("Missing ANTHROPIC_API_KEY")
-
-    _ = seed  # seed is tracked in records even if provider ignores it.
-    base_url = os.getenv("ANTHROPIC_BASE_URL", "https://api.anthropic.com/v1").rstrip("/")
-    url = f"{base_url}/messages"
-    payload = {
-        "model": model_name,
-        "max_tokens": max_output_tokens,
-        "temperature": temperature,
-        "messages": [{"role": "user", "content": prompt}],
-    }
-    status, response_json, _ = _http_json_post(
-        url=url,
-        headers={
-            "x-api-key": api_key,
-            "anthropic-version": os.getenv("ANTHROPIC_VERSION", "2023-06-01"),
-            "Content-Type": "application/json",
-        },
-        payload=payload,
+    return _call_openai(
+        model_name=model_name,
+        provider="anthropic",
+        prompt=prompt,
+        temperature=temperature,
+        seed=seed,
         timeout_seconds=timeout_seconds,
+        max_output_tokens=max_output_tokens,
     )
-    if status >= 400:
-        raise RuntimeError(f"Anthropic API error status={status}: {response_json}")
-    text, in_tokens, out_tokens = _anthropic_text_and_usage(response_json)
-    return response_json, text, in_tokens, out_tokens
 
 
 def _call_gemini(
@@ -635,32 +614,15 @@ def _call_gemini(
     timeout_seconds: float,
     max_output_tokens: int,
 ) -> tuple[dict[str, Any], str, int | None, int | None]:
-    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
-    if not api_key:
-        raise RuntimeError("Missing GEMINI_API_KEY or GOOGLE_API_KEY")
-
-    base_url = os.getenv("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta")
-    base_url = base_url.rstrip("/")
-    model_encoded = parse.quote(model_name, safe="")
-    url = f"{base_url}/models/{model_encoded}:generateContent?key={parse.quote(api_key, safe='')}"
-    payload = {
-        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-        "generationConfig": {
-            "temperature": temperature,
-            "maxOutputTokens": max_output_tokens,
-            "seed": seed,
-        },
-    }
-    status, response_json, _ = _http_json_post(
-        url=url,
-        headers={"Content-Type": "application/json"},
-        payload=payload,
+    return _call_openai(
+        model_name=model_name,
+        provider="gemini",
+        prompt=prompt,
+        temperature=temperature,
+        seed=seed,
         timeout_seconds=timeout_seconds,
+        max_output_tokens=max_output_tokens,
     )
-    if status >= 400:
-        raise RuntimeError(f"Gemini API error status={status}: {response_json}")
-    text, in_tokens, out_tokens = _gemini_text_and_usage(response_json)
-    return response_json, text, in_tokens, out_tokens
 
 
 def _call_provider(
@@ -676,6 +638,7 @@ def _call_provider(
     if provider == "openai":
         return _call_openai(
             model_name=model_name,
+            provider="openai",
             prompt=prompt,
             temperature=temperature,
             seed=seed,
@@ -1022,15 +985,27 @@ def _write_manifest(
 
 
 def _resolve_api_model_name(model: ModelSpec) -> str:
-    env_key = _env_key_for_model_name(model.model_id)
-    override = os.getenv(env_key)
-    if override and override.strip():
-        return override.strip()
+    role_env_key = _model_role_env_key(model)
+    role_model = os.getenv(role_env_key, "").strip()
+    if role_model:
+        return role_model
 
-    raw_name = model.raw.get("api_model_name")
-    if isinstance(raw_name, str) and raw_name.strip():
-        return raw_name.strip()
-    return model.model_id
+    per_model_key = _env_key_for_model_name(model.model_id)
+    override = os.getenv(per_model_key, "").strip()
+    if override:
+        return override
+
+    raw_key = model.raw.get("model_env_var")
+    if isinstance(raw_key, str) and raw_key.strip():
+        raw_override = os.getenv(raw_key.strip(), "").strip()
+        if raw_override:
+            return raw_override
+
+    raise ValueError(
+        "Missing model mapping env var for "
+        f"model_id={model.model_id!r}. Set {role_env_key} "
+        "or provide a model-specific override."
+    )
 
 
 def run_experiments(

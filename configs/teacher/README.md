@@ -2,6 +2,12 @@
 
 Teacher-model validation and inference-related configuration files.
 
+Default production teacher stack:
+
+- Primary teacher: GPT-5
+- Verifier: Claude Opus 4.8
+- Secondary teacher: Gemini 3.1 Pro
+
 ## Validation Protocol Configs
 
 - `teacher_validation_master.json`: top-level orchestration config for pre-labeling teacher selection.

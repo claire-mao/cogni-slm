@@ -17,8 +17,8 @@ This folder centralizes dataset-specific documentation.
 
 ## Licensing and Compliance
 
-- `license_audit.md`
-- `license_verification.md`
+- Current AP tutor release evidence is maintained under `docs/release/`.
+- Legacy pipeline license verification is generated under `outputs/reports/`.
 
 ## Provenance and Manifest
 

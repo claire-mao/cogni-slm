@@ -588,11 +588,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build prioritized human review queue.")
     parser.add_argument(
         "--teacher-outputs",
-        default="outputs/teacher_round1/round1_teacher_validation/collected_outputs.jsonl",
+        default="outputs/teacher_runs/production_labeling_v1/responses.jsonl",
     )
     parser.add_argument(
         "--gold-path",
-        default="datasets/gold/review_package/review_forms.jsonl",
+        default="datasets/final/merged_all.jsonl",
     )
     parser.add_argument("--output-dir", default="datasets/review/queue")
     parser.add_argument("--min-priority-score", type=float, default=0.35)

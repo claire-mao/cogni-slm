@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "baseline_eval_artifact_exists": true,
+    "colab_notebook_exists": true,
+    "env_example_exists": true,
+    "git_user_email_set": true,
+    "git_user_name_set": true,
+    "github_remote_configured": true,
+    "huggingface_setup_scaffolded": true,
+    "inference_notebook_exists": true,
+    "inference_script_exists": true,
+    "providers_config_exists": true,
+    "teacher_models_set": true,
+    "unsloth_training_config_exists": true
+  },
+  "readiness": 1.0,
+  "ready_count": 12,
+  "total_checks": 12
+}

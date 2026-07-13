@@ -28,15 +28,15 @@ Scope notes:
 
 - Essay grading: No direct o3 essay-grading benchmark with human-rater statistics was located.
 - Rubric following: No direct o3 result in the rubric-verification benchmarks used here (RubricEval, RuVerBench).
-- Educational feedback: In the "Arena for Learning" benchmark (`N=189` educators for interactions, `N=206` expert judges), Gemini 2.5 Pro was preferred over OpenAI o3 in `74.2%` of head-to-head pedagogical-quality matchups (excluding ties). [3]
+- Educational feedback: In the "Arena for Learning" benchmark (`N=189` educators for interactions, `N=206` expert judges), Gemini 3.1 Pro was preferred over OpenAI o3 in `74.2%` of head-to-head pedagogical-quality matchups (excluding ties). [3]
 - Logical fallacy identification: No direct published fallacy benchmark result for o3 was located.
 - Argument quality assessment: No direct published argument-quality benchmark result for o3 was located.
 - Consistency across repeated evaluations: No direct repeated-run reliability study for o3 on educational grading was located.
 
-## Claude Opus 4
+## Claude Opus 4.8
 
 - Essay grading: No direct published Opus-4 essay-grading benchmark with human-rater agreement metrics was located.
-- Rubric following: In RuVerBench, Claude Opus 4.7 scored `91.7` (Deep Research) and `85.0` (Agentic Coding) Avg Balanced Accuracy. [2]
+- Rubric following: In RuVerBench, Claude Opus 4.8.7 scored `91.7` (Deep Research) and `85.0` (Agentic Coding) Avg Balanced Accuracy. [2]
 - Educational feedback: No direct Opus-4 educational-feedback benchmark in classroom grading/tutoring settings was located.
 - Logical fallacy identification: No direct published Opus-4 fallacy-identification result was located.
 - Argument quality assessment: No direct published Opus-4 argument-quality benchmark result was located.
@@ -51,16 +51,16 @@ Scope notes:
 - Argument quality assessment: No direct Sonnet-4 argument-quality benchmark result was located.
 - Consistency across repeated evaluations: Domain gaps in [1] (math/science vs ELA) and category gaps in [2] (e.g., lower Tools score) indicate materially different behavior across task types.
 
-## Gemini 2.5 Pro
+## Gemini 3.1 Pro
 
 - Essay grading: In one higher-education rubric essay-scoring study (67 essays, three replications/model), Gemini 2.5 had low human agreement (`QWK 0.00`, non-significant) and weak within-model concordance in repeated runs (reported with low Kendall's W patterns). [4]
-- Rubric following: No direct Gemini 2.5 Pro entry in RuVerBench (Gemini 3.1 is evaluated there), but RubricEval shows rubric-level judging remains difficult even for strong frontier judges. [6][2]
-- Educational feedback: In Arena for Learning, Gemini 2.5 Pro ranked first overall and was preferred in `73.2%` of matchups (excluding ties), with leading pedagogy-rubric outcomes in that benchmark. [3]
-- Logical fallacy identification: No direct Gemini 2.5 Pro fallacy-identification benchmark result was located.
-- Argument quality assessment: No direct Gemini 2.5 Pro argument-quality benchmark result was located.
+- Rubric following: No direct Gemini 3.1 Pro entry in RuVerBench (Gemini 3.1 is evaluated there), but RubricEval shows rubric-level judging remains difficult even for strong frontier judges. [6][2]
+- Educational feedback: In Arena for Learning, Gemini 3.1 Pro ranked first overall and was preferred in `73.2%` of matchups (excluding ties), with leading pedagogy-rubric outcomes in that benchmark. [3]
+- Logical fallacy identification: No direct Gemini 3.1 Pro fallacy-identification benchmark result was located.
+- Argument quality assessment: No direct Gemini 3.1 Pro argument-quality benchmark result was located.
 - Consistency across repeated evaluations: Evidence is mixed by context: strong pedagogy preference in [3], but weak score reproducibility/alignment in one essay-scoring setup in [4].
 
-## DeepSeek R1
+## Gemini 3.1 Pro
 
 - Essay grading: In a Scientific Reports higher-education grading benchmark, DeepSeek-R1 is reported as the closest to human evaluation in both numeric grading and feedback quality among six tested models. [5]
 - Rubric following: No direct DeepSeek-R1 result in RuVerBench (DeepSeek V4 variants are reported there). [2]

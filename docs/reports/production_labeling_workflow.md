@@ -43,6 +43,11 @@ Input:
 2. Teacher stack configuration (model, prompt version, schema version).
 3. Prompt artifacts under `teacher_prompts/`.
 
+Production stack target:
+1. GPT-5 (primary teacher)
+2. Claude Opus 4.8 (verifier)
+3. Gemini 3.1 Pro (secondary teacher)
+
 Output:
 1. Response records (JSONL) with raw output and metadata.
 2. Latency, token usage, and estimated cost fields.

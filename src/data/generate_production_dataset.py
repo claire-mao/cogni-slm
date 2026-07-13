@@ -398,7 +398,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--run-id", default=None)
     parser.add_argument("--workflow-root", default="outputs/dataset_generation")
 
-    parser.add_argument("--input-jsonl", default="datasets/gold/gold_v1.jsonl")
+    parser.add_argument("--input-jsonl", default="datasets/final/merged_all.jsonl")
     parser.add_argument("--teacher-outputs-path", default=None)
     parser.add_argument("--teacher-model-id", default="gpt-5")
     parser.add_argument(

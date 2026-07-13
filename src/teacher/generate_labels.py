@@ -527,7 +527,7 @@ def run_pipeline(config: PipelineConfig) -> dict[str, Any]:
 def parse_args() -> argparse.Namespace:
     """Parse CLI args."""
     parser = argparse.ArgumentParser(description="Run production SFT label generation pipeline.")
-    parser.add_argument("--input-jsonl", default="datasets/gold/gold_v1.jsonl")
+    parser.add_argument("--input-jsonl", default="datasets/final/merged_all.jsonl")
     parser.add_argument("--output-root", default="datasets/sft")
     parser.add_argument("--teacher-model-id", default="gpt-5")
     parser.add_argument(

@@ -4,6 +4,11 @@ Offline benchmarking utilities for evaluating teacher-model outputs against:
 
 - `datasets/gold/gold_v1.jsonl`
 
+Default production stack in configs:
+- GPT-5 (primary teacher)
+- Claude Opus 4.8 (verifier)
+- Gemini 3.1 Pro (secondary teacher)
+
 No provider APIs are called by this framework.
 
 ## Run

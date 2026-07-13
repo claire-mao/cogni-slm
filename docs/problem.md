@@ -1,64 +1,30 @@
-# Cogni Problem Definition
+# Cogni Problem Definition (AP Lang Fallacy Tutor)
 
-## 1. Objective
-Build a fine-tuned small language model (SLM) that teaches logical fallacies through structured analogical reasoning.
+## Objective
+Build a small fine-tuned language model that teaches AP English Language students to identify logical fallacies through a strict, repeatable instructional sequence.
 
-The model should not only label a fallacy, but also produce an instructional analogy that helps a learner transfer understanding to new arguments.
+## Educational Problem
+Students preparing for AP English Language and Composition often memorize fallacy definitions but struggle to recognize reasoning patterns in authentic arguments and transfer them to new contexts.
 
-## 2. Why This Problem Matters
-- Fallacy education is often definition-heavy and hard to apply in unfamiliar contexts.
-- Learners need explanation patterns that generalize beyond memorized examples.
-- Analogical reasoning is a practical bridge between abstract logic concepts and concrete examples.
+Prompted general models can often name fallacies, but they are unreliable tutors. They frequently skip steps, name multiple fallacies, reuse the student's scenario instead of teaching transfer, or simply judge correctness rather than teaching reasoning.
 
-## 3. Primary Users and Use Cases
-- Learners studying critical thinking, rhetoric, or argument analysis.
-- Educators who need consistent, explainable examples.
-- Self-study users who want feedback on why an argument is fallacious and how to improve it.
+## Research Question
+Can supervised fine-tuning teach a small language model to consistently identify one primary fallacy (or none) and teach it through a novel cross-domain analogy more reliably than prompting alone?
 
-Core use cases:
-- Diagnose potential fallacies in short arguments.
-- Explain diagnosis with a structured analogy.
-- Contrast flawed reasoning with a corrected alternative.
+## Users
+- Primary: AP English Language and Composition students.
+- Secondary: Teachers who need consistent structured tutoring examples.
 
-## 4. Scope
+## Scope
 In scope:
-- Technical foundation for data, behavior specification, architecture, and roadmap.
-- Behavior-first specification before any ML implementation.
-- Evaluation planning for pedagogical quality and reasoning faithfulness.
+- Fallacy-focused AP tutoring behavior.
+- Behavior-spec-driven dataset generation, training, and evaluation.
+- Base-vs-tuned proof on a held-out benchmark.
 
-Out of scope (current phase):
-- Training pipelines and model fine-tuning code.
-- Reported benchmark scores or performance claims.
-- Production serving infrastructure.
+Out of scope:
+- Essay grading or AP score prediction.
+- General writing tutoring.
+- Broad English instruction beyond this behavior.
 
-## 5. Research Questions
-1. Does structured analogical explanation improve learner transfer compared with plain definitions?
-2. Which output structure best balances pedagogical clarity and reasoning rigor?
-3. How reliably can the model distinguish closely related fallacies?
-4. What failure patterns appear when arguments contain multiple possible fallacies?
-
-## 6. Success Criteria (Pre-Implementation)
-- A clear and testable behavior contract exists (see `docs/behavior_spec.md`).
-- Data lifecycle and project modules are specified against repository structure.
-- Roadmap defines staged milestones, exit criteria, and risk controls.
-- Known assumptions are explicit and tagged for validation.
-
-## 7. Constraints
-- Small-model orientation: design must remain parameter- and compute-conscious.
-- Explanations must be pedagogically useful, not just taxonomic labels.
-- Outputs must support future automated and human evaluation.
-- No fabricated claims about training or evaluation outcomes.
-
-## 8. Assumptions To Validate
-- A1: Structured analogy improves comprehension for most target learners.
-- A2: A compact fallacy taxonomy can cover initial use cases without major ambiguity.
-- A3: Instructional quality can be evaluated with reliable annotation guidelines.
-- A4: Reasoning-faithful explanations are feasible for a small model under constrained context.
-- A5: The chosen output format can be scored consistently by both humans and scripted checks.
-
-## 9. Relationship to Repository Layout
-- `docs/` holds problem framing, behavior contract, architecture, and roadmap.
-- `datasets/` will track the raw -> processed -> eval lifecycle once data work starts.
-- `configs/` will hold behavior/eval/training configuration contracts.
-- `tests/` will enforce behavior and interface invariants derived from the behavior spec.
-
+## Why Fine-Tuning (Not Prompting)
+The target is not raw capability; it is protocol reliability. The model must execute the same seven-step instructional behavior every time, including adversarial attempts to bypass the process.

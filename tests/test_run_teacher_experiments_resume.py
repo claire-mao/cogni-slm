@@ -27,6 +27,10 @@ def _read_jsonl(path: Path) -> list[dict]:
 
 
 def test_run_experiments_resume_is_idempotent(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("PRIMARY_TEACHER_MODEL", "openai-group/gpt-5")
+    monkeypatch.setenv("VERIFIER_MODEL", "claude-group/claude-opus-4-8")
+    monkeypatch.setenv("SECONDARY_MODEL", "gemini-group/gemini-3.1-pro")
+
     output_root = tmp_path / "outputs"
     prompt_template = tmp_path / "prompt.txt"
     eval_jsonl = tmp_path / "eval.jsonl"

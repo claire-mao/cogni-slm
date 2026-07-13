@@ -12,7 +12,7 @@ license = { file = "LICENSE" }
 authors = [
   { name = "Cogni Contributors" }
 ]
-dependencies = []
+dependencies = ["certifi>=2024.0.0"]
 
 [project.optional-dependencies]
 dev = [

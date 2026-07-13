@@ -1,0 +1,48 @@
+{
+  "version": "1.0",
+  "policy": "Public release is blocked unless every observed source is explicitly approved.",
+  "sources": {
+    "argotario": {
+      "status": "approved",
+      "license": "CC0-1.0",
+      "evidence_url": "https://github.com/UKPLab/argotario#english-data",
+      "local_evidence": "datasets/raw/fallacy/source_files/argotario/README.md",
+      "notes": "The upstream README explicitly places the English argument data under CC0."
+    },
+    "logical_fallacy_climate": {
+      "status": "blocked_no_license",
+      "license": "unknown",
+      "evidence_url": "https://github.com/causalNLP/logical-fallacy",
+      "local_evidence": "datasets/raw/fallacy/source_files/logical-fallacy/README.md",
+      "notes": "Repository contains no license file and its README does not grant redistribution rights."
+    },
+    "logical_fallacy_detection_intermediate": {
+      "status": "blocked_no_license",
+      "license": "unknown",
+      "evidence_url": "https://github.com/causalNLP/logical-fallacy",
+      "local_evidence": "datasets/raw/fallacy/source_files/logical-fallacy/codes_to_get_data/intermediate_data_files/20210901_final_data.csv",
+      "notes": "Aggregated quiz-derived text has no clear redistribution grant; exclude from public release."
+    },
+    "logical_fallacy_edu": {
+      "status": "blocked_no_license",
+      "license": "unknown",
+      "evidence_url": "https://github.com/causalNLP/logical-fallacy",
+      "local_evidence": "datasets/raw/fallacy/source_files/logical-fallacy/README.md",
+      "notes": "Repository contains no license file and its README does not grant redistribution rights."
+    },
+    "mafalda_gold": {
+      "status": "blocked_no_license",
+      "license": "unknown",
+      "evidence_url": "https://github.com/ChadiHelwe/MAFALDA",
+      "local_evidence": "datasets/raw/fallacy/source_files/MAFALDA/README.md",
+      "notes": "Repository contains no license file or explicit redistribution grant."
+    },
+    "mafalda_unannotated": {
+      "status": "blocked_no_license",
+      "license": "unknown",
+      "evidence_url": "https://github.com/ChadiHelwe/MAFALDA",
+      "local_evidence": "datasets/raw/fallacy/source_files/MAFALDA/README.md",
+      "notes": "Repository contains no license file; incorporated source-corpus terms are also unresolved."
+    }
+  }
+}

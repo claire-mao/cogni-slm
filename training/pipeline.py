@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 import json
 from dataclasses import asdict
 from datetime import datetime, timezone
@@ -23,31 +24,37 @@ def build_training_arguments(config: PipelineConfig, has_eval: bool) -> Training
     fp16_available = torch.cuda.is_available() and not bf16_available
 
     evaluation_strategy = config.trainer.evaluation_strategy if has_eval else "no"
+    kwargs: dict[str, Any] = {
+        "output_dir": config.trainer.output_dir,
+        "logging_dir": config.trainer.logging_dir,
+        "num_train_epochs": config.trainer.num_train_epochs,
+        "learning_rate": config.trainer.learning_rate,
+        "weight_decay": config.trainer.weight_decay,
+        "warmup_ratio": config.trainer.warmup_ratio,
+        "lr_scheduler_type": config.trainer.lr_scheduler_type,
+        "seed": config.trainer.seed,
+        "per_device_train_batch_size": config.trainer.per_device_train_batch_size,
+        "per_device_eval_batch_size": config.trainer.per_device_eval_batch_size,
+        "gradient_accumulation_steps": config.trainer.gradient_accumulation_steps,
+        "eval_steps": config.trainer.eval_steps,
+        "save_strategy": config.trainer.save_strategy,
+        "save_steps": config.trainer.save_steps,
+        "save_total_limit": config.trainer.save_total_limit,
+        "logging_strategy": config.trainer.logging_strategy,
+        "logging_steps": config.trainer.logging_steps,
+        "report_to": config.trainer.report_to,
+        "fp16": fp16_available,
+        "bf16": bf16_available,
+        "remove_unused_columns": False,
+    }
 
-    return TrainingArguments(
-        output_dir=config.trainer.output_dir,
-        logging_dir=config.trainer.logging_dir,
-        num_train_epochs=config.trainer.num_train_epochs,
-        learning_rate=config.trainer.learning_rate,
-        weight_decay=config.trainer.weight_decay,
-        warmup_ratio=config.trainer.warmup_ratio,
-        lr_scheduler_type=config.trainer.lr_scheduler_type,
-        seed=config.trainer.seed,
-        per_device_train_batch_size=config.trainer.per_device_train_batch_size,
-        per_device_eval_batch_size=config.trainer.per_device_eval_batch_size,
-        gradient_accumulation_steps=config.trainer.gradient_accumulation_steps,
-        evaluation_strategy=evaluation_strategy,
-        eval_steps=config.trainer.eval_steps,
-        save_strategy=config.trainer.save_strategy,
-        save_steps=config.trainer.save_steps,
-        save_total_limit=config.trainer.save_total_limit,
-        logging_strategy=config.trainer.logging_strategy,
-        logging_steps=config.trainer.logging_steps,
-        report_to=config.trainer.report_to,
-        fp16=fp16_available,
-        bf16=bf16_available,
-        remove_unused_columns=False,
-    )
+    params = inspect.signature(TrainingArguments.__init__).parameters
+    if "evaluation_strategy" in params:
+        kwargs["evaluation_strategy"] = evaluation_strategy
+    elif "eval_strategy" in params:
+        kwargs["eval_strategy"] = evaluation_strategy
+
+    return TrainingArguments(**kwargs)
 
 
 def _build_trainer(
@@ -60,26 +67,67 @@ def _build_trainer(
     max_seq_length: int,
     eval_log_path: str,
 ) -> Any:
-    """Construct TRL SFTTrainer instance."""
-    try:
-        from trl import SFTTrainer
-    except ImportError as exc:  # pragma: no cover
-        raise RuntimeError("trl is required. Install with: pip install trl") from exc
-
+    """Construct a trainer (TRL SFTTrainer preferred, Transformers Trainer fallback)."""
     callbacks = [EvalMetricsCallback(eval_log_path)] if eval_dataset is not None else []
 
-    trainer = SFTTrainer(
-        model=model,
-        tokenizer=tokenizer,
-        train_dataset=train_dataset,
-        eval_dataset=eval_dataset,
-        dataset_text_field="text",
-        max_seq_length=max_seq_length,
-        packing=False,
-        args=training_args,
-        callbacks=callbacks,
-    )
-    return trainer
+    try:
+        from trl import SFTTrainer
+
+        signature = inspect.signature(SFTTrainer.__init__).parameters
+        kwargs: dict[str, Any] = {
+            "model": model,
+            "train_dataset": train_dataset,
+            "eval_dataset": eval_dataset,
+            "args": training_args,
+            "callbacks": callbacks,
+        }
+        if "tokenizer" in signature:
+            kwargs["tokenizer"] = tokenizer
+        if "processing_class" in signature:
+            kwargs["processing_class"] = tokenizer
+        if "dataset_text_field" in signature:
+            kwargs["dataset_text_field"] = "text"
+        if "max_seq_length" in signature:
+            kwargs["max_seq_length"] = max_seq_length
+        if "packing" in signature:
+            kwargs["packing"] = False
+
+        return SFTTrainer(**kwargs)
+    except Exception:
+        # Fallback for TRL/Transformers compatibility issues in constrained envs.
+        from transformers import DataCollatorForLanguageModeling, Trainer
+
+        def tokenize_batch(batch: dict[str, Any]) -> dict[str, Any]:
+            return tokenizer(
+                batch["text"],
+                truncation=True,
+                max_length=max_seq_length,
+            )
+
+        tokenized_train = train_dataset.map(
+            tokenize_batch,
+            batched=True,
+            remove_columns=train_dataset.column_names,
+        )
+        tokenized_eval = (
+            eval_dataset.map(
+                tokenize_batch,
+                batched=True,
+                remove_columns=eval_dataset.column_names,
+            )
+            if eval_dataset is not None
+            else None
+        )
+
+        collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
+        return Trainer(
+            model=model,
+            args=training_args,
+            train_dataset=tokenized_train,
+            eval_dataset=tokenized_eval,
+            data_collator=collator,
+            callbacks=callbacks,
+        )
 
 
 def _write_metadata(path: str | Path, payload: dict[str, Any]) -> None:

@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import json
+import ssl
 from typing import Any
 from urllib import error, request
+
+import certifi
 
 
 class ProviderError(RuntimeError):
@@ -37,6 +40,11 @@ class ProviderHTTPError(ProviderError):
 
 class ProviderValidationError(ProviderError):
     """Output validation failure."""
+
+
+def create_ssl_context() -> ssl.SSLContext:
+    """Build verified TLS context using certifi CA bundle."""
+    return ssl.create_default_context(cafile=certifi.where())
 
 
 def _extract_error_message(response_json: dict[str, Any], response_body: str) -> str:
@@ -106,8 +114,10 @@ def http_json_post(
         method="POST",
     )
 
+    ssl_context = create_ssl_context()
+
     try:
-        with request.urlopen(req, timeout=timeout_seconds) as response:
+        with request.urlopen(req, timeout=timeout_seconds, context=ssl_context) as response:
             status = int(response.status)
             body = response.read().decode("utf-8", errors="replace")
     except error.HTTPError as exc:  # pragma: no cover - runtime API variability

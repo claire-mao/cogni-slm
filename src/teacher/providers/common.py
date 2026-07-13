@@ -336,6 +336,33 @@ def estimate_cost_usd_for_usage(
     if canonical_model_hint:
         candidate_ids.append(canonical_model_hint)
     candidate_ids.append(model_name)
+    if "/" in model_name:
+        candidate_ids.append(model_name.rsplit("/", maxsplit=1)[-1])
+    if ":" in model_name:
+        candidate_ids.append(model_name.rsplit(":", maxsplit=1)[-1])
+    lowered = model_name.lower()
+    heuristic_aliases = (
+        "gpt-5",
+        "o3",
+        "claude_opus_4_8",
+        "claude-opus-4-8",
+        "claude_opus_4",
+        "claude-opus-4",
+        "claude_sonnet_4",
+        "claude-sonnet-4",
+        "gemini_3_1_pro",
+        "gemini-3.1-pro",
+        "gemini_2_5_pro",
+        "gemini-2.5-pro",
+        "deepseek_r1",
+        "deepseek-r1",
+        "qwen3",
+        "llama_4_maverick",
+        "llama-4-maverick",
+    )
+    for alias in heuristic_aliases:
+        if alias in lowered:
+            candidate_ids.append(alias)
     for candidate in candidate_ids:
         try:
             canonical = canonical_model_id(candidate)

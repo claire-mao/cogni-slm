@@ -53,57 +53,61 @@
   "planned_comparisons": {
     "single_teacher_candidates": [
       "gpt-5",
+      "claude_opus_4_8",
+      "gemini_3_1_pro",
       "o3",
-      "claude_opus_4x",
       "claude_sonnet_4x",
-      "gemini_2_5_pro",
-      "deepseek_r1",
       "qwen3",
       "llama4_maverick"
     ],
     "three_teacher_majority_vote_triplets": [
       [
         "gpt-5",
-        "claude_sonnet_4x",
-        "gemini_2_5_pro"
+        "claude_opus_4_8",
+        "gemini_3_1_pro"
       ],
       [
         "gpt-5",
-        "deepseek_r1",
+        "gemini_3_1_pro",
         "qwen3"
       ],
       [
-        "claude_opus_4x",
-        "gemini_2_5_pro",
-        "deepseek_r1"
+        "claude_opus_4_8",
+        "claude_sonnet_4x",
+        "gemini_3_1_pro"
+      ],
+      [
+        "claude_opus_4_8",
+        "gemini_3_1_pro",
+        "qwen3"
       ]
     ],
     "teacher_judge_pairs": [
       {
-        "teacher": "claude_sonnet_4x",
+        "teacher": "claude_opus_4_8",
         "judge": "gpt-5"
       },
       {
         "teacher": "gpt-5",
-        "judge": "claude_opus_4x"
+        "judge": "claude_opus_4_8"
       },
       {
-        "teacher": "deepseek_r1",
-        "judge": "gpt-5"
+        "teacher": "gemini_3_1_pro",
+        "judge": "claude_opus_4_8"
       }
     ],
     "teacher_verifier_pairs": [
       {
-        "teacher": "gemini_2_5_pro",
-        "verifier": "claude_sonnet_4x"
+        "teacher": "gemini_3_1_pro",
+        "verifier": "claude_opus_4_8"
       },
       {
         "teacher": "gpt-5",
-        "verifier": "qwen3"
+        "verifier": "claude_opus_4_8"
       },
       {
-        "teacher": "claude_opus_4x",
-        "verifier": "deepseek_r1"
+        "teacher": "o3",
+        "verifier": "gemini_3_1_pro"
       }
     ]
   },

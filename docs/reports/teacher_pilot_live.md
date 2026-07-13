@@ -8,8 +8,8 @@ Run target: `teacher-pilot20-live-v1`
 - Dataset: `datasets/gold/pilot20_v1.jsonl` (20 examples)
 - Teachers:
   - `gpt-5` (OpenAI)
-  - `claude_opus_4x` (Anthropic)
-  - `deepseek_r1` (DeepSeek)
+  - `claude_opus_4_8` (Anthropic)
+  - `gemini_3_1_pro` (Google)
 - Tasks:
   - essay scoring
   - rubric adherence
@@ -34,9 +34,11 @@ Captured report:
 
 Missing credentials:
 
-- `OPENAI_API_KEY`
-- `ANTHROPIC_API_KEY`
-- `DEEPSEEK_API_KEY`
+- `TFY_API_KEY` (or `TRUEFOUNDRY_API_KEY`)
+- `TFY_BASE_URL` (or `TRUEFOUNDRY_BASE_URL`)
+- `PRIMARY_TEACHER_MODEL`
+- `VERIFIER_MODEL`
+- `SECONDARY_MODEL`
 
 ## Resume Command
 
@@ -80,4 +82,3 @@ python3 -m src.teacher.leaderboard \
   --output-json docs/reports/teacher_leaderboard.json \
   --output-md docs/reports/teacher_leaderboard.md
 ```
-

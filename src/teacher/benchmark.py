@@ -497,8 +497,12 @@ def _canonical_or_none(model_name: str) -> str | None:
 
     alias = _normalize_text(model_name).lower().replace("-", "_").replace(" ", "_")
     fallback_aliases = {
-        "claude_opus_4x": "claude_opus_4",
+        "claude_opus_4_8": "claude_opus_4_8",
+        "claude_opus_4x": "claude_opus_4_8",
+        "claude_opus_4": "claude_opus_4_8",
         "claude_sonnet_4x": "claude_sonnet_4",
+        "gemini_3_1_pro": "gemini_3_1_pro",
+        "gemini_2_5_pro": "gemini_3_1_pro",
         "llama4_maverick": "llama_4_maverick",
     }
     return fallback_aliases.get(alias)

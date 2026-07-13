@@ -12,8 +12,8 @@ This overview compares current state-of-the-art model families for:
 Notes:
 
 - Capability claims below are based on vendor/model-card docs and benchmark disclosures, then mapped to education-assessment use cases.
-- `Claude Opus 4` and `Claude Sonnet 4` base snapshots were retired on June 15, 2026; active replacements in those families are used for deployable specs.
-- `deepseek-reasoner` (DeepSeek R1 compatibility alias) is scheduled for deprecation on July 24, 2026.
+- `Claude Opus 4.8` and `Claude Sonnet 4` base snapshots were retired on June 15, 2026; active replacements in those families are used for deployable specs.
+- `gemini-group/gemini-3.1-pro` (Gemini 3.1 Pro compatibility alias) is scheduled for deprecation on July 24, 2026.
 
 ## GPT-5
 
@@ -43,14 +43,14 @@ Notes:
 - Reasoning ability: Very high (OpenAI positions it as a top reasoning model for complex multi-step tasks).
 - Structured output support: Supported.
 
-## Claude Opus 4 (family status: Opus 4 base retired; active replacement Opus 4.8)
+## Claude Opus 4.8 (family status: Opus 4 base retired; active replacement Opus 4.8)
 
 - Strengths:
   - Strong long-context reasoning and writing quality are useful for holistic essay scoring and rich formative feedback.
   - Claude 4 family is positioned as top-tier on reasoning, long-context handling, and honesty-related behavior.
   - Structured outputs are GA on current Opus 4.x active models.
 - Weaknesses:
-  - Original `claude-opus-4-20250514` is retired (June 15, 2026); migration handling is required.
+  - Original `claude-opus-4-8-20250514` is retired (June 15, 2026); migration handling is required.
   - Structured-output behavior differs by model generation/version, so schema pipelines should pin specific snapshots.
 - Context window: Use active Opus 4.x replacement (`claude-opus-4-8`) at 1M context (legacy base Opus 4 snapshot retired).
 - API availability: Claude API; also available through major clouds (AWS/Bedrock, Google Cloud, Microsoft Foundry) per Anthropic docs.
@@ -71,7 +71,7 @@ Notes:
 - Reasoning ability: High (Anthropic positions Sonnet line as strong speed/intelligence balance).
 - Structured output support: Supported on Sonnet 4.6/4.5 and newer supported snapshots.
 
-## Gemini 2.5 Pro
+## Gemini 3.1 Pro
 
 - Strengths:
   - Google positions it as a state-of-the-art thinking model for complex problem solving.
@@ -85,14 +85,14 @@ Notes:
 - Reasoning ability: Very high (explicitly marketed as advanced for complex reasoning).
 - Structured output support: Supported.
 
-## DeepSeek R1
+## Gemini 3.1 Pro
 
 - Strengths:
   - DeepSeek reports strong reasoning benchmark performance and near-o1-class results on math/code/reasoning tasks.
   - Open model availability enables local/private deployments and custom evaluator pipelines.
   - Official DeepSeek API stack provides OpenAI-compatible interfaces.
 - Weaknesses:
-  - Official API alias path is in transition: `deepseek-reasoner` deprecates July 24, 2026 (maps to V4-flash thinking mode currently).
+  - Official API alias path is in transition: `gemini-group/gemini-3.1-pro` deprecates July 24, 2026 (maps to V4-flash thinking mode currently).
   - DeepSeek usage guidance notes risks like repetition/incoherence without tuned decoding and prompting.
   - Production behavior differs between open-weight R1 self-hosting and managed DeepSeek V4 API routes.
 - Context window:
@@ -153,7 +153,7 @@ Notes:
 - Anthropic structured outputs / consistency docs:
   - https://platform.claude.com/docs/en/build-with-claude/structured-outputs
   - https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency
-- Gemini 2.5 Pro model page: https://ai.google.dev/gemini-api/docs/models/gemini-2.5-pro
+- Gemini 3.1 Pro model page: https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro
 - DeepSeek API quickstart + models/pricing:
   - https://api-docs.deepseek.com/guides/reasoning_model
   - https://api-docs.deepseek.com/quick_start/pricing/

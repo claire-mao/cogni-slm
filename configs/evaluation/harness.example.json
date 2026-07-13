@@ -1,14 +1,12 @@
 {
-  "base_model_id": "Qwen/Qwen3-0.6B",
-  "tuned_model_id": "Qwen/Qwen3-1.7B-Instruct",
-  "dataset_path": "datasets/training",
-  "dataset_split": "validation",
-  "output_dir": "outputs/evaluation/harness",
-  "prompt_template_path": "teacher_prompts/local_teacher_inference_template.txt",
-  "system_role_path": "teacher_prompts/system_role.txt",
-  "max_examples": 128,
-  "max_new_tokens": 320,
+  "base_model_id": "Qwen/Qwen3-1.7B-Instruct",
+  "tuned_model_id": "models/unsloth_qlora/ap_tutor_v1",
+  "dataset_path": "datasets/eval/heldout_benchmark_public_v1.jsonl",
+  "dataset_split": "heldout_benchmark",
+  "output_dir": "outputs/evaluation/ap_harness",
+  "prompt_template_path": "teacher_prompts/ap_fallacy_tutor_teacher.txt",
+  "max_examples": 30,
+  "max_new_tokens": 512,
   "temperature": 0.0,
-  "local_files_only": true,
   "dry_run": false
 }

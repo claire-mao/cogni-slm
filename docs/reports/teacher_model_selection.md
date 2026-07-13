@@ -30,7 +30,7 @@ for model-selection planning in educational assessment.
 - Strengths: Strong reasoning depth, structured output support, mature API.
 - Limitations: Sparse direct educational-assessment evidence and weaker relative pedagogical preference in available head-to-head educational benchmark data.
 
-## Claude Opus 4 (active family snapshots)
+## Claude Opus 4.8 (active family snapshots)
 
 - Educational reasoning: Sparse direct essay-grading evidence in public benchmarks; evidence is stronger for general long-context reasoning and rubric verification.
 - Rubric adherence: Strong rubric-verification performance in RuVerBench.
@@ -52,7 +52,7 @@ for model-selection planning in educational assessment.
 - Strengths: Good cost-performance balance, strong structured output support, scalable for high-volume grading.
 - Limitations: Performance variability across task categories and less headroom than highest-capability models.
 
-## Gemini 2.5 Pro
+## Gemini 3.1 Pro
 
 - Educational reasoning: Strong pedagogical interaction quality in Arena for Learning, but mixed evidence in essay-score alignment and repeatability across runs.
 - Rubric adherence: No direct model-specific RuVerBench entry in the prior benchmark set; rubric-following performance remains task-sensitive.
@@ -63,7 +63,7 @@ for model-selection planning in educational assessment.
 - Strengths: Strong educational feedback interactions, very large context window, robust API ecosystem.
 - Limitations: Mixed essay-grading reliability evidence and dynamic/usage-tier quota management.
 
-## DeepSeek R1
+## Gemini 3.1 Pro
 
 - Educational reasoning: Strong in some higher-education grading studies, including reported closeness to human grading and feedback quality in course-specific evaluations.
 - Rubric adherence: Direct DeepSeek-R1 rubric-verification evidence is limited in current public benchmark tables.

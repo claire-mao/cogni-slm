@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -30,6 +31,9 @@ class ParsedModelOutput:
 
 class LocalModelRunner:
     """Local text-generation runner with optional dry-run mode."""
+
+    _SCORE_KEYS = ("predicted_score", "score_prediction", "score")
+    _CONFIDENCE_KEYS = ("confidence", "score_confidence", "confidence_score")
 
     def __init__(
         self,
@@ -94,11 +98,14 @@ class LocalModelRunner:
         self._device = device
 
     def _render_prompt(self, record: EvalRecord) -> str:
-        return (
+        body = (
             self.prompt_template.replace("{{prompt}}", record.prompt)
             .replace("{{essay}}", record.essay)
             .replace("{{score}}", f"{record.score:.4f}")
         )
+        # Qwen reasoning models often emit `<think>` blocks unless explicitly disabled.
+        # Prefixing with `/no_think` improves JSON output reliability.
+        return "/no_think\n" + body
 
     def _simulate(self, record: EvalRecord) -> ParsedModelOutput:
         key = f"{self.model_id}::{record.example_id}".encode()
@@ -153,12 +160,33 @@ class LocalModelRunner:
 
         raise ValueError("No complete JSON object in model response.")
 
+    @staticmethod
+    def _extract_json_payload(raw_response: str) -> dict[str, Any]:
+        stripped = raw_response.strip()
+
+        try:
+            payload = json.loads(stripped)
+            if isinstance(payload, dict):
+                return payload
+        except Exception:
+            pass
+
+        fence_match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", raw_response, flags=re.DOTALL)
+        if fence_match:
+            payload = json.loads(fence_match.group(1))
+            if isinstance(payload, dict):
+                return payload
+            raise ValueError("Decoded fenced payload is not an object.")
+
+        payload_text = LocalModelRunner._extract_json_object(raw_response)
+        payload = json.loads(payload_text)
+        if isinstance(payload, dict):
+            return payload
+        raise ValueError("Decoded payload is not an object.")
+
     def _parse_response(self, raw_response: str) -> ParsedModelOutput:
         try:
-            payload_text = self._extract_json_object(raw_response)
-            payload = json.loads(payload_text)
-            if not isinstance(payload, dict):
-                raise ValueError("Decoded payload is not an object.")
+            payload = self._extract_json_payload(raw_response)
 
             reasoning = " ".join(str(payload.get("reasoning", "")).split()).strip()
             feedback = payload.get("feedback", "")
@@ -168,8 +196,17 @@ class LocalModelRunner:
                 else json.dumps(feedback, ensure_ascii=False)
             )
 
-            predicted_score = parse_finite_float(payload.get("predicted_score"))
-            confidence = parse_finite_float(payload.get("confidence"))
+            predicted_score = None
+            for key in self._SCORE_KEYS:
+                predicted_score = parse_finite_float(payload.get(key))
+                if predicted_score is not None:
+                    break
+
+            confidence = None
+            for key in self._CONFIDENCE_KEYS:
+                confidence = parse_finite_float(payload.get(key))
+                if confidence is not None:
+                    break
 
             if confidence is not None and confidence > 1.0:
                 confidence = max(0.0, min(1.0, confidence / 100.0))

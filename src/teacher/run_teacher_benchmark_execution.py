@@ -25,13 +25,8 @@ from .providers import TeacherExample, create_teacher_provider
 
 REQUIRED_TEACHER_MODELS: tuple[str, ...] = (
     "gpt-5",
-    "o3",
-    "claude_sonnet_4",
-    "claude_opus_4",
-    "gemini_2_5_pro",
-    "deepseek_r1",
-    "qwen3",
-    "llama_4_maverick",
+    "claude_opus_4_8",
+    "gemini_3_1_pro",
 )
 
 
@@ -181,6 +176,15 @@ def _api_model_env_key(model_id: str) -> str:
     return f"TEACHER_API_MODEL_{normalized}"
 
 
+def _model_role_env_key(canonical_id: str) -> str:
+    normalized = canonical_id.strip().lower()
+    if normalized in {"gpt-5", "o3"}:
+        return "PRIMARY_TEACHER_MODEL"
+    if normalized in {"claude_opus_4_8", "claude_opus_4", "claude_sonnet_4"}:
+        return "VERIFIER_MODEL"
+    return "SECONDARY_MODEL"
+
+
 def _infer_provider(*, canonical_id: str, api_availability: str) -> str:
     env_override = os.getenv(_provider_env_key(canonical_id))
     if env_override:
@@ -201,15 +205,26 @@ def _infer_provider(*, canonical_id: str, api_availability: str) -> str:
 
 
 def _resolve_api_model_name(*, canonical_id: str, raw: dict[str, Any]) -> str:
-    env_override = os.getenv(_api_model_env_key(canonical_id))
-    if env_override and env_override.strip():
-        return env_override.strip()
+    role_env_key = _model_role_env_key(canonical_id)
+    role_model = os.getenv(role_env_key, "").strip()
+    if role_model:
+        return role_model
 
-    for key in ("api_model_name", "model_name", "provider_model_name"):
-        value = raw.get(key)
-        if isinstance(value, str) and value.strip():
-            return value.strip()
-    return canonical_id
+    per_model_key = _api_model_env_key(canonical_id)
+    per_model_model = os.getenv(per_model_key, "").strip()
+    if per_model_model:
+        return per_model_model
+
+    raw_key = raw.get("model_env_var")
+    if isinstance(raw_key, str) and raw_key.strip():
+        model_from_env = os.getenv(raw_key.strip(), "").strip()
+        if model_from_env:
+            return model_from_env
+
+    raise ValueError(
+        "Missing model mapping env var for "
+        f"canonical model '{canonical_id}'. Set {role_env_key}."
+    )
 
 
 def _resolve_config_path(master_path: Path, configured: str) -> Path:
@@ -224,10 +239,11 @@ def _resolve_dataset_jsonl(dataset_root: Path) -> Path:
         return dataset_root
 
     candidates = [
+        dataset_root / "final" / "merged_all.jsonl",
+        dataset_root / "merged_all.jsonl",
         dataset_root / "gold_v1.jsonl",
         dataset_root / "gold.jsonl",
         dataset_root / "candidates" / "candidate_gold.jsonl",
-        dataset_root / "review_package" / "review_forms.jsonl",
     ]
     for path in candidates:
         if path.exists():
@@ -654,8 +670,8 @@ def run_execution_pipeline(
             "provider_override_env_vars": {
                 model.canonical_id: _provider_env_key(model.canonical_id) for model in plan.models
             },
-            "api_model_override_env_vars": {
-                model.canonical_id: _api_model_env_key(model.canonical_id) for model in plan.models
+            "model_role_env_vars": {
+                model.canonical_id: _model_role_env_key(model.canonical_id) for model in plan.models
             },
         },
     )

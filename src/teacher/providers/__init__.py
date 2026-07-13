@@ -8,6 +8,7 @@ from .gemini_provider import GeminiTeacherProvider
 from .local_transformers_provider import LocalTransformersTeacherProvider
 from .openai_provider import OpenAITeacherProvider
 from .openrouter_provider import OpenRouterTeacherProvider
+from .truefoundry_provider import TrueFoundryGatewayTeacherProvider
 
 __all__ = [
     "AnthropicTeacherProvider",
@@ -19,6 +20,7 @@ __all__ = [
     "OpenRouterTeacherProvider",
     "TeacherExample",
     "TeacherProvider",
+    "TrueFoundryGatewayTeacherProvider",
     "canonical_provider_name",
     "create_teacher_provider",
 ]

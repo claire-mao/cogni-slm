@@ -497,7 +497,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--gold-source-path",
-        default="datasets/gold/review_package/review_forms.jsonl",
+        default="datasets/final/merged_all.jsonl",
     )
     parser.add_argument(
         "--corrections-path",

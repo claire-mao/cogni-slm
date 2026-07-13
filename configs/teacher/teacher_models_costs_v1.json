@@ -76,8 +76,8 @@
       }
     },
     {
-      "model_id": "claude_opus_4x",
-      "display_name": "Claude Opus 4",
+      "model_id": "claude_opus_4_8",
+      "display_name": "Claude Opus 4.8",
       "api_availability": "anthropic_api_and_partner_clouds",
       "local_availability": false,
       "open_weights": false,
@@ -142,8 +142,8 @@
       }
     },
     {
-      "model_id": "gemini_2_5_pro",
-      "display_name": "Gemini 2.5 Pro",
+      "model_id": "gemini_3_1_pro",
+      "display_name": "Gemini 3.1 Pro",
       "api_availability": "gemini_api_and_vertex_ai",
       "local_availability": false,
       "open_weights": false,
@@ -170,38 +170,6 @@
       "estimated_runtime_minutes": {
         "one_run_100_examples": 14.0,
         "five_runs_100_examples": 70.0
-      }
-    },
-    {
-      "model_id": "deepseek_r1",
-      "display_name": "DeepSeek R1",
-      "api_availability": "deepseek_api_openai_compatible",
-      "local_availability": true,
-      "open_weights": true,
-      "rate_limits": {
-        "v4_flash_concurrency": 2500,
-        "v4_pro_concurrency": 500
-      },
-      "pricing_usd_per_million_tokens": {
-        "input": 0.14,
-        "output": 0.28
-      },
-      "token_multiplier": 1.2,
-      "estimated_tokens": {
-        "input_100_examples_one_run": 570000,
-        "output_100_examples_one_run": 158400,
-        "input_100_examples_five_runs": 2850000,
-        "output_100_examples_five_runs": 792000
-      },
-      "estimated_cost_usd": {
-        "one_run_100_examples": 0.12,
-        "five_runs_100_examples": 0.62
-      },
-      "estimated_latency_seconds_p50": 7.0,
-      "estimated_throughput_requests_per_minute": 85.71,
-      "estimated_runtime_minutes": {
-        "one_run_100_examples": 8.17,
-        "five_runs_100_examples": 40.83
       }
     },
     {

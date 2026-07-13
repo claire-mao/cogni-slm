@@ -1,0 +1,140 @@
+{
+  "average_token_length": {
+    "avg_prompt_tokens": 340.17,
+    "avg_response_tokens": 131.0,
+    "avg_total_tokens": 471.17
+  },
+  "dataset_root": "datasets/sft",
+  "duplicate_analysis": {
+    "exact_duplicate_examples_remaining": 0,
+    "reused_input_examples_remaining": 0,
+    "reused_output_examples_remaining": 23
+  },
+  "duplicates_removed": 0,
+  "generated_at_utc": "2026-07-09T22:41:48.861806+00:00",
+  "invalid_examples": {
+    "count": 0,
+    "reason_counts": {}
+  },
+  "label_distribution": {
+    "confidence_distribution": {
+      "0.500": 24
+    },
+    "score_distribution": {
+      "30": 24
+    }
+  },
+  "malformed_json": {
+    "by_split": {
+      "test": 0,
+      "train": 0,
+      "validation": 0
+    },
+    "total": 0
+  },
+  "prompt_response_balance": {
+    "prompt_to_response_token_ratio": 2.5967
+  },
+  "random_inspection": {
+    "common_issue_counts": {
+      "anonymization_placeholders_in_input": 18,
+      "confidence_no_variance": 24,
+      "dry_run_artifact": 24,
+      "fallacy_always_none": 24,
+      "identical_output_template": 24,
+      "score_no_variance": 24
+    },
+    "example_ids_by_issue_sample": {
+      "anonymization_placeholders_in_input": [
+        "gold-candidate-004",
+        "gold-candidate-001",
+        "gold-candidate-010",
+        "gold-candidate-023",
+        "gold-candidate-005",
+        "gold-candidate-006",
+        "gold-candidate-003",
+        "gold-candidate-011",
+        "gold-candidate-008",
+        "gold-candidate-013"
+      ],
+      "confidence_no_variance": [
+        "gold-candidate-024",
+        "gold-candidate-004",
+        "gold-candidate-001",
+        "gold-candidate-010",
+        "gold-candidate-009",
+        "gold-candidate-023",
+        "gold-candidate-005",
+        "gold-candidate-006",
+        "gold-candidate-003",
+        "gold-candidate-011"
+      ],
+      "dry_run_artifact": [
+        "gold-candidate-024",
+        "gold-candidate-004",
+        "gold-candidate-001",
+        "gold-candidate-010",
+        "gold-candidate-009",
+        "gold-candidate-023",
+        "gold-candidate-005",
+        "gold-candidate-006",
+        "gold-candidate-003",
+        "gold-candidate-011"
+      ],
+      "fallacy_always_none": [
+        "gold-candidate-024",
+        "gold-candidate-004",
+        "gold-candidate-001",
+        "gold-candidate-010",
+        "gold-candidate-009",
+        "gold-candidate-023",
+        "gold-candidate-005",
+        "gold-candidate-006",
+        "gold-candidate-003",
+        "gold-candidate-011"
+      ],
+      "identical_output_template": [
+        "gold-candidate-024",
+        "gold-candidate-004",
+        "gold-candidate-001",
+        "gold-candidate-010",
+        "gold-candidate-009",
+        "gold-candidate-023",
+        "gold-candidate-005",
+        "gold-candidate-006",
+        "gold-candidate-003",
+        "gold-candidate-011"
+      ],
+      "score_no_variance": [
+        "gold-candidate-024",
+        "gold-candidate-004",
+        "gold-candidate-001",
+        "gold-candidate-010",
+        "gold-candidate-009",
+        "gold-candidate-023",
+        "gold-candidate-005",
+        "gold-candidate-006",
+        "gold-candidate-003",
+        "gold-candidate-011"
+      ]
+    },
+    "inspected": 24,
+    "requested": 100,
+    "sampling_seed": 42
+  },
+  "readiness": {
+    "blockers": [
+      "dataset_too_small_for_training",
+      "high_output_duplication",
+      "label_no_variance",
+      "dry_run_artifact_detected"
+    ],
+    "status": "NOT_READY"
+  },
+  "total_examples": 24,
+  "train_validation_test_sizes": {
+    "test": 2,
+    "train": 21,
+    "validation": 1
+  }
+}

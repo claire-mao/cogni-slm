@@ -279,7 +279,7 @@ def build_sft_dataset(config: SFTBuildConfig) -> dict[str, Any]:
 def parse_args() -> argparse.Namespace:
     """Parse CLI args for SFT build."""
     parser = argparse.ArgumentParser(description="Build final SFT datasets from teacher outputs.")
-    parser.add_argument("--input-jsonl", default="datasets/gold/gold_v1.jsonl")
+    parser.add_argument("--input-jsonl", default="datasets/final/merged_all.jsonl")
     parser.add_argument(
         "--teacher-outputs-path",
         default=None,

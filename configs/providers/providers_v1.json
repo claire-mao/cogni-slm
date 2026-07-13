@@ -1,66 +1,102 @@
 {
   "version": "providers_v1",
-  "description": "Provider credential requirements for teacher execution.",
+  "description": "TrueFoundry gateway requirements for teacher execution.",
   "env_file_default": ".env",
   "aliases": {
     "gemini": "google",
-    "openrouter_compatible": "openrouter"
+    "openrouter_compatible": "openrouter",
+    "truefoundry": "openai"
   },
   "providers": {
     "openai": {
       "required_env_all": [
-        "OPENAI_API_KEY"
+        "PRIMARY_TEACHER_MODEL",
+        "VERIFIER_MODEL",
+        "SECONDARY_MODEL"
       ],
-      "required_env_any": [],
-      "optional_env": [
-        "OPENAI_BASE_URL"
-      ]
+      "required_env_any": [
+        [
+          "TFY_API_KEY",
+          "TRUEFOUNDRY_API_KEY"
+        ],
+        [
+          "TFY_BASE_URL",
+          "TRUEFOUNDRY_BASE_URL"
+        ]
+      ],
+      "optional_env": []
     },
     "anthropic": {
       "required_env_all": [
-        "ANTHROPIC_API_KEY"
+        "PRIMARY_TEACHER_MODEL",
+        "VERIFIER_MODEL",
+        "SECONDARY_MODEL"
       ],
-      "required_env_any": [],
-      "optional_env": [
-        "ANTHROPIC_BASE_URL",
-        "ANTHROPIC_VERSION"
-      ]
-    },
-    "google": {
-      "required_env_all": [],
       "required_env_any": [
         [
-          "GEMINI_API_KEY",
-          "GOOGLE_API_KEY"
+          "TFY_API_KEY",
+          "TRUEFOUNDRY_API_KEY"
+        ],
+        [
+          "TFY_BASE_URL",
+          "TRUEFOUNDRY_BASE_URL"
         ]
       ],
-      "optional_env": [
-        "GEMINI_BASE_URL"
-      ]
+      "optional_env": []
+    },
+    "google": {
+      "required_env_all": [
+        "PRIMARY_TEACHER_MODEL",
+        "VERIFIER_MODEL",
+        "SECONDARY_MODEL"
+      ],
+      "required_env_any": [
+        [
+          "TFY_API_KEY",
+          "TRUEFOUNDRY_API_KEY"
+        ],
+        [
+          "TFY_BASE_URL",
+          "TRUEFOUNDRY_BASE_URL"
+        ]
+      ],
+      "optional_env": []
     },
     "deepseek": {
       "required_env_all": [
-        "DEEPSEEK_API_KEY"
+        "PRIMARY_TEACHER_MODEL",
+        "VERIFIER_MODEL",
+        "SECONDARY_MODEL"
       ],
-      "required_env_any": [],
-      "optional_env": [
-        "DEEPSEEK_BASE_URL"
-      ]
-    },
-    "openrouter": {
-      "required_env_all": [],
       "required_env_any": [
         [
-          "OPENROUTER_API_KEY",
-          "OPENROUTER_COMPAT_API_KEY"
+          "TFY_API_KEY",
+          "TRUEFOUNDRY_API_KEY"
+        ],
+        [
+          "TFY_BASE_URL",
+          "TRUEFOUNDRY_BASE_URL"
         ]
       ],
-      "optional_env": [
-        "OPENROUTER_BASE_URL",
-        "OPENROUTER_COMPAT_BASE_URL",
-        "OPENROUTER_HTTP_REFERER",
-        "OPENROUTER_X_TITLE"
-      ]
+      "optional_env": []
+    },
+    "openrouter": {
+      "required_env_all": [
+        "PRIMARY_TEACHER_MODEL",
+        "VERIFIER_MODEL",
+        "SECONDARY_MODEL"
+      ],
+      "required_env_any": [
+        [
+          "TFY_API_KEY",
+          "TRUEFOUNDRY_API_KEY"
+        ],
+        [
+          "TFY_BASE_URL",
+          "TRUEFOUNDRY_BASE_URL"
+        ]
+      ],
+      "optional_env": []
     }
   }
 }

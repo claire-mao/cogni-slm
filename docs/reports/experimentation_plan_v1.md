@@ -24,7 +24,7 @@ Date: 2026-07-09
 
 1. Live teacher pilot is blocked by missing provider credentials:
    - `.env` is missing.
-   - Required keys: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `DEEPSEEK_API_KEY`.
+   - Required keys: `TFY_API_KEY` (or `TRUEFOUNDRY_API_KEY`), `TFY_BASE_URL` (or `TRUEFOUNDRY_BASE_URL`), `PRIMARY_TEACHER_MODEL`, `VERIFIER_MODEL`, `SECONDARY_MODEL`.
 2. QLoRA training is blocked by unavailable accelerator:
    - `torch.cuda.is_available() == False`
    - Runtime also reports no Metal device in this headless session.

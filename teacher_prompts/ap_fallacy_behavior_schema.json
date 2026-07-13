@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "teacher_prompts/ap_fallacy_behavior_schema.json",
+  "title": "Cogni AP Fallacy Tutor Behavior",
+  "type": "object",
+  "properties": {
+    "argument_summary": {"type": "string", "minLength": 1},
+    "assumptions": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1
+    },
+    "primary_fallacy": {"type": "string", "minLength": 1},
+    "why_this_applies": {"type": "string", "minLength": 1},
+    "cross_domain_analogy": {
+      "type": "object",
+      "properties": {
+        "analogy": {"type": "string", "minLength": 1},
+        "mapping": {"type": "string", "minLength": 1}
+      },
+      "required": ["analogy", "mapping"],
+      "additionalProperties": false
+    },
+    "transfer_check": {
+      "type": "object",
+      "properties": {
+        "example": {"type": "string", "minLength": 1},
+        "question": {"type": "string", "minLength": 1}
+      },
+      "required": ["example", "question"],
+      "additionalProperties": false
+    },
+    "reflective_question": {"type": "string", "minLength": 2, "pattern": "\\?$"}
+  },
+  "required": [
+    "argument_summary",
+    "assumptions",
+    "primary_fallacy",
+    "why_this_applies",
+    "cross_domain_analogy",
+    "transfer_check",
+    "reflective_question"
+  ],
+  "additionalProperties": false
+}

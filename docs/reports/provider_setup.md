@@ -1,12 +1,12 @@
 # Provider Setup
 
-This project now includes provider configuration and preflight validation for:
+This project uses a single TrueFoundry OpenAI-compatible gateway for all remote teacher calls.
+Provider labels are retained for experiment metadata and routing intent, but all requests go through one endpoint.
 
-- OpenAI
-- Anthropic
-- Google (Gemini)
-- DeepSeek
-- OpenRouter
+Default production stack:
+- GPT-5 (primary teacher)
+- Claude Opus 4.8 (verifier)
+- Gemini 3.1 Pro (secondary teacher)
 
 ## Generated Configuration
 
@@ -20,13 +20,19 @@ Provider credentials are read from `.env` (repository root) before execution.
 
 Supported keys:
 
-- `OPENAI_API_KEY`
-- `ANTHROPIC_API_KEY`
-- `GEMINI_API_KEY` or `GOOGLE_API_KEY`
-- `DEEPSEEK_API_KEY`
-- `OPENROUTER_API_KEY` or `OPENROUTER_COMPAT_API_KEY`
+- `TFY_API_KEY` (preferred) or `TRUEFOUNDRY_API_KEY` (compatibility)
+- `TFY_BASE_URL` (preferred) or `TRUEFOUNDRY_BASE_URL` (compatibility)
+- `PRIMARY_TEACHER_MODEL`
+- `VERIFIER_MODEL`
+- `SECONDARY_MODEL`
 
-Optional endpoint overrides are also supported (for example `OPENAI_BASE_URL`).
+Recommended:
+
+- `TFY_API_KEY=...`
+- `TFY_BASE_URL=https://tfy.promptlens.trilogy.com/v1`
+- `PRIMARY_TEACHER_MODEL=openai-group/gpt-5`
+- `VERIFIER_MODEL=claude-group/claude-opus-4-8`
+- `SECONDARY_MODEL=gemini-group/gemini-3.1-pro`
 
 ## Validation Implementation
 
@@ -37,9 +43,15 @@ New module:
 Features:
 
 - Loads `.env` without external dependencies.
-- Validates required keys per provider.
+- Validates required keys for gateway-backed provider execution.
 - Supports provider aliases (`gemini -> google`, `openrouter_compatible -> openrouter`).
 - Provides strict mode that fails fast before execution if config is incomplete.
+
+Model resolution:
+
+- `PRIMARY_TEACHER_MODEL` is used for primary-teacher model slots (for example GPT-5, o3).
+- `VERIFIER_MODEL` is used for verifier slots (for example Claude models).
+- `SECONDARY_MODEL` is used for secondary/checker slots (for example Gemini, Qwen, Llama).
 
 ## Integrated Runners
 
@@ -62,7 +74,7 @@ Validate provider config directly:
 python3 -m src.teacher.provider_config \
   --config-path configs/providers/providers_v1.json \
   --env-file .env \
-  --providers openai,anthropic,google,deepseek,openrouter \
+  --providers openai,anthropic,google,openrouter \
   --strict
 ```
 
@@ -80,4 +92,4 @@ python3 -m src.teacher.run_teacher_benchmark_execution \
 ## Notes
 
 - This setup does not call any provider APIs unless execution flags are explicitly enabled.
-- `.env.example` has been expanded with provider key placeholders to simplify setup.
+- `.env.example` now includes TrueFoundry gateway placeholders to simplify setup.

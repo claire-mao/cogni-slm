@@ -14,9 +14,7 @@ from .config import PipelineConfig, load_pipeline_config, save_pipeline_config
 from .pipeline import run_pipeline
 
 NEW_DEFAULT_CONFIG = Path("configs/training/qlora_default.json")
-LEGACY_DEFAULT_CONFIG = Path("training/configs/qlora_default.json")
 NEW_DEFAULT_RESOLVED = Path("configs/training/qlora_resolved.json")
-LEGACY_DEFAULT_RESOLVED = Path("training/configs/qlora_resolved.json")
 
 
 def parse_args() -> argparse.Namespace:
@@ -56,12 +54,6 @@ def main() -> None:
     args = parse_args()
 
     config_path = Path(args.config)
-    if (
-        not config_path.exists()
-        and config_path == NEW_DEFAULT_CONFIG
-        and LEGACY_DEFAULT_CONFIG.exists()
-    ):
-        config_path = LEGACY_DEFAULT_CONFIG
     if config_path.exists():
         config = load_pipeline_config(config_path)
     else:
@@ -70,12 +62,6 @@ def main() -> None:
     config = apply_overrides(config, args)
 
     resolved_config_path = Path(args.save_resolved_config)
-    if (
-        resolved_config_path == NEW_DEFAULT_RESOLVED
-        and not resolved_config_path.parent.exists()
-        and LEGACY_DEFAULT_RESOLVED.parent.exists()
-    ):
-        resolved_config_path = LEGACY_DEFAULT_RESOLVED
     save_pipeline_config(config, resolved_config_path)
 
     metadata = run_pipeline(config, do_train=args.do_train)

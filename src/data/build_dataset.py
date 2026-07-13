@@ -992,7 +992,7 @@ def main() -> None:
         pipeline_plan[5],
         lambda: verify_licenses(
             final_merged_jsonl=root / "datasets" / "final" / "merged_all.jsonl",
-            report_path=root / "docs" / "reports" / "license_verification.md",
+            report_path=root / "outputs" / "reports" / "license_verification.md",
         ),
     )
     if not license_ok:

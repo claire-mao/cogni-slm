@@ -60,7 +60,7 @@ Examples of report files without direct scripted regeneration in the current bui
 
 - `docs/reports/dataset_lineage.md`
 - `docs/reports/full_pipeline_audit.md`
-- `docs/reports/license_audit.md`
+- `docs/release/THIRD_PARTY_NOTICES.md`
 - `docs/reports/leakage_report.md`
 - `docs/reports/schema_validation.md`
 - `docs/reports/training_readiness.md`

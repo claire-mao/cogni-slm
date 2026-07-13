@@ -65,6 +65,8 @@ datasets/training/
 datasets/training_builder/
 datasets/training_candidates/
 datasets/training_provenance/
+datasets/sft/
+datasets/sft_ap_tutor/
 datasets/final/*.jsonl
 datasets/final/dataset_dict/
 datasets/processed/unified/
@@ -83,3 +85,7 @@ adapters/
 outputs/
 !outputs/.gitkeep
 !outputs/**/.gitkeep
+
+# Generated local bundles and accelerator caches
+*.zip
+unsloth_compiled_cache/

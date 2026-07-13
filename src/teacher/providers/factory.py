@@ -19,6 +19,7 @@ _PROVIDER_ALIASES: dict[str, str] = {
     "deepseek": "deepseek",
     "openrouter": "openrouter",
     "openrouter_compatible": "openrouter",
+    "truefoundry": "openai",
     "local": "local_transformers",
     "local_transformers": "local_transformers",
     "transformers": "local_transformers",

@@ -10,8 +10,9 @@ from teacher.models import canonical_model_id, estimate_cost_usd
 
 def test_canonical_model_aliases() -> None:
     assert canonical_model_id("GPT-5") == "gpt-5"
+    assert canonical_model_id("Claude Opus 4.8") == "claude_opus_4_8"
     assert canonical_model_id("Claude Sonnet 4") == "claude_sonnet_4"
-    assert canonical_model_id("gemini-2.5-pro") == "gemini_2_5_pro"
+    assert canonical_model_id("gemini-3.1-pro") == "gemini_3_1_pro"
     assert canonical_model_id("llama 4 maverick") == "llama_4_maverick"
 
 

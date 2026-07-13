@@ -22,7 +22,11 @@ def _write_jsonl(path: Path, rows: list[dict]) -> None:
             handle.write(json.dumps(row) + "\n")
 
 
-def test_prepare_teacher_benchmark_execution_scaffold(tmp_path: Path) -> None:
+def test_prepare_teacher_benchmark_execution_scaffold(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("PRIMARY_TEACHER_MODEL", "openai-group/gpt-5")
+    monkeypatch.setenv("VERIFIER_MODEL", "claude-group/claude-opus-4-8")
+    monkeypatch.setenv("SECONDARY_MODEL", "gemini-group/gemini-3.1-pro")
+
     config_root = tmp_path / "configs" / "teacher"
     dataset_root = tmp_path / "datasets" / "gold"
     output_root = tmp_path / "outputs" / "teacher_benchmark"
@@ -56,36 +60,15 @@ def test_prepare_teacher_benchmark_execution_scaffold(tmp_path: Path) -> None:
         {
             "models": [
                 {"model_id": "gpt-5", "display_name": "GPT-5", "api_availability": "openai_api"},
-                {"model_id": "o3", "display_name": "o3", "api_availability": "openai_api"},
                 {
-                    "model_id": "claude_sonnet_4x",
-                    "display_name": "Claude Sonnet 4",
+                    "model_id": "claude_opus_4_8",
+                    "display_name": "Claude Opus 4.8",
                     "api_availability": "anthropic_api",
                 },
                 {
-                    "model_id": "claude_opus_4x",
-                    "display_name": "Claude Opus 4",
-                    "api_availability": "anthropic_api",
-                },
-                {
-                    "model_id": "gemini_2_5_pro",
-                    "display_name": "Gemini 2.5 Pro",
+                    "model_id": "gemini_3_1_pro",
+                    "display_name": "Gemini 3.1 Pro",
                     "api_availability": "gemini_api",
-                },
-                {
-                    "model_id": "deepseek_r1",
-                    "display_name": "DeepSeek R1",
-                    "api_availability": "deepseek_api",
-                },
-                {
-                    "model_id": "qwen3",
-                    "display_name": "Qwen3",
-                    "api_availability": "openai_compatible",
-                },
-                {
-                    "model_id": "llama4_maverick",
-                    "display_name": "Llama 4 Maverick",
-                    "api_availability": "provider_dependent",
                 },
             ]
         },
@@ -129,7 +112,7 @@ def test_prepare_teacher_benchmark_execution_scaffold(tmp_path: Path) -> None:
     summary = run_execution_pipeline(plan, output_root=output_root, dataset_stats=dataset_stats)
 
     assert summary["status"] == "prepared"
-    assert summary["planned_requests"] == 8
+    assert summary["planned_requests"] == 3
     assert summary["successful_requests"] == 0
     assert summary["failed_requests"] == 0
 
@@ -140,3 +123,9 @@ def test_prepare_teacher_benchmark_execution_scaffold(tmp_path: Path) -> None:
     assert (run_dir / "latency" / "summary.json").exists()
     assert (run_dir / "confidence" / "summary.json").exists()
     assert (run_dir / "metadata" / "manifest.json").exists()
+
+    models_meta = json.loads((run_dir / "metadata" / "models.json").read_text(encoding="utf-8"))
+    by_id = {row["canonical_id"]: row for row in models_meta["models"]}
+    assert by_id["gpt-5"]["api_model_name"] == "openai-group/gpt-5"
+    assert by_id["claude_opus_4_8"]["api_model_name"] == "claude-group/claude-opus-4-8"
+    assert by_id["gemini_3_1_pro"]["api_model_name"] == "gemini-group/gemini-3.1-pro"

@@ -24,6 +24,14 @@ _PROVIDER_ALIASES: dict[str, str] = {
     "deepseek": "deepseek",
     "openrouter": "openrouter",
     "openrouter_compatible": "openrouter",
+    "truefoundry": "openai",
+}
+
+_DIRECT_MODE_VALUES = {
+    "direct",
+    "openai_compatible",
+    "openai-compatible",
+    "openai_compat",
 }
 
 
@@ -89,6 +97,7 @@ def _read_provider_config(path: Path) -> dict[str, Any]:
 def _collect_missing(
     *,
     provider_cfg: dict[str, Any],
+    provider_mode: str,
 ) -> tuple[list[str], list[list[str]], list[str]]:
     required_all = provider_cfg.get("required_env_all")
     required_any = provider_cfg.get("required_env_any")
@@ -103,6 +112,12 @@ def _collect_missing(
                 if keys:
                     any_groups.append(keys)
     optional_keys = [str(item) for item in optional_env] if isinstance(optional_env, list) else []
+
+    if provider_mode == "direct":
+        any_groups = [["TEACHER_API_KEY"], ["TEACHER_BASE_URL"]]
+        if "TEACHER_PROVIDER_MODE" not in optional_keys:
+            optional_keys.append("TEACHER_PROVIDER_MODE")
+
     return all_keys, any_groups, optional_keys
 
 
@@ -127,6 +142,9 @@ def validate_provider_configuration(
     providers = payload.get("providers")
     if not isinstance(providers, dict):
         raise ValueError(f"Provider config missing providers map: {config_path}")
+
+    raw_mode = str(os.getenv("TEACHER_PROVIDER_MODE", "truefoundry")).strip().lower()
+    provider_mode = "direct" if raw_mode in _DIRECT_MODE_VALUES else "truefoundry"
 
     normalized_required: list[str] = []
     for provider in required_providers:
@@ -153,7 +171,10 @@ def validate_provider_configuration(
             invalid.append(provider_name)
             continue
 
-        required_all, required_any, optional_env = _collect_missing(provider_cfg=raw_cfg)
+        required_all, required_any, optional_env = _collect_missing(
+            provider_cfg=raw_cfg,
+            provider_mode=provider_mode,
+        )
         present_keys: list[str] = []
         for key in required_all + [item for group in required_any for item in group] + optional_env:
             if os.getenv(key):
@@ -183,6 +204,7 @@ def validate_provider_configuration(
         "env_file": str(env_file),
         "env_file_exists": env_file.exists(),
         "env_keys_loaded_count": len(loaded_env),
+        "provider_mode": provider_mode,
         "required_providers_input": required_providers,
         "required_providers_normalized": normalized_required,
         "providers": checks,
@@ -204,7 +226,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Validate provider configuration from .env.")
     parser.add_argument(
         "--providers",
-        default="openai,anthropic,google,deepseek,openrouter",
+        default="openai,anthropic,google,openrouter",
         help="Comma-separated provider list.",
     )
     parser.add_argument("--config-path", default="configs/providers/providers_v1.json")

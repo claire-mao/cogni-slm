@@ -28,6 +28,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from utils.environment import get_teacher_provider_mode
 from utils.experiment_tracker import ExperimentTracker
 
 from .models import canonical_model_id, estimate_cost_usd
@@ -36,6 +37,7 @@ from .prompt_versioning import PromptVersionManager
 from .provider_config import validate_provider_configuration
 from .providers import TeacherExample, canonical_provider_name, create_teacher_provider
 from .providers.common import validate_normalized_output
+from .validate_environment import validate_environment
 
 
 @dataclass(frozen=True)
@@ -130,6 +132,17 @@ def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
         encoding="utf-8",
     )
     temp.replace(path)
+
+
+def _resolve_repo_relative_path(path: Path) -> Path:
+    """Resolve a relative path from repo root when not found in current cwd."""
+    if path.is_absolute() or path.exists():
+        return path
+    repo_root = Path(__file__).resolve().parents[2]
+    candidate = repo_root / path
+    if candidate.exists():
+        return candidate
+    return path
 
 
 def _infer_provider(model_name: str) -> str:
@@ -393,14 +406,71 @@ def run_labeling(
     raw_provider = _normalize_text(provider).lower() if provider else _infer_provider(teacher_model)
     resolved_provider = _normalize_runtime_provider(raw_provider)
     if resolved_provider != "local_transformers":
-        validate_provider_configuration(
+        env_report = validate_environment(env_file=env_file)
+        if not bool(env_report.get("valid")):
+            issues: list[str] = []
+            if env_report.get("format_error"):
+                issues.append(str(env_report["format_error"]))
+            missing = env_report.get("missing_keys") or []
+            empty = env_report.get("empty_keys") or []
+            invalid = env_report.get("invalid_format_keys") or []
+            if missing:
+                issues.append("missing_keys=" + ",".join(str(item) for item in missing))
+            if empty:
+                issues.append("empty_keys=" + ",".join(str(item) for item in empty))
+            if invalid:
+                issues.append("invalid_format_keys=" + ",".join(str(item) for item in invalid))
+            detail_text = "; ".join(issues) if issues else "unknown_environment_error"
+            raise ValueError(f"Environment validation failed: {detail_text}")
+
+        provider_report = validate_provider_configuration(
             required_providers=[resolved_provider],
             config_path=providers_config_path,
             env_file=env_file,
-            strict=True,
-            load_env=True,
+            strict=False,
+            load_env=False,
             override_env=False,
         )
+        normalized = provider_report.get("required_providers_normalized") or []
+        provider_key = str(normalized[0]) if normalized else resolved_provider
+        provider_check = (
+            provider_report.get("providers", {}).get(provider_key, {})
+            if isinstance(provider_report.get("providers"), dict)
+            else {}
+        )
+        if not bool(provider_report.get("valid")):
+            missing_all = provider_check.get("missing_env_all") or []
+            missing_any = provider_check.get("missing_env_any_groups") or []
+            raise ValueError(
+                "Provider configuration validation failed for "
+                f"{provider_key}: missing_env_all={missing_all}; "
+                f"missing_env_any_groups={missing_any}; config_path={providers_config_path}"
+            )
+
+        if get_teacher_provider_mode() == "truefoundry":
+            required_all = {str(item) for item in provider_check.get("required_env_all", [])}
+            required_any_groups = [
+                {str(item) for item in group}
+                for group in provider_check.get("required_env_any", [])
+                if isinstance(group, list)
+            ]
+            expected_all = {"PRIMARY_TEACHER_MODEL", "VERIFIER_MODEL", "SECONDARY_MODEL"}
+            expected_any = [
+                {"TFY_API_KEY", "TRUEFOUNDRY_API_KEY"},
+                {"TFY_BASE_URL", "TRUEFOUNDRY_BASE_URL"},
+            ]
+            has_expected_any = all(
+                any(expected_group.issubset(actual_group) for actual_group in required_any_groups)
+                for expected_group in expected_any
+            )
+            if not expected_all.issubset(required_all) or not has_expected_any:
+                expected_alias_groups = sorted(map(sorted, expected_any))
+                raise ValueError(
+                    "Provider configuration is not aligned with TrueFoundry gateway requirements. "
+                    f"Expected env keys {sorted(expected_all)} and alias groups "
+                    f"{expected_alias_groups} "
+                    f"for provider '{provider_key}' in {providers_config_path}."
+                )
 
     prompt_template, prompt_meta = _load_prompt(
         prompt_template_path=prompt_template_path,
@@ -776,7 +846,7 @@ def run_labeling(
 def parse_args() -> argparse.Namespace:
     """Parse CLI arguments for production labeling runner."""
     parser = argparse.ArgumentParser(description="Run production teacher labeling inference.")
-    parser.add_argument("--dataset", default="datasets/training/training.jsonl")
+    parser.add_argument("--dataset", default="datasets/final/merged_all.jsonl")
     parser.add_argument("--output-dir", default="outputs/teacher_runs/run_v1")
     parser.add_argument("--teacher-model", required=True)
     parser.add_argument("--provider", default=None)
@@ -809,6 +879,8 @@ def main() -> None:
         run_id = datetime.now(timezone.utc).strftime("labeling-%Y%m%dT%H%M%SZ")
 
     schema_path = Path(args.schema_path) if _normalize_text(args.schema_path) else None
+    providers_config_path = _resolve_repo_relative_path(Path(args.providers_config))
+    env_file_path = _resolve_repo_relative_path(Path(args.env_file))
     summary = run_labeling(
         dataset_path=Path(args.dataset),
         output_dir=Path(args.output_dir),
@@ -830,8 +902,8 @@ def main() -> None:
         strict_validation=not bool(args.no_strict_validation),
         run_id=run_id,
         resume=bool(args.resume),
-        providers_config_path=Path(args.providers_config),
-        env_file=Path(args.env_file),
+        providers_config_path=providers_config_path,
+        env_file=env_file_path,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))
 

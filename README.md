@@ -2,6 +2,11 @@
 
 Cogni-SLM is a local-first ML repository for AP-style educational assessment workflows: dataset acquisition and normalization, quality/traceability checks, teacher-generation scaffolds, training initialization, and base-vs-tuned evaluation.
 
+Current production teacher stack:
+- GPT-5 (primary teacher)
+- Claude Opus 4.8 (verifier)
+- Gemini 3.1 Pro (secondary teacher)
+
 ## Repository Layout
 
 ```text
@@ -99,12 +104,15 @@ Primary sequence:
 - Prompt templates: `teacher_prompts/`
 - Generation scaffold: `scripts/generate_training_dataset.py`
 - Local teacher inference: `scripts/run_teacher_inference.py`
+- AP tutor production labeling: `scripts/run_direct_ap_labeling.py`
+- Seven-field behavior schema: `teacher_prompts/ap_fallacy_behavior_schema.json`
+- Direct-output SFT compiler: `scripts/build_ap_tutor_sft_from_teacher.py`
+- Pre-training quality gate: `scripts/validate_ap_sft_ready.py`
 
 ### Training Pipeline
 
 - Runtime entrypoint: `python -m training.run`
 - Default config: `configs/training/qlora_default.json`
-- Legacy fallback remains supported: `training/configs/qlora_default.json`
 
 ### Evaluation Pipeline
 
@@ -119,9 +127,13 @@ Primary sequence:
 - Architecture and stage graph: `docs/architecture.md`
 - Rebuild process: `docs/rebuild.md`
 - Active reports: `docs/reports/`
-- Archived one-time reports: `docs/reports/archive/`
 - Dataset documentation and cards: `docs/datasets/`
 
 ## Current Status
 
-This repository is refactored for first Git release with behavior-preserving script wrappers and `src/`-hosted implementations. Run `docs/reports/functionality_matrix.md` and `docs/reports/regression_test.md` for verification status.
+Qwen3-1.7B QLoRA training and held-out evaluation are complete. Fine-tuning improved
+strict seven-section protocol adherence from 0.0% to 99.3%. The result is an
+experimental structured tutor rather than an authoritative grader; reasoning quality
+remains an area for future improvement. See `docs/reports/final_ap_tutor_results.md`
+for the final report. Dataset and model release remains private because some source
+licenses are unresolved.

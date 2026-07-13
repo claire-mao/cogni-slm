@@ -40,7 +40,7 @@ SYNC_FILES = (
     "docs/reports/unified_sanitization.md",
     "docs/reports/final_dataset_quality.md",
     "docs/reports/deduplication.md",
-    "docs/reports/license_verification.md",
+    "outputs/reports/license_verification.md",
     "docs/reports/provenance.md",
     "docs/reports/provenance_repair.md",
     "docs/reports/training_dataset.md",

@@ -11,9 +11,13 @@ Supported providers:
 - OpenAI
 - Anthropic
 - Gemini
-- DeepSeek
 - OpenRouter
 - Local Transformers
+
+Production stack recommendation in this repository:
+- GPT-5 (primary teacher)
+- Claude Opus 4.8 (verifier)
+- Gemini 3.1 Pro (secondary teacher)
 
 No inference was executed for this deliverable.
 
@@ -45,9 +49,12 @@ Implemented adapters:
 - `src/teacher/providers/openai_provider.py`
 - `src/teacher/providers/anthropic_provider.py`
 - `src/teacher/providers/gemini_provider.py`
-- `src/teacher/providers/deepseek_provider.py`
 - `src/teacher/providers/openrouter_provider.py`
 - `src/teacher/providers/local_transformers_provider.py`
+
+Optional compatibility adapter:
+
+- `src/teacher/providers/deepseek_provider.py` (retained for generic framework compatibility, not in default production configs)
 
 Shared helpers:
 

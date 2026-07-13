@@ -2,7 +2,7 @@
 
 Scope:
 
-- Candidate models: GPT-5, o3, Claude Opus 4, Claude Sonnet 4, Gemini 2.5 Pro, DeepSeek R1, Qwen3, Llama 4 Maverick
+- Candidate models: GPT-5, o3, Claude Opus 4.8, Claude Sonnet 4, Gemini 3.1 Pro, Qwen3, Llama 4 Maverick
 - Focus fields: pricing, latency, rate limits, API availability, local availability, open weights, commercial usage
 - Where providers do not publish fixed latency SLAs or static limits, entries are marked as dynamic/provider-dependent.
 
@@ -44,7 +44,7 @@ Scope:
 - Commercial usage:
   - Yes via OpenAI API terms/policies.
 
-## Claude Opus 4
+## Claude Opus 4.8
 
 - Pricing:
   - Anthropic pricing page lists Opus 4/4.1 class at `$15 / MTok input`, `$75 / MTok output` (with cache and batch variants).
@@ -82,7 +82,7 @@ Scope:
 - Commercial usage:
   - Yes via Anthropic platform terms/policies.
 
-## Gemini 2.5 Pro
+## Gemini 3.1 Pro
 
 - Pricing:
   - Gemini API pricing page lists:
@@ -104,10 +104,10 @@ Scope:
 - Commercial usage:
   - Yes via Google terms/policies for Gemini API/Vertex AI.
 
-## DeepSeek R1
+## Gemini 3.1 Pro
 
 - Pricing:
-  - Current DeepSeek hosted pricing is published for V4 models; `deepseek-reasoner` is a compatibility alias to V4-Flash thinking mode and is scheduled for deprecation on July 24, 2026.
+  - Current DeepSeek hosted pricing is published for V4 models; `gemini-group/gemini-3.1-pro` is a compatibility alias to V4-Flash thinking mode and is scheduled for deprecation on July 24, 2026.
   - `deepseek-v4-flash` published rates: `$0.14 / 1M input (cache miss)`, `$0.28 / 1M output` (plus cache-hit rate).
 - Latency:
   - DeepSeek notes API defaults to non-streaming (appears slower); streaming improves interactivity.
@@ -178,7 +178,7 @@ Scope:
 - Anthropic pricing: https://platform.claude.com/docs/en/about-claude/pricing
 - Anthropic rate limits: https://platform.claude.com/docs/en/api/rate-limits
 - Anthropic models overview: https://platform.claude.com/docs/en/about-claude/models/overview
-- Gemini 2.5 Pro model page: https://ai.google.dev/gemini-api/docs/models/gemini-2.5-pro
+- Gemini 3.1 Pro model page: https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro
 - Gemini API pricing: https://ai.google.dev/gemini-api/docs/pricing
 - Gemini API rate limits: https://ai.google.dev/gemini-api/docs/rate-limits
 - Gemini troubleshooting: https://ai.google.dev/gemini-api/docs/troubleshooting
