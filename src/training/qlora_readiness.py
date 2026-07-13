@@ -337,9 +337,9 @@ def _check_unsloth_installation() -> tuple[CheckResult, CheckResult]:
         label="Unsloth installation",
         status=_status(installed),
         ok=installed,
-        details="Package location found."
-        if installed
-        else "Package not found in current Python env.",
+        details=(
+            "Package location found." if installed else "Package not found in current Python env."
+        ),
         data={"module_found": installed},
     )
 

@@ -117,9 +117,9 @@ def _prepare_rows(
             "split": split,
             "source": source,
             "license": _normalize_text(payload.get("license")) or "unknown",
-            "metadata": payload.get("metadata")
-            if isinstance(payload.get("metadata"), dict)
-            else {},
+            "metadata": (
+                payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
+            ),
             "word_count": wc,
             "quality_score": _quality_score(wc),
         }

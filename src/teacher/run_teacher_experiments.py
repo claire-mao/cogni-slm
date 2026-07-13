@@ -511,13 +511,11 @@ def _call_openai(
         raise RuntimeError("Missing TFY_BASE_URL or TRUEFOUNDRY_BASE_URL")
     parsed_url = urlparse(base_url)
     if parsed_url.scheme not in {"http", "https"} or not parsed_url.netloc:
-        expected_name = (
-            base_url_var
-            or ("TEACHER_BASE_URL" if provider_mode == "direct" else "TFY_BASE_URL")
+        expected_name = base_url_var or (
+            "TEACHER_BASE_URL" if provider_mode == "direct" else "TFY_BASE_URL"
         )
         raise RuntimeError(
-            f"Invalid {expected_name}. "
-            f"Expected absolute http(s) URL, got: {base_url!r}"
+            f"Invalid {expected_name}. " f"Expected absolute http(s) URL, got: {base_url!r}"
         )
     url = f"{base_url.rstrip('/')}/chat/completions"
     payload = {

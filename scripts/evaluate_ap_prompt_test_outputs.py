@@ -262,9 +262,9 @@ def main() -> None:
         "example_count": len(results),
         "metrics": {
             "overall_pass_rate": mean(pass_flags) if pass_flags else 0.0,
-            "behavior_spec_adherence": mean(mean(item["step_checks"].values()) for item in results)
-            if results
-            else 0.0,
+            "behavior_spec_adherence": (
+                mean(mean(item["step_checks"].values()) for item in results) if results else 0.0
+            ),
             "fallacy_accuracy": mean(fallacy_accuracy_values) if fallacy_accuracy_values else 0.0,
             "per_step_adherence": {
                 key: (mean(values) if values else 0.0) for key, values in step_values.items()
